@@ -7,6 +7,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h>
 
 
 using namespace std;
@@ -23,17 +24,32 @@ extern "C" __declspec(dllexport) void dllCalcTest(HWND handle)
 {
 		HWND hWndCalc = handle; //FindWindow(NULL, TEXT("Calculator Plus"));
 		
+		HWND handleTmp = FindWindow(NULL, TEXT("Eryan"));
+
+		cout << "Handle = " << handle << endl;
+		cout << "FindWindowHandle = " << handleTmp;
+
 		cout << "handle is null?: " << (handle == NULL) << endl;
 
+
+		
 	    if(hWndCalc != NULL)
 	    {
-				 HWND hWndFour = FindWindowEx(hWndCalc, NULL, "BUTTON", "4"),
-	             hWndPlus = FindWindowEx(hWndCalc, NULL, "BUTTON", "+"),
-	             hWndFive = FindWindowEx(hWndCalc, NULL, "BUTTON", "5"),
-	             hWndEquals = FindWindowEx(hWndCalc, NULL, "BUTTON", "=");
-	         
+				 //HWND hWndFour = FindWindowEx(hWndCalc, NULL, TEXT("Button"), TEXT("4")),
+				 POINT pt;
+				 pt.x = 300;
+				 pt.y = 200;
+
+				 HWND hWndFour = WindowFromPoint(pt),
+	             hWndPlus = FindWindowEx(hWndCalc, NULL, TEXT("Button"), TEXT("+")),
+	             hWndFive = FindWindowEx(hWndCalc, NULL, TEXT("Button"), TEXT("5")),
+	             hWndEquals = FindWindowEx(hWndCalc, NULL, TEXT("Button"), TEXT("="));
+	    
+				 cout << "4th window is: " << hWndFour << endl;
 	        if(hWndFour != NULL)
 	        {
+				cout << "Fourth button is not null " << endl;
+
 	            SendMessage(hWndFour, WM_LBUTTONDOWN, 0, MAKELPARAM(10,10));  
 	            SendMessage(hWndFour, WM_LBUTTONUP, 0, MAKELPARAM(10,10));  
 	            Sleep(500);
