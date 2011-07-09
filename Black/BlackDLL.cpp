@@ -60,8 +60,26 @@ typedef struct
 	{
 		Py_Initialize();
 		PyGILState_STATE gstate = PyGILState_Ensure();
+		
+		
+		PySys_SetPath("C:\\Users\\emist\\Documents;"
+		"C:\\Windows\\system32\\python27.zip;"
+		"C:\\Python27\\DLLs;"
+		"C:\\Python27\\lib;"
+		"C:\\Python27\\lib\\plat-win;"
+		"C:\\Python27\\lib\\lib-tk;"
+		"C:\\Python27;"
+		"C:\\Python27\\lib\\site-packages;");
+		
+		
 		char buf[600];
-		strcpy(buf, "import socket\n"
+
+		
+		strcpy(buf, 
+		"import sys\n"
+		"print sys.path\n"
+		//"sys.path.insert(0, 'C:\Python27\')\n"
+		"import socket\n"
 		"serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n"
 		"serversocket.bind(('127.0.0.1', 10000))\n"
 		"serversocket.listen(5)\n"
@@ -70,6 +88,16 @@ typedef struct
 			"\tct = client_thread(clientsocket)\n"
 			"\tct.run()\n");
 		
+
+		/*
+		strcpy(buf, "import sys\n"
+					"sys.path.insert(0, 'C:\')\n"
+					"print sys.path\n");
+
+		*/
+		PyRun_SimpleString(buf);
+
+		PyGILState_Release( gstate );
 
 	}
 
