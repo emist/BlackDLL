@@ -54,7 +54,55 @@ typedef struct
 
 		return (TRUE);
 	}
+
+
+	__declspec(dllexport) void startServer()
+	{
+		Py_Initialize();
+		PyGILState_STATE gstate = PyGILState_Ensure();
+		char buf[600];
+		strcpy(buf, "import socket\n"
+		"serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n"
+		"serversocket.bind(('127.0.0.1', 10000))\n"
+		"serversocket.listen(5)\n"
+		"while 1:\n"
+			"\t(clientsocket, address) = serversocket.accept()\n"
+			"\tct = client_thread(clientsocket)\n"
+			"\tct.run()\n");
 		
+
+	}
+
+	__declspec(dllexport) void cServerThread()
+	{
+	}
+
+	__declspec(dllexport) HANDLE dropServer()
+	{
+		HANDLE threadHandler;
+		DWORD threadId;
+		threadHandler = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&cServerThread, NULL, 0, &threadId);
+		return threadHandler;
+	}
+
+	__declspec(dllexport) void atLogin()
+	{
+		Py_Initialize();
+		PyGILState_STATE gstate = PyGILState_Ensure();
+		char buf[400];
+		strcpy(buf, "login = uicore.layer.login\n"
+		"if login.isopen:\n"
+        "\tlogin.usernameEditCtrl.SetValue(loooool)\n"
+        "\tlogin.passwordEditCtrl.SetValue(looooool)\n"
+        "\tsm.ScatterEventWithoutTheStars = LoggedScatter\n"
+        "\tlogin.Connect()");
+
+		PyRun_SimpleString(buf);
+
+		PyGILState_Release( gstate );
+
+	}
+
 	__declspec(dllexport) void process_expression()
 	{
 
@@ -98,7 +146,7 @@ typedef struct
 		
 		PyRun_SimpleString("print 'hello'");
 
-		 PyGILState_Release( gstate );
+		PyGILState_Release( gstate );
 
 
 //		expression = PyDict_GetItemString(global_dict, func_name);
