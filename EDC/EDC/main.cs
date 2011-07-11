@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 
 namespace MinimalisticTelnet
@@ -20,15 +21,23 @@ namespace MinimalisticTelnet
 
             while (tc.IsConnected && prompt.Trim() != "exit" )
             {
-                // display server output
-                Console.Write(tc.Read());
+                int i = 0;
+                
+                String serveroutput = tc.Read();
+                while (serveroutput.Length < 1)
+                {
+                    Thread.Sleep(50);
+                    serveroutput = tc.Read();
+                    i++;
+                }
+                Console.Write(serveroutput);
+                serveroutput = "";
 
                 // send client input to server
                 prompt = Console.ReadLine();
-                tc.WriteLine(prompt);
-
-                // display server output
-                Console.Write(tc.Read());
+                
+                tc.WriteLine(prompt);                
+                
             }
             Console.WriteLine("***DISCONNECTED");
    
