@@ -30,10 +30,15 @@ namespace MinimalisticTelnet
                     serveroutput = tc.Read();
                     i++;
                 }
+
+                serveroutput = serveroutput.Replace(">", "");
+                //serveroutput = serveroutput.StartsWith("", StringComparison.OrdinalIgnoreCase);
+
                 Console.Write(serveroutput);
-                serveroutput = "";
+                serveroutput = "\bEDC>";
 
                 // send client input to server
+                Console.Write(serveroutput);
                 prompt = Console.ReadLine();
                 
                 tc.WriteLine(prompt);                
