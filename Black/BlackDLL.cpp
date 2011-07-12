@@ -232,13 +232,10 @@ bool EchoIncomingPackets(SOCKET sd)
 		PyRun_SimpleString(buf);
 	}
 
-	__declspec(dllexport) void atLogin( PVOID message)
+	int atLogin()
 	{
+		int ret = 0;
 
-		PINIT_STRUCT messageStruct = reinterpret_cast<PINIT_STRUCT>(message);
-		MessageBox(NULL, messageStruct->Message, messageStruct->Title, MB_OK);
-
-		
 		Py_Initialize();
 		PyGILState_STATE gstate = PyGILState_Ensure();
 		
@@ -248,7 +245,7 @@ bool EchoIncomingPackets(SOCKET sd)
 		{
 			elog("Main failed to load");
 			PyGILState_Release( gstate );
-			return;
+			return ret;
 		}
 		PyObject * maindic = PyModule_GetDict(main);
 		
@@ -256,7 +253,7 @@ bool EchoIncomingPackets(SOCKET sd)
 		{
 			elog("Couldn't load main dictionary");
 			PyGILState_Release( gstate );
-			return;
+			return ret;
 		}
 
 		PyObject * uicore = PyDict_GetItemString(maindic, "uicore");
@@ -265,14 +262,14 @@ bool EchoIncomingPackets(SOCKET sd)
 		{
 			elog("uicore is null");
 			PyGILState_Release( gstate );
-			return;
+			return ret;
 		}
 		PyObject * layer = PyObject_GetAttrString(uicore, "layer");
 		if(layer == NULL)
 		{
 			elog("layer is null");
 			PyGILState_Release( gstate );
-			return;
+			return ret;
 		}
 
 		PyObject * login = PyObject_GetAttrString(layer, "login");
@@ -280,12 +277,12 @@ bool EchoIncomingPackets(SOCKET sd)
 		{
 			elog("login is null");
 			PyGILState_Release( gstate );
-			return;
+			return ret;
 		}
 
-		Py_DECREF(main);
-		Py_DECREF(uicore);
-		Py_DECREF(layer);
+		//Py_DECREF(main);
+		//Py_DECREF(uicore);
+		//Py_DECREF(layer);
 
 		PyObject * isopen = PyObject_GetAttrString(login, "isopen");
 		if(isopen != NULL)
@@ -293,6 +290,7 @@ bool EchoIncomingPackets(SOCKET sd)
 			if(PyObject_IsTrue(isopen))
 			{
 				elog("Login is open");
+				ret = 1;
 				//output->output = true;
 			}
 			else
@@ -305,74 +303,15 @@ bool EchoIncomingPackets(SOCKET sd)
 		{
 			elog("isopen is null");
 			PyGILState_Release( gstate );
-			return;
+			return ret;
 		}
 
-		Py_DECREF(login);
-		Py_DECREF(isopen);
-
-
-		/*
-		strcpy(buf, "login = uicore.layer.login\n"
-		"if login.isopen:\n"
-        "\tlogin.usernameEditCtrl.SetValue(loooool)\n"
-        "\tlogin.passwordEditCtrl.SetValue(looooool)\n"
-        "\tsm.ScatterEventWithoutTheStars = LoggedScatter\n"
-        "\tlogin.Connect()");
-
-		PyRun_SimpleString(buf);
-		*/
-
+		//Py_DECREF(login);
+		//Py_DECREF(isopen);
 
 
 		PyGILState_Release( gstate );
-
-	}
-
-
-	__declspec(dllexport) void waitLoaded()
-	{
-		Py_Initialize();
-		char buf[300];
-		PyObject *myMod = NULL;
-		PyObject *var = NULL;
-
-		PyGILState_STATE gstate = PyGILState_Ensure();
-
-		PySys_SetPath("C:\\Users\\emist\\Documents;"
-		"C:\\Windows\\system32\\python27.zip;"
-		"C:\\Python27\\DLLs;"
-		"C:\\Python27\\lib;"
-		"C:\\Python27\\lib\\plat-win;"
-		"C:\\Python27\\lib\\lib-tk;"
-		"C:\\Python27;"
-		"C:\\Python27\\lib\\site-packages;");
-		
-		myMod = PyImport_ImportModule("main");
-
-		PyGILState_Release( gstate );
-
-		if(myMod == NULL)
-		{
-			printf("Couldn't open main\n");
-			return;
-		}
-
-		var = PyObject_GetAttrString(myMod, "uicore.layer.login");
-
-		
-
-		while(var == NULL)
-		{
-			Sleep(300);
-			gstate = PyGILState_Ensure();
-			printf("uicore.layer.login is NULL\n");
-			var = PyObject_GetAttrString(myMod, "uicore.layer.login");
-			PyGILState_Release(gstate);
-		}
-		printf("uicore.layer.login is not NULL");
-	
-
+		return ret;
 	}
 
 	__declspec(dllexport) void startServer()
@@ -447,32 +386,6 @@ bool EchoIncomingPackets(SOCKET sd)
 		);
 	
 
-		//"utrhead(console.interact())\n");
-		
-
-		//strcpy(buf, "exit()");
-
-		/*
-		strcpy(buf, 
-		"import sys\n"
-		"print sys.path\n"
-		//"sys.path.insert(0, 'C:\Python27\')\n"
-		"import socket\n"
-		"serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n"
-		"serversocket.bind(('127.0.0.1', 10000))\n"
-		"serversocket.listen(5)\n"
-		"while 1:\n"
-			"\t(clientsocket, address) = serversocket.accept()\n"
-			"\tct = client_thread(clientsocket)\n"
-			"\tct.run()\n");
-		
-		*/
-		/*
-		strcpy(buf, "import sys\n"
-					"sys.path.insert(0, 'C:\')\n"
-					"print sys.path\n");
-
-		*/
 		PyRun_SimpleString(buf);
 
 		PyGILState_Release( gstate );
@@ -498,47 +411,86 @@ bool EchoIncomingPackets(SOCKET sd)
 		
 	}
 
-	__declspec(dllexport) HANDLE dropServer()
+
+	__declspec(dllexport) void namedPipeServer()
+	{
+
+	   HANDLE npipe;
+
+	   npipe = CreateNamedPipe(TEXT("\\\\.\\pipe\\TestChannel"),
+							   PIPE_ACCESS_DUPLEX,
+							   PIPE_TYPE_MESSAGE | PIPE_WAIT,  
+							   PIPE_UNLIMITED_INSTANCES ,
+							   1024,
+							   1024,
+							   5000,
+							   NULL);
+	   if( npipe == NULL ){
+		  //cerr<<"Error: cannot create named pipe\n";
+		  return ;
+	   }
+	   #ifdef TRACE_ON
+	   cerr<<"Named pipe created successfully"<<endl;
+	   cerr<<"Waiting for the first client to connect ...\n";
+	   #endif
+
+	   while( ConnectNamedPipe(npipe, NULL) ){
+		  char  buf[1024];
+		  char  * conf = "UNKNOWN FUNCTION";
+		  DWORD bread;
+		  while( ReadFile(npipe, (void*)buf, 1023, &bread, NULL) )
+		  {
+			 buf[bread] = 0; 
+			 //cout<<"Received: '"<<buf<<"'"<<endl;
+
+			 if(strcmp(buf, "login") == 0)
+			 {
+				int ret = atLogin();
+				if(ret == 1)
+					conf = "True";
+				else
+					conf = "False";
+			 }
+
+			 if( !WriteFile(npipe, (void*)conf, strlen(conf), &bread, NULL) )
+			 {
+				//cerr<<"Error writing the named pipe\n";
+			 }
+		  }
+		  DisconnectNamedPipe(npipe);
+		  #ifdef TRACE_ON
+		  cerr<<"Waiting for the next client to connect ...\n";
+		  #endif
+	   }
+
+	   return ;
+	
+	}
+
+	__declspec(dllexport) void dropServer()
 	{
 		HANDLE threadHandler;
 		DWORD threadId;
-		threadHandler = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&cServerThread, NULL, 0, &threadId);
-		return threadHandler;
+		threadHandler = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&namedPipeServer, NULL, 0, &threadId);
+		//return threadHandler;
 	}
 
 
 	__declspec(dllexport) void process_expression()
 	{
 
-		// Get a reference to the main module
-		// and global dictionary
-	//	main_module = PyImport_AddModule("__main__");
-	//	global_dict = PyModule_GetDict(main_module);
-
-		// Extract a reference to the function "func_name"
-		// from the global dictionary
-
-
-//		PyRun_SimpleString("print hello");
-
 		Py_Initialize();
 
-
 		PyGILState_STATE gstate = PyGILState_Ensure();
-
-		
 		
 		PyRun_SimpleString("import sys\n");
-		//PyRun_SimpleString("sys.path.append('C:\\Users\\emist\\My Documents')");
+
 		PyRun_SimpleString("sys.path.insert(0, 'C:\')");
 
 		PyRun_SimpleString("import byteplay\n");
-		//PyImport_Import(PyString_FromString("byteplay.py'"));
-		//PyRun_SimpleString("sys.exit(0)");
 		PyRun_SimpleString("from byteplay import *");
 		PyRun_SimpleString("from pprint import pprint");
-		PyRun_SimpleString("c = Code.from_code(hello.func_code)");
-		
+		PyRun_SimpleString("c = Code.from_code(hello.func_code)");		
 
 		PyRun_SimpleString("c.code[5:5] = [(LOAD_GLOBAL, 'text')]");
 		PyRun_SimpleString("c.code[6:6] = [(LOAD_CONST, 'blah')]");
@@ -552,22 +504,6 @@ bool EchoIncomingPackets(SOCKET sd)
 
 		PyGILState_Release( gstate );
 
-
-//		expression = PyDict_GetItemString(global_dict, func_name);
-
-	
-		// Make a call to the function referenced
-		// by "expression"
-//		PyObject * res = PyObject_CallObject(expression, NULL);
-
-		
-
-//		char buf[120];
-//		strcpy(buf, PyString_AsString(res));
-
-		
-
-		//MessageBox(0, buf, NULL, 0);
 	}
 
 
@@ -581,21 +517,11 @@ bool EchoIncomingPackets(SOCKET sd)
   __declspec(dllexport) void Initialize()
   {
 		
-	  //TCHAR s[100];
-
-	  //sprintf(s, "%s", GetCurrentProcessId());
-	  //int (*pPyRun_SimpleString)(void * buf);
-	  //Py_AddPendingCall(pPyRun_SimpleString, ((void*)"print hello"));
-
 	  ofstream out;
 	  out.open("hello.txt");
 	  out << GetCurrentProcessId() << endl;
 
 	  process_expression();
-	  
-	  //Py_AddPendingCall(&run, "print 'hello'");	
-
-
   }
 
   
