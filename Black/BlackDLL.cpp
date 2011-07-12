@@ -16,6 +16,11 @@ extern "C"
 {
 
 
+typedef struct _INIT_STRUCT {
+	LPCWSTR Title;
+	LPCWSTR Message;
+} INIT_STRUCT, *PINIT_STRUCT;
+
 
 typedef HMODULE (WINAPI *pGetModuleHandle)(LPCTSTR);
 typedef FARPROC (WINAPI *pGetProcAddress)(HMODULE,LPCSTR);
@@ -214,11 +219,100 @@ bool EchoIncomingPackets(SOCKET sd)
 		return (TRUE);
 	}
 
-	__declspec(dllexport) void atLogin()
+
+	__declspec(dllexport) void elog(const char * message)
 	{
+		char buf[300];
+		strcpy(buf, "f = open('C:\\Users\\emist\\log.txt', 'w')\n"
+					"f.write('");
+		strcat(buf, message);
+		strcat(buf, "')\n"
+					"f.close()");
+
+		PyRun_SimpleString(buf);
+	}
+
+	__declspec(dllexport) void atLogin( PVOID message)
+	{
+
+		PINIT_STRUCT messageStruct = reinterpret_cast<PINIT_STRUCT>(message);
+		MessageBox(NULL, messageStruct->Message, messageStruct->Title, MB_OK);
+
+		
 		Py_Initialize();
 		PyGILState_STATE gstate = PyGILState_Ensure();
-		char buf[400];
+		
+		
+		PyObject * main = PyImport_AddModule("__builtin__");
+		if(main == NULL)
+		{
+			elog("Main failed to load");
+			PyGILState_Release( gstate );
+			return;
+		}
+		PyObject * maindic = PyModule_GetDict(main);
+		
+		if(maindic == NULL)
+		{
+			elog("Couldn't load main dictionary");
+			PyGILState_Release( gstate );
+			return;
+		}
+
+		PyObject * uicore = PyDict_GetItemString(maindic, "uicore");
+
+		if(uicore == NULL)
+		{
+			elog("uicore is null");
+			PyGILState_Release( gstate );
+			return;
+		}
+		PyObject * layer = PyObject_GetAttrString(uicore, "layer");
+		if(layer == NULL)
+		{
+			elog("layer is null");
+			PyGILState_Release( gstate );
+			return;
+		}
+
+		PyObject * login = PyObject_GetAttrString(layer, "login");
+		if(login == NULL)
+		{
+			elog("login is null");
+			PyGILState_Release( gstate );
+			return;
+		}
+
+		Py_DECREF(main);
+		Py_DECREF(uicore);
+		Py_DECREF(layer);
+
+		PyObject * isopen = PyObject_GetAttrString(login, "isopen");
+		if(isopen != NULL)
+		{
+			if(PyObject_IsTrue(isopen))
+			{
+				elog("Login is open");
+				//output->output = true;
+			}
+			else
+			{
+				elog("Login is false");
+				//output->output = false;
+			}
+		}
+		else 
+		{
+			elog("isopen is null");
+			PyGILState_Release( gstate );
+			return;
+		}
+
+		Py_DECREF(login);
+		Py_DECREF(isopen);
+
+
+		/*
 		strcpy(buf, "login = uicore.layer.login\n"
 		"if login.isopen:\n"
         "\tlogin.usernameEditCtrl.SetValue(loooool)\n"
@@ -227,6 +321,9 @@ bool EchoIncomingPackets(SOCKET sd)
         "\tlogin.Connect()");
 
 		PyRun_SimpleString(buf);
+		*/
+
+
 
 		PyGILState_Release( gstate );
 
@@ -274,7 +371,7 @@ bool EchoIncomingPackets(SOCKET sd)
 			PyGILState_Release(gstate);
 		}
 		printf("uicore.layer.login is not NULL");
-		atLogin();
+	
 
 	}
 
