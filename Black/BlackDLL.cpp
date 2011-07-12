@@ -291,12 +291,10 @@ bool EchoIncomingPackets(SOCKET sd)
 			{
 				elog("Login is open");
 				ret = 1;
-				//output->output = true;
 			}
 			else
 			{
 				elog("Login is false");
-				//output->output = false;
 			}
 		}
 		else 
@@ -305,10 +303,6 @@ bool EchoIncomingPackets(SOCKET sd)
 			PyGILState_Release( gstate );
 			return ret;
 		}
-
-		//Py_DECREF(login);
-		//Py_DECREF(isopen);
-
 
 		PyGILState_Release( gstate );
 		return ret;
@@ -443,7 +437,7 @@ bool EchoIncomingPackets(SOCKET sd)
 			 buf[bread] = 0; 
 			 //cout<<"Received: '"<<buf<<"'"<<endl;
 
-			 if(strcmp(buf, "login") == 0)
+			 if(strcmp(buf, "atLogin") == 0)
 			 {
 				int ret = atLogin();
 				if(ret == 1)
