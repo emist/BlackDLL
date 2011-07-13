@@ -14,6 +14,24 @@
 
 using namespace std;
 
+	template<typename T>
+	char * putToByteArray(T & eveobject, int & size)
+	{
+		char * output = new char[eveobject.ByteSize()];
+		size = eveobject.ByteSize();
+		eveobject.SerializeToArray(output, size);
+		return output;
+
+	}
+
+	void elog(string message)
+	{
+		ofstream myfile;
+		myfile.open("C:\\Users\\emist\\log.txt", fstream::app);
+		myfile << message << endl;
+		myfile.close();
+	}
+
 extern "C"
 {
 
@@ -222,13 +240,7 @@ bool EchoIncomingPackets(SOCKET sd)
 	}
 
 
-	__declspec(dllexport) void elog(string message)
-	{
-		ofstream myfile;
-		myfile.open("C:\\Users\\emist\\log.txt");
-		myfile << message << endl;
-		myfile.close();
-	}
+
 
 	int atLogin()
 	{
@@ -404,37 +416,21 @@ bool EchoIncomingPackets(SOCKET sd)
 	}
 
 
+	char * buildBooleanObject( bool value, int & size  )
+	{
+		eveobjects::BooleanObject eveobject;
+		eveobject.set_istrue(value);
+		char * output = putToByteArray(eveobject, size);
+		return output;
+	}
+
+
 	__declspec(dllexport) void namedPipeServer()
 	{
+		
 
 	   HANDLE npipe;
 		
-	   eveobjects::Interaface eveobject;
-	   eveobject.set_name("protobuf object");
-	   eveobject.set_position(300);
-	   
-	   
-	   if(eveobject.IsInitialized())
-	   {
-			elog("Is initialized");
-	   }
-	   else
-		   elog("not initialize");
-
-	   
-	   char * output = new char[eveobject.ByteSize()];
-	   
-	   if(eveobject.SerializeToArray(output, eveobject.ByteSize()))
-	   {
-	    
-		elog("Serialized successfully");
-		elog("Bytesize = " + eveobject.ByteSize());
-	   }
-	   else
-		   elog("Failed to serialize");
-	   
-
-
 	   npipe = CreateNamedPipe(TEXT("\\\\.\\pipe\\TestChannel"),
 							   PIPE_ACCESS_DUPLEX,
 							   PIPE_TYPE_MESSAGE | PIPE_WAIT,  
@@ -452,11 +448,16 @@ bool EchoIncomingPackets(SOCKET sd)
 	   cerr<<"Waiting for the first client to connect ...\n";
 	   #endif
 
+	   char * output = NULL;
+
+	   
 	   while( ConnectNamedPipe(npipe, NULL) )
 	   {
 		  char  buf[1024];
 		  char  * conf = "UNKNOWN FUNCTION";
+		  int size = 0;
 		  DWORD bread;
+		  DWORD bsent;
 		  while( ReadFile(npipe, (void*)buf, 1023, &bread, NULL) )
 		  {
 			 buf[bread] = 0; 
@@ -466,12 +467,17 @@ bool EchoIncomingPackets(SOCKET sd)
 			 {
 				int ret = atLogin();
 				if(ret == 1)
-					conf = "True";
+				{
+					//elog("login=TRUE");
+					output = buildBooleanObject(true, size);
+				}
 				else
-					conf = "False";
+				{
+					output = buildBooleanObject(false, size);
+				}
 			 }
 
-			 if( !WriteFile(npipe, (void*)output, eveobject.ByteSize(), &bread, NULL) )
+			 if( !WriteFile(npipe, (void*)output, size, &bsent, NULL) )
 			 {
 				//cerr<<"Error writing the named pipe\n";
 			 }
