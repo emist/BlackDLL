@@ -8,6 +8,8 @@
 #include <fstream>
 #include <time.h>
 #include <winsock.h>
+#include "objects.pb.h"
+#include <iostream>
 
 
 using namespace std;
@@ -220,16 +222,12 @@ bool EchoIncomingPackets(SOCKET sd)
 	}
 
 
-	__declspec(dllexport) void elog(const char * message)
+	__declspec(dllexport) void elog(string message)
 	{
-		char buf[300];
-		strcpy(buf, "f = open('C:\\Users\\emist\\log.txt', 'w')\n"
-					"f.write('");
-		strcat(buf, message);
-		strcat(buf, "')\n"
-					"f.close()");
-
-		PyRun_SimpleString(buf);
+		ofstream myfile;
+		myfile.open("C:\\Users\\emist\\log.txt");
+		myfile << message << endl;
+		myfile.close();
 	}
 
 	int atLogin()
@@ -410,6 +408,32 @@ bool EchoIncomingPackets(SOCKET sd)
 	{
 
 	   HANDLE npipe;
+		
+	   eveobjects::Interaface eveobject;
+	   eveobject.set_name("protobuf object");
+	   eveobject.set_position(300);
+	   
+	   
+	   if(eveobject.IsInitialized())
+	   {
+			elog("Is initialized");
+	   }
+	   else
+		   elog("not initialize");
+
+	   
+	   char * output = new char[eveobject.ByteSize()];
+	   
+	   if(eveobject.SerializeToArray(output, eveobject.ByteSize()))
+	   {
+	    
+		elog("Serialized successfully");
+		elog("Bytesize = " + eveobject.ByteSize());
+	   }
+	   else
+		   elog("Failed to serialize");
+	   
+
 
 	   npipe = CreateNamedPipe(TEXT("\\\\.\\pipe\\TestChannel"),
 							   PIPE_ACCESS_DUPLEX,
@@ -428,7 +452,8 @@ bool EchoIncomingPackets(SOCKET sd)
 	   cerr<<"Waiting for the first client to connect ...\n";
 	   #endif
 
-	   while( ConnectNamedPipe(npipe, NULL) ){
+	   while( ConnectNamedPipe(npipe, NULL) )
+	   {
 		  char  buf[1024];
 		  char  * conf = "UNKNOWN FUNCTION";
 		  DWORD bread;
@@ -446,7 +471,7 @@ bool EchoIncomingPackets(SOCKET sd)
 					conf = "False";
 			 }
 
-			 if( !WriteFile(npipe, (void*)conf, strlen(conf), &bread, NULL) )
+			 if( !WriteFile(npipe, (void*)output, eveobject.ByteSize(), &bread, NULL) )
 			 {
 				//cerr<<"Error writing the named pipe\n";
 			 }
