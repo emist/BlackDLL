@@ -342,7 +342,6 @@ bool EchoIncomingPackets(SOCKET sd)
 		HANDLE threadHandler;
 		DWORD threadId;
 		threadHandler = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&namedPipeServer, NULL, 0, &threadId);
-		//return threadHandler;
 	}
 
 }
@@ -370,11 +369,6 @@ bool EchoIncomingPackets(SOCKET sd)
 
 		return (TRUE);
 	}
-
-
-//	char * getInterfaceByName
-
-
 
 	__declspec(dllexport) void cServerThread()
 	{
@@ -426,23 +420,5 @@ bool EchoIncomingPackets(SOCKET sd)
 		PyGILState_Release( gstate );
 
 	}
-
-
-
-	int run(void * a)
-	{
-		PyRun_SimpleString( (char *)a);
-		return 0;
-	}
-
-  __declspec(dllexport) void Initialize()
-  {
-		
-//	  ofstream out;
-//	  out.open("hello.txt");
-//	  out << GetCurrentProcessId() << endl;
-
-	  process_expression();
-  }
 
   
