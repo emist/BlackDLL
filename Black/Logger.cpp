@@ -13,14 +13,6 @@ void Logger::elog(char * message)
 	myfile.close();
 }
 
-void Logger::elog(string & message)
-{
-	ofstream myfile;
-	myfile.open("C:\\Users\\emist\\log.txt", fstream::app);
-	myfile << message << endl;
-	myfile.close();
-}
-
 void Logger::elog(string message)
 {
 	ofstream myfile;
@@ -28,3 +20,4 @@ void Logger::elog(string message)
 	myfile << message << endl;
 	myfile.close();
 }
+

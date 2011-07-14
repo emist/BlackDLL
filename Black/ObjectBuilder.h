@@ -1,3 +1,9 @@
+#ifndef OBJECTBUILDER
+#define OBJECTBUILDER
+
+#include <string>
+
+using namespace std;
 
 class ObjectBuilder{
 		template<typename T>
@@ -11,4 +17,6 @@ class ObjectBuilder{
 
 public:
 		char * buildBooleanObject( bool value, int & size );
+		char * buildInterfaceObject( string name, int posX, int posY, int & size );
 };
+#endif

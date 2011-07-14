@@ -2,31 +2,22 @@
 #include "Login.h"
 
 
-
-char * Login::atLogin(int & size)
-{
-		int ret = 0;
-		char * output;
-
-		Py_Initialize();
-		PyGILState_STATE gstate = PyGILState_Ensure();
-		
+PyObject * Login::getLayer()
+{		
+		PyObject * output = NULL;
 		
 		PyObject * main = PyImport_AddModule("__builtin__");
 		if(main == NULL)
 		{
 			log.elog("Main failed to load");
-			PyGILState_Release( gstate );
-			output = builder.buildBooleanObject(false, size);			
 			return output;
 		}
+
 		PyObject * maindic = PyModule_GetDict(main);
 		
 		if(maindic == NULL)
 		{
 			log.elog("Couldn't load main dictionary");
-			PyGILState_Release( gstate );
-			output = builder.buildBooleanObject(false, size);
 			return output;
 		}
 
@@ -35,16 +26,12 @@ char * Login::atLogin(int & size)
 		if(uicore == NULL)
 		{
 			log.elog("uicore is null");
-			PyGILState_Release( gstate );
-			output = builder.buildBooleanObject(false, size);
 			return output;
 		}
 		PyObject * layer = PyObject_GetAttrString(uicore, "layer");
 		if(layer == NULL)
 		{
 			log.elog("layer is null");
-			PyGILState_Release( gstate );
-			output = builder.buildBooleanObject(false, size);
 			return output;
 		}
 
@@ -52,14 +39,33 @@ char * Login::atLogin(int & size)
 		if(login == NULL)
 		{
 			log.elog("login is null");
-			PyGILState_Release( gstate );
-			output = builder.buildBooleanObject(false, size);
 			return output;
 		}
+
+		return login;
+}
+
+
+char * Login::atLogin(int & size)
+{
+		char * output;
+
+		Py_Initialize();
 
 		//Py_DECREF(main);
 		//Py_DECREF(uicore);
 		//Py_DECREF(layer);
+		
+		PyGILState_STATE gstate = PyGILState_Ensure();
+
+		PyObject * login = Login::getLayer();
+
+		if(login == NULL)
+		{
+			log.elog("Login is NULL");
+			PyGILState_Release( gstate );
+			return NULL;
+		}
 
 		PyObject * isopen = PyObject_GetAttrString(login, "isopen");
 		if(isopen != NULL)
@@ -79,8 +85,7 @@ char * Login::atLogin(int & size)
 		{
 			log.elog("isopen is null");
 			PyGILState_Release( gstate );
-			output = builder.buildBooleanObject(false, size);
-			return output;
+			return NULL;
 		}
 
 		PyGILState_Release( gstate );

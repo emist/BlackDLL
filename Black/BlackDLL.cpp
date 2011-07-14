@@ -8,6 +8,7 @@
 #include <winsock.h>
 #include <iostream>
 #include "Login.h"
+#include "Interfaces.h"
 
 
 using namespace std;
@@ -271,15 +272,17 @@ bool EchoIncomingPackets(SOCKET sd)
 
 	}
 
-
 	void namedPipeServer()
 	{
 		
 
 	   Login login;
+	   Interfaces interfaces;
+	   Logger log;
+
 	   HANDLE npipe;
 		
-	   ObjectBuilder builder;
+	   
 	   npipe = CreateNamedPipe(TEXT("\\\\.\\pipe\\TestChannel"),
 							   PIPE_ACCESS_DUPLEX,
 							   PIPE_TYPE_MESSAGE | PIPE_WAIT,  
@@ -318,6 +321,12 @@ bool EchoIncomingPackets(SOCKET sd)
 			 {
 				 output = login.atLogin(size);
 			 }
+			 if(func.name().compare("findByName") == 0)
+			 {
+				 log.elog(func.strparameter());
+				 output = interfaces.findByName(func.strparameter(), size);
+			 }
+				
 
 			 if( !WriteFile(npipe, (void*)output, size, &bsent, NULL) )
 			 {
