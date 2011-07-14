@@ -196,7 +196,7 @@ bool EchoIncomingPackets(SOCKET sd)
 
 	__declspec(dllexport) void startServer()
 	{
-		//Py_Initialize();
+		Py_Initialize();
 		PyGILState_STATE gstate = PyGILState_Ensure();
 		
 		
@@ -321,10 +321,10 @@ bool EchoIncomingPackets(SOCKET sd)
 			 {
 				 output = login.atLogin(size);
 			 }
-			 if(func.name().compare("findByName") == 0)
+			 if(func.name().compare("findByNameLogin") == 0)
 			 {
 				 log.elog(func.strparameter());
-				 output = interfaces.findByName(func.strparameter(), size);
+				 output = interfaces.findByNameLogin(func.strparameter(), size);
 			 }
 				
 

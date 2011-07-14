@@ -3,20 +3,22 @@
 
 #include <string>
 #include "Login.h"
-#include "Logger.h"
-#include "ObjectBuilder.h"
 
 using namespace std; 
 
 class Interfaces{
+	
 	Login login;
+
 	Logger log;
+
 	ObjectBuilder builder;
 
-	PyObject * _findByText(string text, int & size);
+	void _findByText(PyObject * parentInt, string text, PyObject ** obj);
 
 public:
-	char * findByName(string name, int & size);
+	PyObject * getLayer(string layername);
+	char * findByNameLogin(string name, int & size);
 	char * findByText(string text, int & size);
 };
 #endif

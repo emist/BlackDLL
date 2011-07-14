@@ -1,48 +1,13 @@
 #include "stdafx.h"
 #include "Login.h"
+#include "Interfaces.h"
+
+Interfaces interfaces;
 
 
 PyObject * Login::getLayer()
-{		
-		PyObject * output = NULL;
-		
-		PyObject * main = PyImport_AddModule("__builtin__");
-		if(main == NULL)
-		{
-			log.elog("Main failed to load");
-			return output;
-		}
-
-		PyObject * maindic = PyModule_GetDict(main);
-		
-		if(maindic == NULL)
-		{
-			log.elog("Couldn't load main dictionary");
-			return output;
-		}
-
-		PyObject * uicore = PyDict_GetItemString(maindic, "uicore");
-
-		if(uicore == NULL)
-		{
-			log.elog("uicore is null");
-			return output;
-		}
-		PyObject * layer = PyObject_GetAttrString(uicore, "layer");
-		if(layer == NULL)
-		{
-			log.elog("layer is null");
-			return output;
-		}
-
-		PyObject * login = PyObject_GetAttrString(layer, "login");
-		if(login == NULL)
-		{
-			log.elog("login is null");
-			return output;
-		}
-
-		return login;
+{	
+	return interfaces.getLayer("login");
 }
 
 
