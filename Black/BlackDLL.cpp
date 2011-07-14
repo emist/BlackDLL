@@ -1,36 +1,17 @@
+#include <stdafx.h>
 #include <stdio.h>
 #include <windows.h>
 #include <tlhelp32.h>
 #include <stdlib.h>
-#include <stdafx.h>
 #include <iostream>
-#include "python/Python.h"
-#include <fstream>
 #include <time.h>
 #include <winsock.h>
-#include "objects.pb.h"
 #include <iostream>
+#include "Login.h"
 
 
 using namespace std;
 
-	template<typename T>
-	char * putToByteArray(T & eveobject, int & size)
-	{
-		char * output = new char[eveobject.ByteSize()];
-		size = eveobject.ByteSize();
-		eveobject.SerializeToArray(output, size);
-		return output;
-
-	}
-
-	void elog(string message)
-	{
-		ofstream myfile;
-		myfile.open("C:\\Users\\emist\\log.txt", fstream::app);
-		myfile << message << endl;
-		myfile.close();
-	}
 
 extern "C"
 {
@@ -212,112 +193,6 @@ bool EchoIncomingPackets(SOCKET sd)
 }
 
 
-
-
-// Define the DLL's main function
-
-	BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReason, LPVOID lpReserved)
-	{
-		// Get rid of compiler warnings since we do not use this parameter
-
-		UNREFERENCED_PARAMETER(lpReserved);
-
-		// If we are attaching to a process
-
-		if(ulReason == DLL_PROCESS_ATTACH)
-		{
-			// Do not need the thread based attach/detach messages in this DLL
-
-			DisableThreadLibraryCalls(hModule);
-		}
-
-		// Signal for Loading/Unloading
-		
-		
-		
-
-		return (TRUE);
-	}
-
-
-
-
-	int atLogin()
-	{
-		int ret = 0;
-
-		Py_Initialize();
-		PyGILState_STATE gstate = PyGILState_Ensure();
-		
-		
-		PyObject * main = PyImport_AddModule("__builtin__");
-		if(main == NULL)
-		{
-			elog("Main failed to load");
-			PyGILState_Release( gstate );
-			return ret;
-		}
-		PyObject * maindic = PyModule_GetDict(main);
-		
-		if(maindic == NULL)
-		{
-			elog("Couldn't load main dictionary");
-			PyGILState_Release( gstate );
-			return ret;
-		}
-
-		PyObject * uicore = PyDict_GetItemString(maindic, "uicore");
-
-		if(uicore == NULL)
-		{
-			elog("uicore is null");
-			PyGILState_Release( gstate );
-			return ret;
-		}
-		PyObject * layer = PyObject_GetAttrString(uicore, "layer");
-		if(layer == NULL)
-		{
-			elog("layer is null");
-			PyGILState_Release( gstate );
-			return ret;
-		}
-
-		PyObject * login = PyObject_GetAttrString(layer, "login");
-		if(login == NULL)
-		{
-			elog("login is null");
-			PyGILState_Release( gstate );
-			return ret;
-		}
-
-		//Py_DECREF(main);
-		//Py_DECREF(uicore);
-		//Py_DECREF(layer);
-
-		PyObject * isopen = PyObject_GetAttrString(login, "isopen");
-		if(isopen != NULL)
-		{
-			if(PyObject_IsTrue(isopen))
-			{
-				elog("Login is open");
-				ret = 1;
-			}
-			else
-			{
-				elog("Login is false");
-			}
-		}
-		else 
-		{
-			elog("isopen is null");
-			PyGILState_Release( gstate );
-			return ret;
-		}
-
-		PyGILState_Release( gstate );
-		return ret;
-	}
-
 	__declspec(dllexport) void startServer()
 	{
 		//Py_Initialize();
@@ -396,41 +271,15 @@ bool EchoIncomingPackets(SOCKET sd)
 
 	}
 
-	__declspec(dllexport) void cServerThread()
-	{
-		// Start Winsock up
-		WSAData wsaData;
-		int nCode;
-		if ((nCode = WSAStartup(MAKEWORD(1, 1), &wsaData)) != 0) {
-			//cerr << "WSAStartup() returned error code " << nCode << "." <<
-			//		endl;
-			return ;
-		}
 
-		// Call the main example routine.
-		int retval = DoWinsock();
-
-		// Shut Winsock back down and take off.
-		WSACleanup();
-		
-	}
-
-
-	char * buildBooleanObject( bool value, int & size  )
-	{
-		eveobjects::BooleanObject eveobject;
-		eveobject.set_istrue(value);
-		char * output = putToByteArray(eveobject, size);
-		return output;
-	}
-
-
-	__declspec(dllexport) void namedPipeServer()
+	void namedPipeServer()
 	{
 		
 
+	   Login login;
 	   HANDLE npipe;
 		
+	   ObjectBuilder builder;
 	   npipe = CreateNamedPipe(TEXT("\\\\.\\pipe\\TestChannel"),
 							   PIPE_ACCESS_DUPLEX,
 							   PIPE_TYPE_MESSAGE | PIPE_WAIT,  
@@ -463,18 +312,11 @@ bool EchoIncomingPackets(SOCKET sd)
 			 buf[bread] = 0; 
 			 //cout<<"Received: '"<<buf<<"'"<<endl;
 
-			 if(strcmp(buf, "atLogin") == 0)
+			 eveobjects::functionCall func;
+			 func.ParseFromArray(buf, bread);
+			 if(func.name().compare("atLogin") == 0)
 			 {
-				int ret = atLogin();
-				if(ret == 1)
-				{
-					//elog("login=TRUE");
-					output = buildBooleanObject(true, size);
-				}
-				else
-				{
-					output = buildBooleanObject(false, size);
-				}
+				 output = login.atLogin(size);
 			 }
 
 			 if( !WriteFile(npipe, (void*)output, size, &bsent, NULL) )
@@ -492,6 +334,9 @@ bool EchoIncomingPackets(SOCKET sd)
 	
 	}
 
+
+
+
 	__declspec(dllexport) void dropServer()
 	{
 		HANDLE threadHandler;
@@ -499,6 +344,57 @@ bool EchoIncomingPackets(SOCKET sd)
 		threadHandler = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&namedPipeServer, NULL, 0, &threadId);
 		//return threadHandler;
 	}
+
+}
+// Define the DLL's main function
+
+	BOOL APIENTRY DllMain(HMODULE hModule, DWORD ulReason, LPVOID lpReserved)
+	{
+		// Get rid of compiler warnings since we do not use this parameter
+
+		UNREFERENCED_PARAMETER(lpReserved);
+
+		// If we are attaching to a process
+
+		if(ulReason == DLL_PROCESS_ATTACH)
+		{
+			// Do not need the thread based attach/detach messages in this DLL
+
+			DisableThreadLibraryCalls(hModule);
+		}
+
+		// Signal for Loading/Unloading
+		
+		
+		
+
+		return (TRUE);
+	}
+
+
+//	char * getInterfaceByName
+
+
+
+	__declspec(dllexport) void cServerThread()
+	{
+		// Start Winsock up
+		WSAData wsaData;
+		int nCode;
+		if ((nCode = WSAStartup(MAKEWORD(1, 1), &wsaData)) != 0) {
+			//cerr << "WSAStartup() returned error code " << nCode << "." <<
+			//		endl;
+			return ;
+		}
+
+		// Call the main example routine.
+		int retval = DoWinsock();
+
+		// Shut Winsock back down and take off.
+		WSACleanup();
+		
+	}
+
 
 
 	__declspec(dllexport) void process_expression()
@@ -542,12 +438,11 @@ bool EchoIncomingPackets(SOCKET sd)
   __declspec(dllexport) void Initialize()
   {
 		
-	  ofstream out;
-	  out.open("hello.txt");
-	  out << GetCurrentProcessId() << endl;
+//	  ofstream out;
+//	  out.open("hello.txt");
+//	  out << GetCurrentProcessId() << endl;
 
 	  process_expression();
   }
 
   
-}

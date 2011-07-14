@@ -177,6 +177,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Logger.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Login.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ObejctBuilder.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\objects.pb.cc"
 				>
 			</File>
@@ -206,6 +218,18 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\Logger.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Login.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ObjectBuilder.h"
+				>
+			</File>
 			<File
 				RelativePath=".\objects.pb.h"
 				>

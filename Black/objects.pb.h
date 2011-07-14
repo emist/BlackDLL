@@ -33,6 +33,7 @@ void protobuf_AssignDesc_objects_2eproto();
 void protobuf_ShutdownFile_objects_2eproto();
 
 class BooleanObject;
+class functionCall;
 class Interface;
 
 // ===================================================================
@@ -116,6 +117,106 @@ class BooleanObject : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static BooleanObject* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class functionCall : public ::google::protobuf::Message {
+ public:
+  functionCall();
+  virtual ~functionCall();
+  
+  functionCall(const functionCall& from);
+  
+  inline functionCall& operator=(const functionCall& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const functionCall& default_instance();
+  
+  void Swap(functionCall* other);
+  
+  // implements Message ----------------------------------------------
+  
+  functionCall* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const functionCall& from);
+  void MergeFrom(const functionCall& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  
+  // optional string strparameter = 2;
+  inline bool has_strparameter() const;
+  inline void clear_strparameter();
+  static const int kStrparameterFieldNumber = 2;
+  inline const ::std::string& strparameter() const;
+  inline void set_strparameter(const ::std::string& value);
+  inline void set_strparameter(const char* value);
+  inline void set_strparameter(const char* value, size_t size);
+  inline ::std::string* mutable_strparameter();
+  inline ::std::string* release_strparameter();
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.functionCall)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_strparameter();
+  inline void clear_has_strparameter();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::std::string* name_;
+  ::std::string* strparameter_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static functionCall* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -310,6 +411,126 @@ inline bool BooleanObject::istrue() const {
 inline void BooleanObject::set_istrue(bool value) {
   set_has_istrue();
   istrue_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// functionCall
+
+// required string name = 1;
+inline bool functionCall::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void functionCall::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void functionCall::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void functionCall::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& functionCall::name() const {
+  return *name_;
+}
+inline void functionCall::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void functionCall::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void functionCall::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* functionCall::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* functionCall::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// optional string strparameter = 2;
+inline bool functionCall::has_strparameter() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void functionCall::set_has_strparameter() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void functionCall::clear_has_strparameter() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void functionCall::clear_strparameter() {
+  if (strparameter_ != &::google::protobuf::internal::kEmptyString) {
+    strparameter_->clear();
+  }
+  clear_has_strparameter();
+}
+inline const ::std::string& functionCall::strparameter() const {
+  return *strparameter_;
+}
+inline void functionCall::set_strparameter(const ::std::string& value) {
+  set_has_strparameter();
+  if (strparameter_ == &::google::protobuf::internal::kEmptyString) {
+    strparameter_ = new ::std::string;
+  }
+  strparameter_->assign(value);
+}
+inline void functionCall::set_strparameter(const char* value) {
+  set_has_strparameter();
+  if (strparameter_ == &::google::protobuf::internal::kEmptyString) {
+    strparameter_ = new ::std::string;
+  }
+  strparameter_->assign(value);
+}
+inline void functionCall::set_strparameter(const char* value, size_t size) {
+  set_has_strparameter();
+  if (strparameter_ == &::google::protobuf::internal::kEmptyString) {
+    strparameter_ = new ::std::string;
+  }
+  strparameter_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* functionCall::mutable_strparameter() {
+  set_has_strparameter();
+  if (strparameter_ == &::google::protobuf::internal::kEmptyString) {
+    strparameter_ = new ::std::string;
+  }
+  return strparameter_;
+}
+inline ::std::string* functionCall::release_strparameter() {
+  clear_has_strparameter();
+  if (strparameter_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = strparameter_;
+    strparameter_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
 }
 
 // -------------------------------------------------------------------
