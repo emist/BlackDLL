@@ -84,7 +84,7 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 	{
 		if(PyObject_HasAttrString(pvalue, "text"))
 		{
-			PyObject * ptext = PyObject_GetAttrString(parentInt, "text");
+			PyObject * ptext = PyObject_GetAttrString(pvalue, "text");
 			if(ptext != NULL)
 			{
 				char * ctext = PyString_AsString(ptext);
@@ -97,7 +97,7 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 				if(strcmp(ctext, text.c_str()) == 0)
 				{
 					log.elog("Found text");
-					*result = parentInt;
+					*result = pvalue;
 					return;
 				}
 			}
@@ -118,7 +118,6 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 char * Interfaces::findByText(string text, int & size)
 {
 	
-	Py_Initialize();
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	PyObject * result;
 	_findByText(login.getLayer(), text, &result);
@@ -130,8 +129,6 @@ char * Interfaces::findByText(string text, int & size)
 
 char * Interfaces::findByNameLogin(string name, int & size)
 {
-
-	Py_Initialize();
 
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	//Momentary hack, seeing if this is going to work
@@ -164,6 +161,8 @@ char * Interfaces::findByNameLogin(string name, int & size)
 			{
 				log.elog("Failed to create args with args: ");
 				log.elog(name);
+				Py_DECREF(findChild);
+				Py_DECREF(loginInterface);
 				PyGILState_Release( gstate );
 				return NULL;
 			}
@@ -175,6 +174,9 @@ char * Interfaces::findByNameLogin(string name, int & size)
 			if(param == NULL)
 			{
 				log.elog("Failed to build PyTuple");
+				Py_DECREF(findChild);
+				Py_DECREF(loginInterface);
+				Py_DECREF(args);
 				PyGILState_Release( gstate );
 				return NULL;
 			}
@@ -183,6 +185,10 @@ char * Interfaces::findByNameLogin(string name, int & size)
 			if(PyTuple_SetItem(param, 0, args) != 0)
 			{
 				log.elog("Failed to setitem in tuple");
+				Py_DECREF(findChild);
+				Py_DECREF(loginInterface);
+				Py_DECREF(args);
+				Py_DECREF(param);
 				PyGILState_Release( gstate );
 				return NULL;
 			}
@@ -192,6 +198,10 @@ char * Interfaces::findByNameLogin(string name, int & size)
 			if(PyCallable_Check(findChild) == 0)
 			{
 				log.elog("findChild is not callable");
+				Py_DECREF(findChild);
+				Py_DECREF(loginInterface);
+				Py_DECREF(args);
+				Py_DECREF(param);
 				PyGILState_Release( gstate );
 				return NULL;
 			}
@@ -203,6 +213,10 @@ char * Interfaces::findByNameLogin(string name, int & size)
 			{
 				log.elog("Error calling FindChild(param)");
 				log.elog(PyString_AsString(param));
+				Py_DECREF(findChild);
+				Py_DECREF(loginInterface);
+				Py_DECREF(args);
+				Py_DECREF(param);
 				PyGILState_Release( gstate );
 				return NULL;
 			}
@@ -213,6 +227,11 @@ char * Interfaces::findByNameLogin(string name, int & size)
 				if(leftPosVal == NULL)
 				{
 					log.elog("Failed to get leftPosVal");
+					Py_DECREF(findChild);
+					Py_DECREF(loginInterface);
+					Py_DECREF(args);
+					Py_DECREF(param);
+					Py_DECREF(soughtInterface);
 					PyGILState_Release( gstate );
 					return NULL;
 				}
@@ -220,6 +239,11 @@ char * Interfaces::findByNameLogin(string name, int & size)
 			else 
 			{
 				log.elog("Doesn't have " + absoluteLeft);
+				Py_DECREF(findChild);
+				Py_DECREF(loginInterface);
+				Py_DECREF(args);
+				Py_DECREF(param);
+				Py_DECREF(soughtInterface);
 				PyGILState_Release( gstate );
 				return NULL;
 			}
@@ -230,6 +254,12 @@ char * Interfaces::findByNameLogin(string name, int & size)
 				if(topPosVal == NULL)
 				{
 					log.elog("Failed to get topPosVal");
+					Py_DECREF(findChild);
+					Py_DECREF(loginInterface);
+					Py_DECREF(args);
+					Py_DECREF(param);
+					Py_DECREF(soughtInterface);
+					Py_DECREF(leftPosVal);
 					PyGILState_Release( gstate );
 					return NULL;
 				}
@@ -237,20 +267,32 @@ char * Interfaces::findByNameLogin(string name, int & size)
 			else 
 			{
 				log.elog("Doesn't have " + absoluteTop);
+				Py_DECREF(findChild);
+				Py_DECREF(loginInterface);
+				Py_DECREF(args);
+				Py_DECREF(param);
+				Py_DECREF(soughtInterface);
+				Py_DECREF(leftPosVal);
 				PyGILState_Release( gstate );
 				return NULL;
 			}
 			
 			log.elog("Found Child");
 			output = builder.buildInterfaceObject(name, (int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(leftPosVal), size);
-
+			Py_DECREF(findChild);
+			Py_DECREF(loginInterface);
+			Py_DECREF(args);
+			Py_DECREF(param);
+			Py_DECREF(soughtInterface);
+			Py_DECREF(leftPosVal);
+			Py_DECREF(topPosVal);
 		}
 		else
 		{
 			log.elog("findChild Method not found");
 		}
 	}
-
-	PyGILState_Release( gstate );
+	
+	PyGILState_Release( gstate );	
 	return output;
 }

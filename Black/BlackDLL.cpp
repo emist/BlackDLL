@@ -197,7 +197,6 @@ bool EchoIncomingPackets(SOCKET sd)
 	__declspec(dllexport) void startServer()
 	{
 
-		Py_Initialize();
 		PyGILState_STATE gstate = PyGILState_Ensure();
 		
 		
@@ -273,8 +272,8 @@ bool EchoIncomingPackets(SOCKET sd)
 	
 
 		PyRun_SimpleString(buf);
-
 		PyGILState_Release( gstate );
+
 
 	}
 
