@@ -331,6 +331,12 @@ bool EchoIncomingPackets(SOCKET sd)
 				 log.elog(func.strparameter());
 				 output = interfaces.findByNameLogin(func.strparameter(), size);
 			 }
+
+			 if(func.name().compare("findByTextLogin") == 0)
+			 {
+				 log.elog(func.strparameter());
+				 output = interfaces.findByTextLogin(func.strparameter(), size);
+			 }
 				
 
 			 if( !WriteFile(npipe, (void*)output, size, &bsent, NULL) )

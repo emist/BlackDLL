@@ -19,6 +19,6 @@ class Interfaces{
 public:
 	PyObject * getLayer(string layername);
 	char * findByNameLogin(string name, int & size);
-	char * findByText(string text, int & size);
+	char * findByTextLogin(string text, int & size);
 };
 #endif

@@ -56,7 +56,7 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 
 	if(!PyObject_HasAttrString(parentInt, "children"))
 	{
-		log.elog("Interface has no children");
+		//log.elog("Interface has no children");
 		return;
 	}
 	
@@ -67,63 +67,192 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 		return;
 	}
 
+	
 	int len = PyObject_Size(children);
+
+	//log.elog(len + "");
 
 	if(len < 1)
 	{
 		log.elog("End of branch");
 		return;
 	}
+	
+	if(len > 1)
+	{
+		//log.elog("Has many children");
+	}
 
-	Py_ssize_t * pos = 0;
+	Py_ssize_t pos = 0;
 
 	PyObject *pkey;
 	PyObject *pvalue;
+	char buf[30];
+	char *buff = buf;
+		
+	//log.elog("About to enter while loop");
 
-	while(PyDict_Next(children, pos, &pkey, &pvalue))
-	{
+	for(int i = 0; i < len; i++)
+	{	//log.elog("Iterating");
+
+
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get children[i]");
+			Py_DECREF(children);
+			return;
+		}
+
 		if(PyObject_HasAttrString(pvalue, "text"))
 		{
 			PyObject * ptext = PyObject_GetAttrString(pvalue, "text");
 			if(ptext != NULL)
 			{
+				log.elog("Function has text: ");
+				
 				char * ctext = PyString_AsString(ptext);
+			
 				if(ctext == NULL)
 				{
-					log.elog("Couldn't convert python screen");
+					log.elog("Couldn't convert python string");
+					Py_DECREF(children);
+					Py_DECREF(ptext);
 					return;
 				}
 
 				if(strcmp(ctext, text.c_str()) == 0)
 				{
-					log.elog("Found text");
+					//log.elog("Found text");
 					*result = pvalue;
+					//delete buf;
+					//delete ibuf;
+					Py_DECREF(children);
+					Py_DECREF(ptext);
 					return;
 				}
 			}
-			PyObject * firstChild = PyDict_GetItemString(children, "0");
+			//PyObject * firstChild = PyDict_GetItemString(children, "0");
+			/*
 			if(firstChild == NULL)
 			{
 				log.elog("Couldn't get first child");
+				Py_DECREF(children);
 				return;
 			}
-
-			_findByText(firstChild, text, result); 
+			*/
 		}
+		_findByText(pvalue, text, result); 
+		//log.elog("Function ran");
+		Py_DECREF(pvalue);
 	}
 	
 
 }
 
-char * Interfaces::findByText(string text, int & size)
+char * Interfaces::findByTextLogin(string text, int & size)
 {
 	
 	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
 	PyObject * result;
-	_findByText(login.getLayer(), text, &result);
-	PyGILState_Release(gstate);
 
-	return NULL;
+	PyObject * loginlayer = login.getLayer();
+
+
+	if(loginlayer == NULL)
+	{
+		log.elog("Loginlayer is NULL");
+		PyGILState_Release( gstate );
+		return NULL;
+	}
+
+	_findByText(loginlayer, text, &result);
+
+	if(result == NULL)
+	{
+		log.elog("Result is NULL");
+		Py_DECREF(loginlayer);
+		PyGILState_Release( gstate );
+		return NULL;
+	}
+
+	string absoluteLeft("absoluteLeft");
+	string absoluteTop("absoluteTop");
+	PyObject * leftPosVal, * topPosVal, * name;
+
+
+	if(PyObject_HasAttrString(result, absoluteLeft.c_str()))
+	{
+		leftPosVal = PyObject_GetAttrString(result, absoluteLeft.c_str());
+		if(leftPosVal == NULL)
+		{
+			log.elog("Failed to get leftPosVal");
+			Py_DECREF(result);
+			Py_DECREF(loginlayer);
+			PyGILState_Release( gstate );
+			return NULL;
+		}
+	}
+	else 
+	{
+		log.elog("Doesn't have " + absoluteLeft);
+		Py_DECREF(result);
+		Py_DECREF(loginlayer);
+		PyGILState_Release( gstate );
+		return NULL;
+	}
+
+	if(PyObject_HasAttrString(result, absoluteTop.c_str()))
+	{
+		topPosVal = PyObject_GetAttrString(result, absoluteTop.c_str());
+		if(topPosVal == NULL)
+		{
+			log.elog("Failed to get topPosVal");
+			Py_DECREF(result);
+			Py_DECREF(leftPosVal);
+			Py_DECREF(loginlayer);
+			PyGILState_Release( gstate );
+			return NULL;
+		}
+	}
+	else 
+	{
+		log.elog("Doesn't have " + absoluteTop);
+		Py_DECREF(leftPosVal);
+		Py_DECREF(loginlayer);
+		PyGILState_Release( gstate );
+		return NULL;
+	}
+
+	if(PyObject_HasAttrString(result, "name"))
+	{
+		name = PyObject_GetAttrString(result, "name");
+		if(name == NULL)
+		{
+			log.elog("Failed to get name");
+			Py_DECREF(result);
+			Py_DECREF(leftPosVal);
+			Py_DECREF(topPosVal);
+			Py_DECREF(loginlayer);
+			PyGILState_Release( gstate);
+			return NULL;
+		}
+	}
+
+	log.elog("Found Child");
+	char * iname = PyString_AsString(name);
+	output = builder.buildInterfaceObject(iname, (int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(leftPosVal), size);
+	Py_DECREF(loginlayer);
+	Py_DECREF(result);
+	Py_DECREF(leftPosVal);
+	Py_DECREF(topPosVal);
+	Py_DECREF(name);
+
+
+	PyGILState_Release(gstate);
+	return output;
 }
 
 
