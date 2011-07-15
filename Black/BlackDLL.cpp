@@ -338,7 +338,12 @@ bool EchoIncomingPackets(SOCKET sd)
 				 output = interfaces.findByTextLogin(func.strparameter(), size);
 			 }
 				
-
+			 if(func.name().compare("findByTextMenu") == 0)
+			 {
+				 log.elog(func.strparameter());
+				 output = interfaces.findByTextMenu(func.strparameter(), size);
+			 }
+			
 			 if( !WriteFile(npipe, (void*)output, size, &bsent, NULL) )
 			 {
 				//cerr<<"Error writing the named pipe\n";

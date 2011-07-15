@@ -15,8 +15,6 @@ char * Login::atLogin(int & size)
 {
 		char * output;
 
-		Py_Initialize();
-
 		//Py_DECREF(main);
 		//Py_DECREF(uicore);
 		//Py_DECREF(layer);
