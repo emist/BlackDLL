@@ -196,6 +196,7 @@ bool EchoIncomingPackets(SOCKET sd)
 
 	__declspec(dllexport) void startServer()
 	{
+
 		Py_Initialize();
 		PyGILState_STATE gstate = PyGILState_Ensure();
 		
@@ -217,6 +218,7 @@ bool EchoIncomingPackets(SOCKET sd)
 		"import socket\n"
 		"import code\n"
 		"import sys\n"
+		"import threading\n"
 
 		"class MyConsole(code.InteractiveConsole):\n"
 			"\tdef __init__(self, rfile, wfile, locals=None):\n"
@@ -261,8 +263,12 @@ bool EchoIncomingPackets(SOCKET sd)
 			"\t\tservsock.close()\n"
 			"\t\tsys.stdout.close()\n"
 
-		"while True:\n"
-		"\thandleSocket()\n"
+		"def listen():\n"
+		"\twhile True:\n"
+		"\t\thandleSocket()\n"
+		
+		"threading.Thread(group=None, target=listen, name=None, args={}, kwargs={}).start()\n"
+
 		);
 	
 
