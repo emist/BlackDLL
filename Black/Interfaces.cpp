@@ -126,7 +126,7 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 
 	log.elog("Found Child");
 	char * iname = PyString_AsString(name);
-	output = builder.buildInterfaceObject(iname, (int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(leftPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
+	output = builder.buildInterfaceObject(iname,  (int)PyInt_AsLong(leftPosVal),(int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
 	Py_DECREF(layer);
 	Py_DECREF(result);
 	Py_DECREF(leftPosVal);
@@ -295,7 +295,7 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 
 			
 			log.elog("Found Child");
-			output = builder.buildInterfaceObject(name, (int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(leftPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
+			output = builder.buildInterfaceObject(name,  (int)PyInt_AsLong(leftPosVal) ,(int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
 			Py_DECREF(findChild);
 			Py_DECREF(layer);
 			Py_DECREF(args);
