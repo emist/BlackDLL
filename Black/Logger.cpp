@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Logger.h"
 #include <fstream>
+#include "python/Python.h"
 
 using namespace std;
 

@@ -17,6 +17,7 @@ using namespace std;
 extern "C"
 {
 
+	
 
 typedef struct _INIT_STRUCT {
 	LPCWSTR Title;
@@ -305,11 +306,11 @@ bool EchoIncomingPackets(SOCKET sd)
 	   cerr<<"Waiting for the first client to connect ...\n";
 	   #endif
 
-	   char * output = NULL;
 
 	   
 	   while( ConnectNamedPipe(npipe, NULL) )
 	   {
+		  char * output = NULL;
 		  char  buf[1024];
 		  char  * conf = "UNKNOWN FUNCTION";
 		  int size = 0;
@@ -317,11 +318,14 @@ bool EchoIncomingPackets(SOCKET sd)
 		  DWORD bsent;
 		  while( ReadFile(npipe, (void*)buf, 1023, &bread, NULL) )
 		  {
+			 char * output = NULL;
 			 buf[bread] = 0; 
 			 //cout<<"Received: '"<<buf<<"'"<<endl;
 
 			 eveobjects::functionCall func;
 			 func.ParseFromArray(buf, bread);
+			 
+			 
 			 if(func.name().compare("atLogin") == 0)
 			 {
 				 output = login.atLogin(size);
@@ -343,11 +347,25 @@ bool EchoIncomingPackets(SOCKET sd)
 				 log.elog(func.strparameter());
 				 output = interfaces.findByTextMenu(func.strparameter(), size);
 			 }
-			
+			 
+			 Sleep(300);
+
+			 if(output == NULL)
+			 {
+				 output = "\0";
+			 }
+
 			 if( !WriteFile(npipe, (void*)output, size, &bsent, NULL) )
 			 {
-				//cerr<<"Error writing the named pipe\n";
+				 
+				 char * perr =(char*) malloc(100*sizeof(char));
+				 log.elog("Couldn't write to client");
+				 sprintf(perr, "%x", GetLastError());
+				 log.elog(perr);
+				 free(perr);
+				 //cerr<<"Error writing the named pipe\n";
 			 }
+			 log.elog("Returning successfully");
 		  }
 		  DisconnectNamedPipe(npipe);
 		  #ifdef TRACE_ON

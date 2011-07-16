@@ -17,6 +17,6 @@ class ObjectBuilder{
 
 public:
 		char * buildBooleanObject( bool value, int & size );
-		char * buildInterfaceObject( string name, int posX, int posY, int & size );
+		char * buildInterfaceObject( string name, int posX, int posY, int width, int height, int & size );
 };
 #endif

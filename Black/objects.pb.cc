@@ -69,10 +69,12 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(functionCall));
   Interface_descriptor_ = file->message_type(2);
-  static const int Interface_offsets_[9] = {
+  static const int Interface_offsets_[11] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, topleftx_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, toplefty_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, width_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, hasclosebutton_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, closetopleftx_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, closetoplefty_),
@@ -131,13 +133,13 @@ void protobuf_AddDesc_objects_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\robjects.proto\022\neveobjects\"\037\n\rBooleanOb"
     "ject\022\016\n\006istrue\030\001 \002(\010\"2\n\014functionCall\022\014\n\004"
-    "name\030\001 \002(\t\022\024\n\014strparameter\030\002 \001(\t\"\322\001\n\tInt"
+    "name\030\001 \002(\t\022\024\n\014strparameter\030\002 \001(\t\"\361\001\n\tInt"
     "erface\022\014\n\004name\030\001 \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020"
-    "\n\010topleftY\030\003 \002(\005\022\026\n\016hasCloseButton\030\004 \001(\010"
-    "\022\025\n\rcloseTopLeftX\030\005 \001(\005\022\025\n\rcloseTopLeftY"
-    "\030\006 \001(\005\022\031\n\021hasContinueButton\030\007 \001(\010\022\030\n\020con"
-    "tinueTopLeftX\030\010 \001(\005\022\030\n\020continueTopLeftY\030"
-    "\t \001(\005", 325);
+    "\n\010topleftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006heigh"
+    "t\030\005 \002(\005\022\026\n\016hasCloseButton\030\006 \001(\010\022\025\n\rclose"
+    "TopLeftX\030\007 \001(\005\022\025\n\rcloseTopLeftY\030\010 \001(\005\022\031\n"
+    "\021hasContinueButton\030\t \001(\010\022\030\n\020continueTopL"
+    "eftX\030\n \001(\005\022\030\n\020continueTopLeftY\030\013 \001(\005", 356);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "objects.proto", &protobuf_RegisterTypes);
   BooleanObject::default_instance_ = new BooleanObject();
@@ -651,6 +653,8 @@ void functionCall::Swap(functionCall* other) {
 const int Interface::kNameFieldNumber;
 const int Interface::kTopleftXFieldNumber;
 const int Interface::kTopleftYFieldNumber;
+const int Interface::kWidthFieldNumber;
+const int Interface::kHeightFieldNumber;
 const int Interface::kHasCloseButtonFieldNumber;
 const int Interface::kCloseTopLeftXFieldNumber;
 const int Interface::kCloseTopLeftYFieldNumber;
@@ -678,6 +682,8 @@ void Interface::SharedCtor() {
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   topleftx_ = 0;
   toplefty_ = 0;
+  width_ = 0;
+  height_ = 0;
   hasclosebutton_ = false;
   closetopleftx_ = 0;
   closetoplefty_ = 0;
@@ -728,13 +734,15 @@ void Interface::Clear() {
     }
     topleftx_ = 0;
     toplefty_ = 0;
+    width_ = 0;
+    height_ = 0;
     hasclosebutton_ = false;
     closetopleftx_ = 0;
     closetoplefty_ = 0;
-    hascontinuebutton_ = false;
-    continuetopleftx_ = 0;
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    hascontinuebutton_ = false;
+    continuetopleftx_ = 0;
     continuetoplefty_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -791,12 +799,44 @@ bool Interface::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(32)) goto parse_hasCloseButton;
+        if (input->ExpectTag(32)) goto parse_width;
         break;
       }
       
-      // optional bool hasCloseButton = 4;
+      // required int32 width = 4;
       case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_width:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &width_)));
+          set_has_width();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_height;
+        break;
+      }
+      
+      // required int32 height = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_height:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &height_)));
+          set_has_height();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(48)) goto parse_hasCloseButton;
+        break;
+      }
+      
+      // optional bool hasCloseButton = 6;
+      case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_hasCloseButton:
@@ -807,12 +847,12 @@ bool Interface::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(40)) goto parse_closeTopLeftX;
+        if (input->ExpectTag(56)) goto parse_closeTopLeftX;
         break;
       }
       
-      // optional int32 closeTopLeftX = 5;
-      case 5: {
+      // optional int32 closeTopLeftX = 7;
+      case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_closeTopLeftX:
@@ -823,12 +863,12 @@ bool Interface::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(48)) goto parse_closeTopLeftY;
+        if (input->ExpectTag(64)) goto parse_closeTopLeftY;
         break;
       }
       
-      // optional int32 closeTopLeftY = 6;
-      case 6: {
+      // optional int32 closeTopLeftY = 8;
+      case 8: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_closeTopLeftY:
@@ -839,12 +879,12 @@ bool Interface::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(56)) goto parse_hasContinueButton;
+        if (input->ExpectTag(72)) goto parse_hasContinueButton;
         break;
       }
       
-      // optional bool hasContinueButton = 7;
-      case 7: {
+      // optional bool hasContinueButton = 9;
+      case 9: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_hasContinueButton:
@@ -855,12 +895,12 @@ bool Interface::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(64)) goto parse_continueTopLeftX;
+        if (input->ExpectTag(80)) goto parse_continueTopLeftX;
         break;
       }
       
-      // optional int32 continueTopLeftX = 8;
-      case 8: {
+      // optional int32 continueTopLeftX = 10;
+      case 10: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_continueTopLeftX:
@@ -871,12 +911,12 @@ bool Interface::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(72)) goto parse_continueTopLeftY;
+        if (input->ExpectTag(88)) goto parse_continueTopLeftY;
         break;
       }
       
-      // optional int32 continueTopLeftY = 9;
-      case 9: {
+      // optional int32 continueTopLeftY = 11;
+      case 11: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_continueTopLeftY:
@@ -928,34 +968,44 @@ void Interface::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->toplefty(), output);
   }
   
-  // optional bool hasCloseButton = 4;
+  // required int32 width = 4;
+  if (has_width()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->width(), output);
+  }
+  
+  // required int32 height = 5;
+  if (has_height()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->height(), output);
+  }
+  
+  // optional bool hasCloseButton = 6;
   if (has_hasclosebutton()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->hasclosebutton(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->hasclosebutton(), output);
   }
   
-  // optional int32 closeTopLeftX = 5;
+  // optional int32 closeTopLeftX = 7;
   if (has_closetopleftx()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->closetopleftx(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->closetopleftx(), output);
   }
   
-  // optional int32 closeTopLeftY = 6;
+  // optional int32 closeTopLeftY = 8;
   if (has_closetoplefty()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->closetoplefty(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(8, this->closetoplefty(), output);
   }
   
-  // optional bool hasContinueButton = 7;
+  // optional bool hasContinueButton = 9;
   if (has_hascontinuebutton()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->hascontinuebutton(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(9, this->hascontinuebutton(), output);
   }
   
-  // optional int32 continueTopLeftX = 8;
+  // optional int32 continueTopLeftX = 10;
   if (has_continuetopleftx()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(8, this->continuetopleftx(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(10, this->continuetopleftx(), output);
   }
   
-  // optional int32 continueTopLeftY = 9;
+  // optional int32 continueTopLeftY = 11;
   if (has_continuetoplefty()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->continuetoplefty(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(11, this->continuetoplefty(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -986,34 +1036,44 @@ void Interface::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->toplefty(), target);
   }
   
-  // optional bool hasCloseButton = 4;
+  // required int32 width = 4;
+  if (has_width()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->width(), target);
+  }
+  
+  // required int32 height = 5;
+  if (has_height()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->height(), target);
+  }
+  
+  // optional bool hasCloseButton = 6;
   if (has_hasclosebutton()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->hasclosebutton(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->hasclosebutton(), target);
   }
   
-  // optional int32 closeTopLeftX = 5;
+  // optional int32 closeTopLeftX = 7;
   if (has_closetopleftx()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->closetopleftx(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->closetopleftx(), target);
   }
   
-  // optional int32 closeTopLeftY = 6;
+  // optional int32 closeTopLeftY = 8;
   if (has_closetoplefty()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->closetoplefty(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(8, this->closetoplefty(), target);
   }
   
-  // optional bool hasContinueButton = 7;
+  // optional bool hasContinueButton = 9;
   if (has_hascontinuebutton()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->hascontinuebutton(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(9, this->hascontinuebutton(), target);
   }
   
-  // optional int32 continueTopLeftX = 8;
+  // optional int32 continueTopLeftX = 10;
   if (has_continuetopleftx()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(8, this->continuetopleftx(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(10, this->continuetopleftx(), target);
   }
   
-  // optional int32 continueTopLeftY = 9;
+  // optional int32 continueTopLeftY = 11;
   if (has_continuetoplefty()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->continuetoplefty(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(11, this->continuetoplefty(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -1048,40 +1108,54 @@ int Interface::ByteSize() const {
           this->toplefty());
     }
     
-    // optional bool hasCloseButton = 4;
+    // required int32 width = 4;
+    if (has_width()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->width());
+    }
+    
+    // required int32 height = 5;
+    if (has_height()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->height());
+    }
+    
+    // optional bool hasCloseButton = 6;
     if (has_hasclosebutton()) {
       total_size += 1 + 1;
     }
     
-    // optional int32 closeTopLeftX = 5;
+    // optional int32 closeTopLeftX = 7;
     if (has_closetopleftx()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->closetopleftx());
     }
     
-    // optional int32 closeTopLeftY = 6;
+    // optional int32 closeTopLeftY = 8;
     if (has_closetoplefty()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->closetoplefty());
     }
     
-    // optional bool hasContinueButton = 7;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional bool hasContinueButton = 9;
     if (has_hascontinuebutton()) {
       total_size += 1 + 1;
     }
     
-    // optional int32 continueTopLeftX = 8;
+    // optional int32 continueTopLeftX = 10;
     if (has_continuetopleftx()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->continuetopleftx());
     }
     
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional int32 continueTopLeftY = 9;
+    // optional int32 continueTopLeftY = 11;
     if (has_continuetoplefty()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -1124,6 +1198,12 @@ void Interface::MergeFrom(const Interface& from) {
     if (from.has_toplefty()) {
       set_toplefty(from.toplefty());
     }
+    if (from.has_width()) {
+      set_width(from.width());
+    }
+    if (from.has_height()) {
+      set_height(from.height());
+    }
     if (from.has_hasclosebutton()) {
       set_hasclosebutton(from.hasclosebutton());
     }
@@ -1133,14 +1213,14 @@ void Interface::MergeFrom(const Interface& from) {
     if (from.has_closetoplefty()) {
       set_closetoplefty(from.closetoplefty());
     }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_hascontinuebutton()) {
       set_hascontinuebutton(from.hascontinuebutton());
     }
     if (from.has_continuetopleftx()) {
       set_continuetopleftx(from.continuetopleftx());
     }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_continuetoplefty()) {
       set_continuetoplefty(from.continuetoplefty());
     }
@@ -1161,7 +1241,7 @@ void Interface::CopyFrom(const Interface& from) {
 }
 
 bool Interface::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+  if ((_has_bits_[0] & 0x0000001f) != 0x0000001f) return false;
   
   return true;
 }
@@ -1171,6 +1251,8 @@ void Interface::Swap(Interface* other) {
     std::swap(name_, other->name_);
     std::swap(topleftx_, other->topleftx_);
     std::swap(toplefty_, other->toplefty_);
+    std::swap(width_, other->width_);
+    std::swap(height_, other->height_);
     std::swap(hasclosebutton_, other->hasclosebutton_);
     std::swap(closetopleftx_, other->closetopleftx_);
     std::swap(closetoplefty_, other->closetoplefty_);

@@ -299,45 +299,59 @@ class Interface : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 toplefty() const;
   inline void set_toplefty(::google::protobuf::int32 value);
   
-  // optional bool hasCloseButton = 4;
+  // required int32 width = 4;
+  inline bool has_width() const;
+  inline void clear_width();
+  static const int kWidthFieldNumber = 4;
+  inline ::google::protobuf::int32 width() const;
+  inline void set_width(::google::protobuf::int32 value);
+  
+  // required int32 height = 5;
+  inline bool has_height() const;
+  inline void clear_height();
+  static const int kHeightFieldNumber = 5;
+  inline ::google::protobuf::int32 height() const;
+  inline void set_height(::google::protobuf::int32 value);
+  
+  // optional bool hasCloseButton = 6;
   inline bool has_hasclosebutton() const;
   inline void clear_hasclosebutton();
-  static const int kHasCloseButtonFieldNumber = 4;
+  static const int kHasCloseButtonFieldNumber = 6;
   inline bool hasclosebutton() const;
   inline void set_hasclosebutton(bool value);
   
-  // optional int32 closeTopLeftX = 5;
+  // optional int32 closeTopLeftX = 7;
   inline bool has_closetopleftx() const;
   inline void clear_closetopleftx();
-  static const int kCloseTopLeftXFieldNumber = 5;
+  static const int kCloseTopLeftXFieldNumber = 7;
   inline ::google::protobuf::int32 closetopleftx() const;
   inline void set_closetopleftx(::google::protobuf::int32 value);
   
-  // optional int32 closeTopLeftY = 6;
+  // optional int32 closeTopLeftY = 8;
   inline bool has_closetoplefty() const;
   inline void clear_closetoplefty();
-  static const int kCloseTopLeftYFieldNumber = 6;
+  static const int kCloseTopLeftYFieldNumber = 8;
   inline ::google::protobuf::int32 closetoplefty() const;
   inline void set_closetoplefty(::google::protobuf::int32 value);
   
-  // optional bool hasContinueButton = 7;
+  // optional bool hasContinueButton = 9;
   inline bool has_hascontinuebutton() const;
   inline void clear_hascontinuebutton();
-  static const int kHasContinueButtonFieldNumber = 7;
+  static const int kHasContinueButtonFieldNumber = 9;
   inline bool hascontinuebutton() const;
   inline void set_hascontinuebutton(bool value);
   
-  // optional int32 continueTopLeftX = 8;
+  // optional int32 continueTopLeftX = 10;
   inline bool has_continuetopleftx() const;
   inline void clear_continuetopleftx();
-  static const int kContinueTopLeftXFieldNumber = 8;
+  static const int kContinueTopLeftXFieldNumber = 10;
   inline ::google::protobuf::int32 continuetopleftx() const;
   inline void set_continuetopleftx(::google::protobuf::int32 value);
   
-  // optional int32 continueTopLeftY = 9;
+  // optional int32 continueTopLeftY = 11;
   inline bool has_continuetoplefty() const;
   inline void clear_continuetoplefty();
-  static const int kContinueTopLeftYFieldNumber = 9;
+  static const int kContinueTopLeftYFieldNumber = 11;
   inline ::google::protobuf::int32 continuetoplefty() const;
   inline void set_continuetoplefty(::google::protobuf::int32 value);
   
@@ -349,6 +363,10 @@ class Interface : public ::google::protobuf::Message {
   inline void clear_has_topleftx();
   inline void set_has_toplefty();
   inline void clear_has_toplefty();
+  inline void set_has_width();
+  inline void clear_has_width();
+  inline void set_has_height();
+  inline void clear_has_height();
   inline void set_has_hasclosebutton();
   inline void clear_has_hasclosebutton();
   inline void set_has_closetopleftx();
@@ -367,6 +385,8 @@ class Interface : public ::google::protobuf::Message {
   ::std::string* name_;
   ::google::protobuf::int32 topleftx_;
   ::google::protobuf::int32 toplefty_;
+  ::google::protobuf::int32 width_;
+  ::google::protobuf::int32 height_;
   ::google::protobuf::int32 closetopleftx_;
   bool hasclosebutton_;
   bool hascontinuebutton_;
@@ -375,7 +395,7 @@ class Interface : public ::google::protobuf::Message {
   ::google::protobuf::int32 continuetoplefty_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
   
   friend void  protobuf_AddDesc_objects_2eproto();
   friend void protobuf_AssignDesc_objects_2eproto();
@@ -639,15 +659,59 @@ inline void Interface::set_toplefty(::google::protobuf::int32 value) {
   toplefty_ = value;
 }
 
-// optional bool hasCloseButton = 4;
-inline bool Interface::has_hasclosebutton() const {
+// required int32 width = 4;
+inline bool Interface::has_width() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Interface::set_has_hasclosebutton() {
+inline void Interface::set_has_width() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Interface::clear_has_hasclosebutton() {
+inline void Interface::clear_has_width() {
   _has_bits_[0] &= ~0x00000008u;
+}
+inline void Interface::clear_width() {
+  width_ = 0;
+  clear_has_width();
+}
+inline ::google::protobuf::int32 Interface::width() const {
+  return width_;
+}
+inline void Interface::set_width(::google::protobuf::int32 value) {
+  set_has_width();
+  width_ = value;
+}
+
+// required int32 height = 5;
+inline bool Interface::has_height() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Interface::set_has_height() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Interface::clear_has_height() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Interface::clear_height() {
+  height_ = 0;
+  clear_has_height();
+}
+inline ::google::protobuf::int32 Interface::height() const {
+  return height_;
+}
+inline void Interface::set_height(::google::protobuf::int32 value) {
+  set_has_height();
+  height_ = value;
+}
+
+// optional bool hasCloseButton = 6;
+inline bool Interface::has_hasclosebutton() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Interface::set_has_hasclosebutton() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Interface::clear_has_hasclosebutton() {
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void Interface::clear_hasclosebutton() {
   hasclosebutton_ = false;
@@ -661,15 +725,15 @@ inline void Interface::set_hasclosebutton(bool value) {
   hasclosebutton_ = value;
 }
 
-// optional int32 closeTopLeftX = 5;
+// optional int32 closeTopLeftX = 7;
 inline bool Interface::has_closetopleftx() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void Interface::set_has_closetopleftx() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void Interface::clear_has_closetopleftx() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void Interface::clear_closetopleftx() {
   closetopleftx_ = 0;
@@ -683,15 +747,15 @@ inline void Interface::set_closetopleftx(::google::protobuf::int32 value) {
   closetopleftx_ = value;
 }
 
-// optional int32 closeTopLeftY = 6;
+// optional int32 closeTopLeftY = 8;
 inline bool Interface::has_closetoplefty() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void Interface::set_has_closetoplefty() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void Interface::clear_has_closetoplefty() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void Interface::clear_closetoplefty() {
   closetoplefty_ = 0;
@@ -705,15 +769,15 @@ inline void Interface::set_closetoplefty(::google::protobuf::int32 value) {
   closetoplefty_ = value;
 }
 
-// optional bool hasContinueButton = 7;
+// optional bool hasContinueButton = 9;
 inline bool Interface::has_hascontinuebutton() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void Interface::set_has_hascontinuebutton() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void Interface::clear_has_hascontinuebutton() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void Interface::clear_hascontinuebutton() {
   hascontinuebutton_ = false;
@@ -727,15 +791,15 @@ inline void Interface::set_hascontinuebutton(bool value) {
   hascontinuebutton_ = value;
 }
 
-// optional int32 continueTopLeftX = 8;
+// optional int32 continueTopLeftX = 10;
 inline bool Interface::has_continuetopleftx() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void Interface::set_has_continuetopleftx() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void Interface::clear_has_continuetopleftx() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void Interface::clear_continuetopleftx() {
   continuetopleftx_ = 0;
@@ -749,15 +813,15 @@ inline void Interface::set_continuetopleftx(::google::protobuf::int32 value) {
   continuetopleftx_ = value;
 }
 
-// optional int32 continueTopLeftY = 9;
+// optional int32 continueTopLeftY = 11;
 inline bool Interface::has_continuetoplefty() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void Interface::set_has_continuetoplefty() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void Interface::clear_has_continuetoplefty() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void Interface::clear_continuetoplefty() {
   continuetoplefty_ = 0;
