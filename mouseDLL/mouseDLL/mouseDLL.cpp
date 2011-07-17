@@ -46,6 +46,7 @@ extern "C" __declspec(dllexport) void dllCalcTest(HWND handle)
 	             hWndEquals = FindWindowEx(hWndCalc, NULL, TEXT("Button"), TEXT("="));
 	    
 				 cout << "4th window is: " << hWndFour << endl;
+
 	        if(hWndFour != NULL)
 	        {
 				cout << "Fourth button is not null " << endl;
@@ -65,24 +66,39 @@ extern "C" __declspec(dllexport) void dllCalcTest(HWND handle)
 	    }
 }
 
-extern "C" __declspec(dllexport) void dllMouseClick(HWND handle, int x, int y)
+
+
+
+extern "C" __declspec(dllexport) void dllMouseClick(HWND handle, bool left, int x, int y)
 {
-		cout << "handle is null?: " << (handle == NULL) << endl;
+
+		if(handle == NULL)
+			cout << "handle is NULL" << endl;
 
 		srand (time(NULL));
 
 	    if(handle != NULL)
 	    {
-			SendMessage(handle, WM_LBUTTONDOWN, 0, MAKELPARAM(x,y));  
-			Sleep(rand() % 10 + 1);
-			SendMessage(handle, WM_LBUTTONUP, 0, MAKELPARAM(x,y)); 
+			if(left)
+			{
+				SendMessage(handle, WM_LBUTTONDOWN, 0, MAKELPARAM(x,y));  
+				Sleep(rand() % 10 + 1);
+				SendMessage(handle, WM_LBUTTONUP, 0, MAKELPARAM(x,y)); 
+			}
+			else
+			{
+				SendMessage(handle, WM_RBUTTONDOWN, 0, MAKELPARAM(x,y));  
+				Sleep(rand() % 10 + 1);
+				SendMessage(handle, WM_RBUTTONUP, 0, MAKELPARAM(x,y)); 
+			}
 	    }
 		
 }
 
 extern "C" __declspec(dllexport) void dllMoveMouse(HWND handle, int x, int y)
 {
-		cout << "handle is null?: " << (handle == NULL) << endl;
+		if(handle == NULL)
+			cout << "handle is null?: " << endl;
 
 	    if(handle != NULL)
 	    {
