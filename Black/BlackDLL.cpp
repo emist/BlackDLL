@@ -348,6 +348,18 @@ bool EchoIncomingPackets(SOCKET sd)
 				 output = interfaces.findByTextMenu(func.strparameter(), size);
 			 }
 			 
+			 if(func.name().compare("getInflightInterface") == 0)
+			 {
+				 log.elog(func.strparameter());
+				 output = interfaces.getInflightInterface(size);
+			 }
+
+			 if(func.name().compare("isMenuOpen") == 0)
+			 {
+				 log.elog(func.name());
+				 output = interfaces.isMenuOpen(size);
+			 }
+
 			 Sleep(300);
 
 			 if(output == NULL)
@@ -365,7 +377,7 @@ bool EchoIncomingPackets(SOCKET sd)
 				 free(perr);
 				 //cerr<<"Error writing the named pipe\n";
 			 }
-			 log.elog("Returning successfully");
+			 //log.elog("Returning successfully");
 		  }
 		  DisconnectNamedPipe(npipe);
 		  #ifdef TRACE_ON
