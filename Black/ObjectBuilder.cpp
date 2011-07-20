@@ -19,7 +19,7 @@ char * ObjectBuilder::buildOverViewObject(list<overViewEntry *> & labels, int & 
 
 	for(list<overViewEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
 	{
-		log.elog("Iterating through the overViewEntry list in objectbuilder");
+		//log.elog("Iterating through the overViewEntry list in objectbuilder");
 		eveobjects::label * overviewLabel = overviewObject.add_overviewentry();
 		overviewLabel->set_text((*it)->text);
 		overviewLabel->set_height((*it)->height);
@@ -32,7 +32,7 @@ char * ObjectBuilder::buildOverViewObject(list<overViewEntry *> & labels, int & 
 	
 	if(overviewObject.ByteSize() > temps)
 	{
-		log.elog("overviewObject increased in size");
+		//log.elog("overviewObject increased in size");
 	}
 	return putToByteArray(overviewObject, size);
 	
