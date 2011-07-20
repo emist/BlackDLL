@@ -1,12 +1,63 @@
 #include "stdafx.h"
 #include "Interfaces.h"
+#include <List>
+#include "ObjectBuilder.h"
+
+///_functions should never aquire the GIL, its the caller's responsibility to do so.
+
+using namespace std;
+
+
+char * Interfaces::atLogin(int & size)
+{
+		char * output;
+
+		//Py_DECREF(main);
+		//Py_DECREF(uicore);
+		//Py_DECREF(layer);
+		
+		PyGILState_STATE gstate = PyGILState_Ensure();
+
+		PyObject * login = _getLayer("login");
+
+		if(login == NULL)
+		{
+			log.elog("Login is NULL");
+			PyGILState_Release( gstate );
+			return NULL;
+		}
+
+		PyObject * isopen = PyObject_GetAttrString(login, "isopen");
+		if(isopen != NULL)
+		{
+			if(PyObject_IsTrue(isopen))
+			{
+				log.elog("Login is open");
+				output = builder.buildBooleanObject(true, size);
+			}
+			else
+			{
+				log.elog("Login is false");
+				output = builder.buildBooleanObject(false, size);
+			}
+		}
+		else 
+		{
+			log.elog("isopen is null");
+			PyGILState_Release( gstate );
+			return NULL;
+		}
+
+		PyGILState_Release( gstate );
+		return output;
+}
 
 
 char * Interfaces::getInflightInterface(int & size)
 {
 	char * output = NULL;
 	PyGILState_STATE gstate = PyGILState_Ensure();
-	PyObject * layer = getLayer("inflight");
+	PyObject * layer = _getLayer("inflight");
 	if(layer == NULL)
 	{
 		PyGILState_Release(gstate);
@@ -60,6 +111,8 @@ char * Interfaces::getInflightInterface(int & size)
 		Py_DECREF(absoluteLeft);
 		Py_DECREF(displayWidth);
 		Py_DECREF(displayHeight);
+		PyGILState_Release(gstate);
+		return NULL;
 	}
 
 	char * iname = PyString_AsString(name);
@@ -90,25 +143,34 @@ PyObject * Interfaces::_getWidth(PyObject * result)
 }
 
 PyObject * Interfaces::_getHeight(PyObject * result)
-{	
+{		
 	return _getAttribute(result, "height");
 }
 
 
 char * Interfaces::findByTextMenu(string label, int & size)
 {
-	return _findByTextGeneric("menu", label, size);
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _findByTextGeneric("menu", label, size);
+	PyGILState_Release(gstate);
+	return output;
 }
 
 char * Interfaces::findByTextLogin(string text, int & size)
 {
-	return _findByTextGeneric("login", text, size);
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _findByTextGeneric("login", text, size);
+	PyGILState_Release(gstate);
+	return output;
 }
 
 
 char * Interfaces::findByNameLogin(string name, int & size)
 {
-	return _findByNameGeneric("login", name, size);
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _findByNameGeneric("login", name, size);
+	PyGILState_Release(gstate);
+	return output;
 }
 
 
@@ -122,7 +184,10 @@ PyObject * Interfaces::_getAbsoluteTop(PyObject * result)
 	return _getAttribute(result, "absoluteTop");
 }
 
-
+PyObject * Interfaces::_getText(PyObject * result)
+{
+	return _getAttribute(result, "text");
+}
 
 PyObject * Interfaces::_getName(PyObject * result)
 {
@@ -132,7 +197,7 @@ PyObject * Interfaces::_getName(PyObject * result)
 char * Interfaces::isMenuOpen(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
-	PyObject * menu = getLayer("menu");
+	PyObject * menu = _getLayer("menu");
 	char * output = NULL;
 
 	if(!PyObject_HasAttrString(menu, "children"))
@@ -174,17 +239,16 @@ char * Interfaces::isMenuOpen(int & size)
 
 char * Interfaces::_findByTextGeneric(string layername, string label, int & size)
 {
-	PyGILState_STATE gstate = PyGILState_Ensure();
+
 	char * output = NULL;
 	PyObject * result = NULL;
 
-	PyObject * layer = getLayer(layername);
+	PyObject * layer = _getLayer(layername);
 
 
 	if(layer == NULL)
 	{
 		log.elog("menulayer is NULL");
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -194,7 +258,6 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	{
 		log.elog("Result is NULL");
 		Py_DECREF(layer);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -206,7 +269,6 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	{
 		Py_DECREF(layer);
 		Py_DECREF(result);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -216,7 +278,6 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 		Py_DECREF(layer);
 		Py_DECREF(leftPosVal);
 		Py_DECREF(result);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -227,7 +288,6 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 		Py_DECREF(leftPosVal);
 		Py_DECREF(topPosVal);
 		Py_DECREF(result);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -239,7 +299,6 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 		Py_DECREF(topPosVal);
 		Py_DECREF(name);
 		Py_DECREF(result);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -252,7 +311,6 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 		Py_DECREF(name);
 		Py_DECREF(height);
 		Py_DECREF(result);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -266,16 +324,16 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	Py_DECREF(name);
 	Py_DECREF(width);
 	Py_DECREF(height);
-	PyGILState_Release(gstate);
 	return output;
 }
 
 
 
+
 char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 {
-	PyGILState_STATE gstate = PyGILState_Ensure();
-	PyObject * layer = getLayer(layername);
+
+	PyObject * layer = _getLayer(layername);
 	PyObject * leftPosVal, * topPosVal, * width, * height, *name;
 	leftPosVal = _getAbsoluteLeft(layer);
 	char * output = NULL;
@@ -283,7 +341,6 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 	if(leftPosVal == NULL)
 	{
 		Py_DECREF(layer);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -292,7 +349,6 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 	{
 		Py_DECREF(layer);
 		Py_DECREF(leftPosVal);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -302,7 +358,6 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 		Py_DECREF(layer);
 		Py_DECREF(leftPosVal);
 		Py_DECREF(topPosVal);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -313,7 +368,6 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 		Py_DECREF(leftPosVal);
 		Py_DECREF(topPosVal);
 		Py_DECREF(name);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -325,7 +379,6 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 		Py_DECREF(topPosVal);
 		Py_DECREF(name);
 		Py_DECREF(height);
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 
@@ -336,19 +389,15 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 	Py_DECREF(topPosVal);
 	Py_DECREF(name);
 	Py_DECREF(height);
-	PyGILState_Release(gstate);
 	return output;
 }
 
 
 char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 {
-
-	PyGILState_STATE gstate = PyGILState_Ensure();
-	
 	log.elog(name);
 
-	PyObject * layer = getLayer(layername);
+	PyObject * layer = _getLayer(layername);
 	
 	char * output = NULL;
 	PyObject * leftPosVal;
@@ -359,7 +408,6 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 	if(layer == NULL)
 	{
 		log.elog("Login Interface is null");
-		PyGILState_Release( gstate );
 		return NULL;
 	}
 	
@@ -376,7 +424,6 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				log.elog(name);
 				Py_DECREF(findChild);
 				Py_DECREF(layer);
-				PyGILState_Release( gstate );
 				return NULL;
 			}
 			
@@ -390,7 +437,6 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				Py_DECREF(findChild);
 				Py_DECREF(layer);
 				Py_DECREF(args);
-				PyGILState_Release( gstate );
 				return NULL;
 			}
 
@@ -402,7 +448,6 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				Py_DECREF(layer);
 				Py_DECREF(args);
 				Py_DECREF(param);
-				PyGILState_Release( gstate );
 				return NULL;
 			}
 
@@ -415,7 +460,6 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				Py_DECREF(layer);
 				Py_DECREF(args);
 				Py_DECREF(param);
-				PyGILState_Release( gstate );
 				return NULL;
 			}
 
@@ -430,7 +474,6 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				Py_DECREF(layer);
 				Py_DECREF(args);
 				Py_DECREF(param);
-				PyGILState_Release( gstate );
 				return NULL;
 			}
 
@@ -438,13 +481,13 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 
 			if(leftPosVal == NULL)
 			{
+
 				log.elog("Failed to get leftPosVal");
 				Py_DECREF(findChild);
 				Py_DECREF(layer);
 				Py_DECREF(args);
 				Py_DECREF(param);
 				Py_DECREF(soughtInterface);
-				PyGILState_Release( gstate );
 				return NULL;
 			}
 			
@@ -459,7 +502,6 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				Py_DECREF(param);
 				Py_DECREF(soughtInterface);
 				Py_DECREF(leftPosVal);
-				PyGILState_Release( gstate );
 				return NULL;
 			}
 			
@@ -474,7 +516,6 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				Py_DECREF(soughtInterface);
 				Py_DECREF(leftPosVal);
 				Py_DECREF(topPosVal);
-				PyGILState_Release( gstate );
 				return NULL;
 			}			
 
@@ -491,7 +532,6 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				Py_DECREF(leftPosVal);
 				Py_DECREF(topPosVal);
 				Py_DECREF(width);
-				PyGILState_Release( gstate );
 				return NULL;
 			}
 
@@ -514,11 +554,321 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 		}
 	}
 	
-	PyGILState_Release( gstate );	
+
 	return output;
 }
 
-PyObject * Interfaces::getLayer(string name)
+
+char * Interfaces::OverViewGetMembers(int & size)
+{
+	
+	list<ObjectBuilder::overViewEntry *> labels;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * overview = _findByNameLayer(main, "overview");
+	if(overview == NULL)
+	{
+		log.elog("Couldn't get overview child");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+		
+
+	PyObject * maincontainer = _findByNameLayer(overview, "maincontainer");
+	if(maincontainer == NULL)
+	{
+		log.elog("maincontainer is null");
+		Py_DECREF(main);
+		Py_DECREF(overview);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * content = _findByNameLayer(maincontainer, "__content");	
+	if(content == NULL)
+	{
+		log.elog("content is null");
+		Py_DECREF(main);
+		Py_DECREF(maincontainer);
+		Py_DECREF(overview);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * children = PyObject_GetAttrString(content, "children");
+	
+	if(children == NULL)
+	{
+		log.elog("Couldn't get CHildren");
+		Py_DECREF(main);
+		Py_DECREF(maincontainer);
+		Py_DECREF(content);
+		Py_DECREF(overview);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	int len = PyObject_Size(children);
+	if(len < 1)
+	{
+		log.elog("Overview is Closed");
+		Py_DECREF(main);
+		Py_DECREF(maincontainer);
+		Py_DECREF(content);
+		Py_DECREF(children);
+		Py_DECREF(overview);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	for(int i = 0; i < len; i++)
+	{
+
+		PyObject * pkey = PyInt_FromLong(i);
+		PyObject * pvalue = PyObject_GetItem(children, pkey);
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get the child value");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+
+		PyObject * label = _findByNameLayer(pvalue, "text");
+		if(label == NULL)
+		{
+			log.elog("No label");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			Py_DECREF(pvalue);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		PyObject * text = _getText(label);
+	
+		if(text == NULL)
+		{
+			log.elog("No text in the label");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		PyObject * absoluteTop = _getAbsoluteTop(label);
+		if(absoluteTop == NULL)
+		{
+			log.elog("No absoluteTop");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			Py_DECREF(text);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		PyObject * absoluteLeft = _getAbsoluteLeft(label);
+		if(absoluteLeft == NULL)
+		{
+			log.elog("No absoluteLeft");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			Py_DECREF(text);
+			Py_DECREF(absoluteTop);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+		
+		PyObject * width = _getWidth(label);
+		if(width == NULL)
+		{
+			log.elog("No width");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			Py_DECREF(text);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(absoluteTop);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		PyObject * height = _getHeight(label);
+		if(height == NULL)
+		{
+			log.elog("No height");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			Py_DECREF(text);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(width);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		ObjectBuilder::overViewEntry * over = new ObjectBuilder::overViewEntry();
+		over->text = PyString_AsString(text);
+		over->topLeftX = PyInt_AsLong(absoluteLeft);
+		over->topLeftY = PyInt_AsLong(absoluteTop);
+		over->width = PyInt_AsLong(width);
+		over->height = PyInt_AsLong(height);
+		labels.push_back(over);
+		Py_DECREF(pvalue);
+		Py_DECREF(label);
+		Py_DECREF(text);
+		Py_DECREF(absoluteLeft);
+		Py_DECREF(absoluteTop);
+		Py_DECREF(width);
+
+	}
+	log.elog("Building overview object");
+	char * output = builder.buildOverViewObject(labels, size);
+
+	for(list<ObjectBuilder::overViewEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
+	{
+		delete (*it);
+	}
+
+	Py_DECREF(main);
+	Py_DECREF(maincontainer);
+	Py_DECREF(content);
+	Py_DECREF(children);
+	Py_DECREF(overview);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
+{
+
+	PyObject * soughtInterface = NULL;
+
+
+	log.elog(name);
+	if(layer == NULL)
+	{
+		log.elog("Login Interface is null");
+		return NULL;
+	}
+	
+	if(PyObject_HasAttrString(layer, "FindChild"))
+	{
+		PyObject * findChild = PyObject_GetAttrString(layer, "FindChild");
+		if(findChild != NULL)
+		{
+
+			PyObject * args = PyString_FromString(name.c_str());
+			if(args == NULL)
+			{
+				log.elog("Failed to create args with args: ");
+				log.elog(name);
+				Py_DECREF(findChild);
+				return NULL;
+			}
+			
+			PyObject * param = PyTuple_New(1);
+
+			if(param == NULL)
+			{
+				log.elog("Failed to build PyTuple");
+				Py_DECREF(findChild);
+				Py_DECREF(args);
+				return NULL;
+			}
+
+			
+			if(PyTuple_SetItem(param, 0, args) != 0)
+			{
+				log.elog("Failed to setitem in tuple");
+				Py_DECREF(findChild);
+				Py_DECREF(args);
+				Py_DECREF(param);
+				return NULL;
+			}
+
+			
+
+			if(PyCallable_Check(findChild) == 0)
+			{
+				log.elog("findChild is not callable");
+				Py_DECREF(findChild);
+				Py_DECREF(args);
+				Py_DECREF(param);
+				return NULL;
+			}
+
+
+			soughtInterface = PyObject_CallObject(findChild, param );
+			
+			if(soughtInterface == NULL)
+			{
+				log.elog("Error calling FindChild(param)");
+				log.elog(PyString_AsString(param));
+				Py_DECREF(findChild);
+				Py_DECREF(args);
+				Py_DECREF(param);
+				return NULL;
+			}
+
+			log.elog("Found Child");
+			//output = builder.buildInterfaceObject(name,  (int)PyInt_AsLong(leftPosVal) ,(int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
+			Py_DECREF(findChild);
+			Py_DECREF(args);
+			Py_DECREF(param);
+		}
+		else
+		{
+			log.elog("findChild Method not found");
+		}
+	}
+	
+	return soughtInterface;
+}
+
+
+PyObject * Interfaces::_getLayer(string name)
 {
 	
 		
