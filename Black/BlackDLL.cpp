@@ -328,7 +328,7 @@ bool EchoIncomingPackets(SOCKET sd)
 			 
 			 if(func.name().compare("atLogin") == 0)
 			 {
-				 output = login.atLogin(size);
+				 output = interfaces.atLogin(size);
 			 }
 			 if(func.name().compare("findByNameLogin") == 0)
 			 {
@@ -360,10 +360,19 @@ bool EchoIncomingPackets(SOCKET sd)
 				 output = interfaces.isMenuOpen(size);
 			 }
 
+			 ///FOr testing purposes
+			 if(func.name().compare("getOverViewItems") == 0)
+			 {
+				 log.elog(func.name());
+				 output = interfaces.OverViewGetMembers(size);
+			 }
+
+
 			 Sleep(300);
 
 			 if(output == NULL)
-			 {
+			 {	 
+				 log.elog("Output is null");
 				 output = "\0";
 			 }
 
