@@ -34,6 +34,8 @@ void protobuf_ShutdownFile_objects_2eproto();
 
 class BooleanObject;
 class functionCall;
+class overview;
+class label;
 class Interface;
 
 // ===================================================================
@@ -217,6 +219,217 @@ class functionCall : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static functionCall* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class overview : public ::google::protobuf::Message {
+ public:
+  overview();
+  virtual ~overview();
+  
+  overview(const overview& from);
+  
+  inline overview& operator=(const overview& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const overview& default_instance();
+  
+  void Swap(overview* other);
+  
+  // implements Message ----------------------------------------------
+  
+  overview* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const overview& from);
+  void MergeFrom(const overview& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // repeated .eveobjects.label overviewEntry = 1;
+  inline int overviewentry_size() const;
+  inline void clear_overviewentry();
+  static const int kOverviewEntryFieldNumber = 1;
+  inline const ::eveobjects::label& overviewentry(int index) const;
+  inline ::eveobjects::label* mutable_overviewentry(int index);
+  inline ::eveobjects::label* add_overviewentry();
+  inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::label >&
+      overviewentry() const;
+  inline ::google::protobuf::RepeatedPtrField< ::eveobjects::label >*
+      mutable_overviewentry();
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.overview)
+ private:
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::RepeatedPtrField< ::eveobjects::label > overviewentry_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static overview* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class label : public ::google::protobuf::Message {
+ public:
+  label();
+  virtual ~label();
+  
+  label(const label& from);
+  
+  inline label& operator=(const label& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const label& default_instance();
+  
+  void Swap(label* other);
+  
+  // implements Message ----------------------------------------------
+  
+  label* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const label& from);
+  void MergeFrom(const label& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required string text = 1;
+  inline bool has_text() const;
+  inline void clear_text();
+  static const int kTextFieldNumber = 1;
+  inline const ::std::string& text() const;
+  inline void set_text(const ::std::string& value);
+  inline void set_text(const char* value);
+  inline void set_text(const char* value, size_t size);
+  inline ::std::string* mutable_text();
+  inline ::std::string* release_text();
+  
+  // required int32 topLeftX = 2;
+  inline bool has_topleftx() const;
+  inline void clear_topleftx();
+  static const int kTopLeftXFieldNumber = 2;
+  inline ::google::protobuf::int32 topleftx() const;
+  inline void set_topleftx(::google::protobuf::int32 value);
+  
+  // required int32 topLeftY = 3;
+  inline bool has_toplefty() const;
+  inline void clear_toplefty();
+  static const int kTopLeftYFieldNumber = 3;
+  inline ::google::protobuf::int32 toplefty() const;
+  inline void set_toplefty(::google::protobuf::int32 value);
+  
+  // required int32 width = 4;
+  inline bool has_width() const;
+  inline void clear_width();
+  static const int kWidthFieldNumber = 4;
+  inline ::google::protobuf::int32 width() const;
+  inline void set_width(::google::protobuf::int32 value);
+  
+  // required int32 height = 5;
+  inline bool has_height() const;
+  inline void clear_height();
+  static const int kHeightFieldNumber = 5;
+  inline ::google::protobuf::int32 height() const;
+  inline void set_height(::google::protobuf::int32 value);
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.label)
+ private:
+  inline void set_has_text();
+  inline void clear_has_text();
+  inline void set_has_topleftx();
+  inline void clear_has_topleftx();
+  inline void set_has_toplefty();
+  inline void clear_has_toplefty();
+  inline void set_has_width();
+  inline void clear_has_width();
+  inline void set_has_height();
+  inline void clear_has_height();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::std::string* text_;
+  ::google::protobuf::int32 topleftx_;
+  ::google::protobuf::int32 toplefty_;
+  ::google::protobuf::int32 width_;
+  ::google::protobuf::int32 height_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static label* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -551,6 +764,185 @@ inline ::std::string* functionCall::release_strparameter() {
     strparameter_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
+}
+
+// -------------------------------------------------------------------
+
+// overview
+
+// repeated .eveobjects.label overviewEntry = 1;
+inline int overview::overviewentry_size() const {
+  return overviewentry_.size();
+}
+inline void overview::clear_overviewentry() {
+  overviewentry_.Clear();
+}
+inline const ::eveobjects::label& overview::overviewentry(int index) const {
+  return overviewentry_.Get(index);
+}
+inline ::eveobjects::label* overview::mutable_overviewentry(int index) {
+  return overviewentry_.Mutable(index);
+}
+inline ::eveobjects::label* overview::add_overviewentry() {
+  return overviewentry_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::label >&
+overview::overviewentry() const {
+  return overviewentry_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::eveobjects::label >*
+overview::mutable_overviewentry() {
+  return &overviewentry_;
+}
+
+// -------------------------------------------------------------------
+
+// label
+
+// required string text = 1;
+inline bool label::has_text() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void label::set_has_text() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void label::clear_has_text() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void label::clear_text() {
+  if (text_ != &::google::protobuf::internal::kEmptyString) {
+    text_->clear();
+  }
+  clear_has_text();
+}
+inline const ::std::string& label::text() const {
+  return *text_;
+}
+inline void label::set_text(const ::std::string& value) {
+  set_has_text();
+  if (text_ == &::google::protobuf::internal::kEmptyString) {
+    text_ = new ::std::string;
+  }
+  text_->assign(value);
+}
+inline void label::set_text(const char* value) {
+  set_has_text();
+  if (text_ == &::google::protobuf::internal::kEmptyString) {
+    text_ = new ::std::string;
+  }
+  text_->assign(value);
+}
+inline void label::set_text(const char* value, size_t size) {
+  set_has_text();
+  if (text_ == &::google::protobuf::internal::kEmptyString) {
+    text_ = new ::std::string;
+  }
+  text_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* label::mutable_text() {
+  set_has_text();
+  if (text_ == &::google::protobuf::internal::kEmptyString) {
+    text_ = new ::std::string;
+  }
+  return text_;
+}
+inline ::std::string* label::release_text() {
+  clear_has_text();
+  if (text_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = text_;
+    text_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// required int32 topLeftX = 2;
+inline bool label::has_topleftx() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void label::set_has_topleftx() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void label::clear_has_topleftx() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void label::clear_topleftx() {
+  topleftx_ = 0;
+  clear_has_topleftx();
+}
+inline ::google::protobuf::int32 label::topleftx() const {
+  return topleftx_;
+}
+inline void label::set_topleftx(::google::protobuf::int32 value) {
+  set_has_topleftx();
+  topleftx_ = value;
+}
+
+// required int32 topLeftY = 3;
+inline bool label::has_toplefty() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void label::set_has_toplefty() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void label::clear_has_toplefty() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void label::clear_toplefty() {
+  toplefty_ = 0;
+  clear_has_toplefty();
+}
+inline ::google::protobuf::int32 label::toplefty() const {
+  return toplefty_;
+}
+inline void label::set_toplefty(::google::protobuf::int32 value) {
+  set_has_toplefty();
+  toplefty_ = value;
+}
+
+// required int32 width = 4;
+inline bool label::has_width() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void label::set_has_width() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void label::clear_has_width() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void label::clear_width() {
+  width_ = 0;
+  clear_has_width();
+}
+inline ::google::protobuf::int32 label::width() const {
+  return width_;
+}
+inline void label::set_width(::google::protobuf::int32 value) {
+  set_has_width();
+  width_ = value;
+}
+
+// required int32 height = 5;
+inline bool label::has_height() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void label::set_has_height() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void label::clear_has_height() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void label::clear_height() {
+  height_ = 0;
+  clear_has_height();
+}
+inline ::google::protobuf::int32 label::height() const {
+  return height_;
+}
+inline void label::set_height(::google::protobuf::int32 value) {
+  set_has_height();
+  height_ = value;
 }
 
 // -------------------------------------------------------------------
