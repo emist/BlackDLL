@@ -4,10 +4,10 @@
 
 Interfaces interfaces;
 
-
+/*
 PyObject * Login::getLayer()
 {	
-	return interfaces.getLayer("login");
+	return interfaces._getLayer("login");
 }
 
 
@@ -54,3 +54,4 @@ char * Login::atLogin(int & size)
 		PyGILState_Release( gstate );
 		return output;
 }
+*/

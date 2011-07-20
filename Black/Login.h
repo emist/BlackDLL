@@ -14,7 +14,7 @@ public:
 
 	//char * atLogin(int * size);
 	PyObject * getLayer();
-	char * atLogin(int & size);
+	//char * atLogin(int & size);
 	
 };
 
