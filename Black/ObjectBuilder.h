@@ -2,10 +2,13 @@
 #define OBJECTBUILDER
 
 #include <string>
+#include <List>
+#include "Logger.h"
 
 using namespace std;
 
 class ObjectBuilder{
+		Logger log;
 		template<typename T>
 		char * putToByteArray(T & eveobject, int & size)
 		{
@@ -16,7 +19,17 @@ class ObjectBuilder{
 		}
 
 public:
+	
+		struct overViewEntry
+		{
+			string text;
+			int topLeftX;
+			int topLeftY;
+			int width;
+			int height;
+		};
 		char * buildBooleanObject( bool value, int & size );
 		char * buildInterfaceObject( string name, int posX, int posY, int width, int height, int & size );
+		char * buildOverViewObject(list<overViewEntry *> & labels, int & size);
 };
 #endif
