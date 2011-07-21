@@ -373,6 +373,11 @@ bool EchoIncomingPackets(SOCKET sd)
 				 output = interfaces.GetSelectedItem(size);
 			 }
 
+			 if(func.name().compare("getTargetList") == 0)
+			 {
+				 log.elog(func.name());
+				 output = interfaces.GetTargetList(size);
+			 }
 
 			 Sleep(300);
 
@@ -392,6 +397,7 @@ bool EchoIncomingPackets(SOCKET sd)
 				 free(perr);
 				 //cerr<<"Error writing the named pipe\n";
 			 }
+			 //NEEDS TO delete output
 			 //log.elog("Returning successfully");
 		  }
 		  DisconnectNamedPipe(npipe);
