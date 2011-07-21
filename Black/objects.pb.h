@@ -490,24 +490,24 @@ class TargetList : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // repeated .eveobjects.targetentry target = 1;
-  inline int target_size() const;
-  inline void clear_target();
-  static const int kTargetFieldNumber = 1;
-  inline const ::eveobjects::targetentry& target(int index) const;
-  inline ::eveobjects::targetentry* mutable_target(int index);
-  inline ::eveobjects::targetentry* add_target();
+  // repeated .eveobjects.targetentry thistarget = 1;
+  inline int thistarget_size() const;
+  inline void clear_thistarget();
+  static const int kThistargetFieldNumber = 1;
+  inline const ::eveobjects::targetentry& thistarget(int index) const;
+  inline ::eveobjects::targetentry* mutable_thistarget(int index);
+  inline ::eveobjects::targetentry* add_thistarget();
   inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry >&
-      target() const;
+      thistarget() const;
   inline ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry >*
-      mutable_target();
+      mutable_thistarget();
   
   // @@protoc_insertion_point(class_scope:eveobjects.TargetList)
  private:
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry > target_;
+  ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry > thistarget_;
   
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -1220,29 +1220,29 @@ inline void label::set_height(::google::protobuf::int32 value) {
 
 // TargetList
 
-// repeated .eveobjects.targetentry target = 1;
-inline int TargetList::target_size() const {
-  return target_.size();
+// repeated .eveobjects.targetentry thistarget = 1;
+inline int TargetList::thistarget_size() const {
+  return thistarget_.size();
 }
-inline void TargetList::clear_target() {
-  target_.Clear();
+inline void TargetList::clear_thistarget() {
+  thistarget_.Clear();
 }
-inline const ::eveobjects::targetentry& TargetList::target(int index) const {
-  return target_.Get(index);
+inline const ::eveobjects::targetentry& TargetList::thistarget(int index) const {
+  return thistarget_.Get(index);
 }
-inline ::eveobjects::targetentry* TargetList::mutable_target(int index) {
-  return target_.Mutable(index);
+inline ::eveobjects::targetentry* TargetList::mutable_thistarget(int index) {
+  return thistarget_.Mutable(index);
 }
-inline ::eveobjects::targetentry* TargetList::add_target() {
-  return target_.Add();
+inline ::eveobjects::targetentry* TargetList::add_thistarget() {
+  return thistarget_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry >&
-TargetList::target() const {
-  return target_;
+TargetList::thistarget() const {
+  return thistarget_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry >*
-TargetList::mutable_target() {
-  return &target_;
+TargetList::mutable_thistarget() {
+  return &thistarget_;
 }
 
 // -------------------------------------------------------------------

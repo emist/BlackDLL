@@ -119,7 +119,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       sizeof(label));
   TargetList_descriptor_ = file->message_type(4);
   static const int TargetList_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TargetList, target_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TargetList, thistarget_),
   };
   TargetList_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -252,17 +252,17 @@ void protobuf_AddDesc_objects_2eproto() {
     "view\022(\n\roverviewEntry\030\001 \003(\0132\021.eveobjects"
     ".label\"X\n\005label\022\014\n\004text\030\001 \002(\t\022\020\n\010topLeft"
     "X\030\002 \002(\005\022\020\n\010topLeftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005"
-    "\022\016\n\006height\030\005 \002(\005\"5\n\nTargetList\022\'\n\006target"
-    "\030\001 \003(\0132\027.eveobjects.targetentry\"Q\n\013targe"
-    "tentry\022\037\n\004text\030\001 \001(\0132\021.eveobjects.label\022"
-    "!\n\004jams\030\002 \001(\0132\023.eveobjects.jammers\"\031\n\007ja"
-    "mmers\022\016\n\006jammer\030\001 \003(\t\"\361\001\n\tInterface\022\014\n\004n"
-    "ame\030\001 \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010topleftY\030"
-    "\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005 \002(\005\022\026\n\016"
-    "hasCloseButton\030\006 \001(\010\022\025\n\rcloseTopLeftX\030\007 "
-    "\001(\005\022\025\n\rcloseTopLeftY\030\010 \001(\005\022\031\n\021hasContinu"
-    "eButton\030\t \001(\010\022\030\n\020continueTopLeftX\030\n \001(\005\022"
-    "\030\n\020continueTopLeftY\030\013 \001(\005", 665);
+    "\022\016\n\006height\030\005 \002(\005\"9\n\nTargetList\022+\n\nthista"
+    "rget\030\001 \003(\0132\027.eveobjects.targetentry\"Q\n\013t"
+    "argetentry\022\037\n\004text\030\001 \001(\0132\021.eveobjects.la"
+    "bel\022!\n\004jams\030\002 \001(\0132\023.eveobjects.jammers\"\031"
+    "\n\007jammers\022\016\n\006jammer\030\001 \003(\t\"\361\001\n\tInterface\022"
+    "\014\n\004name\030\001 \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010tople"
+    "ftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005 \002(\005"
+    "\022\026\n\016hasCloseButton\030\006 \001(\010\022\025\n\rcloseTopLeft"
+    "X\030\007 \001(\005\022\025\n\rcloseTopLeftY\030\010 \001(\005\022\031\n\021hasCon"
+    "tinueButton\030\t \001(\010\022\030\n\020continueTopLeftX\030\n "
+    "\001(\005\022\030\n\020continueTopLeftY\030\013 \001(\005", 669);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "objects.proto", &protobuf_RegisterTypes);
   BooleanObject::default_instance_ = new BooleanObject();
@@ -1373,7 +1373,7 @@ void label::Swap(label* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int TargetList::kTargetFieldNumber;
+const int TargetList::kThistargetFieldNumber;
 #endif  // !_MSC_VER
 
 TargetList::TargetList()
@@ -1425,7 +1425,7 @@ TargetList* TargetList::New() const {
 }
 
 void TargetList::Clear() {
-  target_.Clear();
+  thistarget_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -1436,17 +1436,17 @@ bool TargetList::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .eveobjects.targetentry target = 1;
+      // repeated .eveobjects.targetentry thistarget = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_target:
+         parse_thistarget:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_target()));
+                input, add_thistarget()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(10)) goto parse_target;
+        if (input->ExpectTag(10)) goto parse_thistarget;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1469,10 +1469,10 @@ bool TargetList::MergePartialFromCodedStream(
 
 void TargetList::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .eveobjects.targetentry target = 1;
-  for (int i = 0; i < this->target_size(); i++) {
+  // repeated .eveobjects.targetentry thistarget = 1;
+  for (int i = 0; i < this->thistarget_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->target(i), output);
+      1, this->thistarget(i), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -1483,11 +1483,11 @@ void TargetList::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* TargetList::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .eveobjects.targetentry target = 1;
-  for (int i = 0; i < this->target_size(); i++) {
+  // repeated .eveobjects.targetentry thistarget = 1;
+  for (int i = 0; i < this->thistarget_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->target(i), target);
+        1, this->thistarget(i), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -1500,12 +1500,12 @@ void TargetList::SerializeWithCachedSizes(
 int TargetList::ByteSize() const {
   int total_size = 0;
   
-  // repeated .eveobjects.targetentry target = 1;
-  total_size += 1 * this->target_size();
-  for (int i = 0; i < this->target_size(); i++) {
+  // repeated .eveobjects.targetentry thistarget = 1;
+  total_size += 1 * this->thistarget_size();
+  for (int i = 0; i < this->thistarget_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->target(i));
+        this->thistarget(i));
   }
   
   if (!unknown_fields().empty()) {
@@ -1533,7 +1533,7 @@ void TargetList::MergeFrom(const ::google::protobuf::Message& from) {
 
 void TargetList::MergeFrom(const TargetList& from) {
   GOOGLE_CHECK_NE(&from, this);
-  target_.MergeFrom(from.target_);
+  thistarget_.MergeFrom(from.thistarget_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -1551,15 +1551,15 @@ void TargetList::CopyFrom(const TargetList& from) {
 
 bool TargetList::IsInitialized() const {
   
-  for (int i = 0; i < target_size(); i++) {
-    if (!this->target(i).IsInitialized()) return false;
+  for (int i = 0; i < thistarget_size(); i++) {
+    if (!this->thistarget(i).IsInitialized()) return false;
   }
   return true;
 }
 
 void TargetList::Swap(TargetList* other) {
   if (other != this) {
-    target_.Swap(&other->target_);
+    thistarget_.Swap(&other->thistarget_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
