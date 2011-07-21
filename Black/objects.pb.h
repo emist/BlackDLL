@@ -36,6 +36,9 @@ class BooleanObject;
 class functionCall;
 class overview;
 class label;
+class TargetList;
+class targetentry;
+class jammers;
 class Interface;
 
 // ===================================================================
@@ -430,6 +433,274 @@ class label : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static label* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class TargetList : public ::google::protobuf::Message {
+ public:
+  TargetList();
+  virtual ~TargetList();
+  
+  TargetList(const TargetList& from);
+  
+  inline TargetList& operator=(const TargetList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const TargetList& default_instance();
+  
+  void Swap(TargetList* other);
+  
+  // implements Message ----------------------------------------------
+  
+  TargetList* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const TargetList& from);
+  void MergeFrom(const TargetList& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // repeated .eveobjects.targetentry target = 1;
+  inline int target_size() const;
+  inline void clear_target();
+  static const int kTargetFieldNumber = 1;
+  inline const ::eveobjects::targetentry& target(int index) const;
+  inline ::eveobjects::targetentry* mutable_target(int index);
+  inline ::eveobjects::targetentry* add_target();
+  inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry >&
+      target() const;
+  inline ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry >*
+      mutable_target();
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.TargetList)
+ private:
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry > target_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static TargetList* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class targetentry : public ::google::protobuf::Message {
+ public:
+  targetentry();
+  virtual ~targetentry();
+  
+  targetentry(const targetentry& from);
+  
+  inline targetentry& operator=(const targetentry& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const targetentry& default_instance();
+  
+  void Swap(targetentry* other);
+  
+  // implements Message ----------------------------------------------
+  
+  targetentry* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const targetentry& from);
+  void MergeFrom(const targetentry& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // optional .eveobjects.label text = 1;
+  inline bool has_text() const;
+  inline void clear_text();
+  static const int kTextFieldNumber = 1;
+  inline const ::eveobjects::label& text() const;
+  inline ::eveobjects::label* mutable_text();
+  inline ::eveobjects::label* release_text();
+  
+  // optional .eveobjects.jammers jams = 2;
+  inline bool has_jams() const;
+  inline void clear_jams();
+  static const int kJamsFieldNumber = 2;
+  inline const ::eveobjects::jammers& jams() const;
+  inline ::eveobjects::jammers* mutable_jams();
+  inline ::eveobjects::jammers* release_jams();
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.targetentry)
+ private:
+  inline void set_has_text();
+  inline void clear_has_text();
+  inline void set_has_jams();
+  inline void clear_has_jams();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::eveobjects::label* text_;
+  ::eveobjects::jammers* jams_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static targetentry* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class jammers : public ::google::protobuf::Message {
+ public:
+  jammers();
+  virtual ~jammers();
+  
+  jammers(const jammers& from);
+  
+  inline jammers& operator=(const jammers& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const jammers& default_instance();
+  
+  void Swap(jammers* other);
+  
+  // implements Message ----------------------------------------------
+  
+  jammers* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const jammers& from);
+  void MergeFrom(const jammers& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // repeated string jammer = 1;
+  inline int jammer_size() const;
+  inline void clear_jammer();
+  static const int kJammerFieldNumber = 1;
+  inline const ::std::string& jammer(int index) const;
+  inline ::std::string* mutable_jammer(int index);
+  inline void set_jammer(int index, const ::std::string& value);
+  inline void set_jammer(int index, const char* value);
+  inline void set_jammer(int index, const char* value, size_t size);
+  inline ::std::string* add_jammer();
+  inline void add_jammer(const ::std::string& value);
+  inline void add_jammer(const char* value);
+  inline void add_jammer(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& jammer() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_jammer();
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.jammers)
+ private:
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::RepeatedPtrField< ::std::string> jammer_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static jammers* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -943,6 +1214,145 @@ inline ::google::protobuf::int32 label::height() const {
 inline void label::set_height(::google::protobuf::int32 value) {
   set_has_height();
   height_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// TargetList
+
+// repeated .eveobjects.targetentry target = 1;
+inline int TargetList::target_size() const {
+  return target_.size();
+}
+inline void TargetList::clear_target() {
+  target_.Clear();
+}
+inline const ::eveobjects::targetentry& TargetList::target(int index) const {
+  return target_.Get(index);
+}
+inline ::eveobjects::targetentry* TargetList::mutable_target(int index) {
+  return target_.Mutable(index);
+}
+inline ::eveobjects::targetentry* TargetList::add_target() {
+  return target_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry >&
+TargetList::target() const {
+  return target_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::eveobjects::targetentry >*
+TargetList::mutable_target() {
+  return &target_;
+}
+
+// -------------------------------------------------------------------
+
+// targetentry
+
+// optional .eveobjects.label text = 1;
+inline bool targetentry::has_text() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void targetentry::set_has_text() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void targetentry::clear_has_text() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void targetentry::clear_text() {
+  if (text_ != NULL) text_->::eveobjects::label::Clear();
+  clear_has_text();
+}
+inline const ::eveobjects::label& targetentry::text() const {
+  return text_ != NULL ? *text_ : *default_instance_->text_;
+}
+inline ::eveobjects::label* targetentry::mutable_text() {
+  set_has_text();
+  if (text_ == NULL) text_ = new ::eveobjects::label;
+  return text_;
+}
+inline ::eveobjects::label* targetentry::release_text() {
+  clear_has_text();
+  ::eveobjects::label* temp = text_;
+  text_ = NULL;
+  return temp;
+}
+
+// optional .eveobjects.jammers jams = 2;
+inline bool targetentry::has_jams() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void targetentry::set_has_jams() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void targetentry::clear_has_jams() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void targetentry::clear_jams() {
+  if (jams_ != NULL) jams_->::eveobjects::jammers::Clear();
+  clear_has_jams();
+}
+inline const ::eveobjects::jammers& targetentry::jams() const {
+  return jams_ != NULL ? *jams_ : *default_instance_->jams_;
+}
+inline ::eveobjects::jammers* targetentry::mutable_jams() {
+  set_has_jams();
+  if (jams_ == NULL) jams_ = new ::eveobjects::jammers;
+  return jams_;
+}
+inline ::eveobjects::jammers* targetentry::release_jams() {
+  clear_has_jams();
+  ::eveobjects::jammers* temp = jams_;
+  jams_ = NULL;
+  return temp;
+}
+
+// -------------------------------------------------------------------
+
+// jammers
+
+// repeated string jammer = 1;
+inline int jammers::jammer_size() const {
+  return jammer_.size();
+}
+inline void jammers::clear_jammer() {
+  jammer_.Clear();
+}
+inline const ::std::string& jammers::jammer(int index) const {
+  return jammer_.Get(index);
+}
+inline ::std::string* jammers::mutable_jammer(int index) {
+  return jammer_.Mutable(index);
+}
+inline void jammers::set_jammer(int index, const ::std::string& value) {
+  jammer_.Mutable(index)->assign(value);
+}
+inline void jammers::set_jammer(int index, const char* value) {
+  jammer_.Mutable(index)->assign(value);
+}
+inline void jammers::set_jammer(int index, const char* value, size_t size) {
+  jammer_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* jammers::add_jammer() {
+  return jammer_.Add();
+}
+inline void jammers::add_jammer(const ::std::string& value) {
+  jammer_.Add()->assign(value);
+}
+inline void jammers::add_jammer(const char* value) {
+  jammer_.Add()->assign(value);
+}
+inline void jammers::add_jammer(const char* value, size_t size) {
+  jammer_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+jammers::jammer() const {
+  return jammer_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+jammers::mutable_jammer() {
+  return &jammer_;
 }
 
 // -------------------------------------------------------------------

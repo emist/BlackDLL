@@ -30,6 +30,15 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* label_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   label_reflection_ = NULL;
+const ::google::protobuf::Descriptor* TargetList_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  TargetList_reflection_ = NULL;
+const ::google::protobuf::Descriptor* targetentry_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  targetentry_reflection_ = NULL;
+const ::google::protobuf::Descriptor* jammers_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  jammers_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Interface_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Interface_reflection_ = NULL;
@@ -108,7 +117,53 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(label));
-  Interface_descriptor_ = file->message_type(4);
+  TargetList_descriptor_ = file->message_type(4);
+  static const int TargetList_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TargetList, target_),
+  };
+  TargetList_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      TargetList_descriptor_,
+      TargetList::default_instance_,
+      TargetList_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TargetList, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TargetList, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(TargetList));
+  targetentry_descriptor_ = file->message_type(5);
+  static const int targetentry_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(targetentry, text_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(targetentry, jams_),
+  };
+  targetentry_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      targetentry_descriptor_,
+      targetentry::default_instance_,
+      targetentry_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(targetentry, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(targetentry, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(targetentry));
+  jammers_descriptor_ = file->message_type(6);
+  static const int jammers_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(jammers, jammer_),
+  };
+  jammers_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      jammers_descriptor_,
+      jammers::default_instance_,
+      jammers_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(jammers, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(jammers, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(jammers));
+  Interface_descriptor_ = file->message_type(7);
   static const int Interface_offsets_[11] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, topleftx_),
@@ -154,6 +209,12 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     label_descriptor_, &label::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    TargetList_descriptor_, &TargetList::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    targetentry_descriptor_, &targetentry::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    jammers_descriptor_, &jammers::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Interface_descriptor_, &Interface::default_instance());
 }
 
@@ -168,6 +229,12 @@ void protobuf_ShutdownFile_objects_2eproto() {
   delete overview_reflection_;
   delete label::default_instance_;
   delete label_reflection_;
+  delete TargetList::default_instance_;
+  delete TargetList_reflection_;
+  delete targetentry::default_instance_;
+  delete targetentry_reflection_;
+  delete jammers::default_instance_;
+  delete jammers_reflection_;
   delete Interface::default_instance_;
   delete Interface_reflection_;
 }
@@ -185,24 +252,34 @@ void protobuf_AddDesc_objects_2eproto() {
     "view\022(\n\roverviewEntry\030\001 \003(\0132\021.eveobjects"
     ".label\"X\n\005label\022\014\n\004text\030\001 \002(\t\022\020\n\010topLeft"
     "X\030\002 \002(\005\022\020\n\010topLeftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005"
-    "\022\016\n\006height\030\005 \002(\005\"\361\001\n\tInterface\022\014\n\004name\030\001"
-    " \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010topleftY\030\003 \002(\005"
-    "\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005 \002(\005\022\026\n\016hasCl"
-    "oseButton\030\006 \001(\010\022\025\n\rcloseTopLeftX\030\007 \001(\005\022\025"
-    "\n\rcloseTopLeftY\030\010 \001(\005\022\031\n\021hasContinueButt"
-    "on\030\t \001(\010\022\030\n\020continueTopLeftX\030\n \001(\005\022\030\n\020co"
-    "ntinueTopLeftY\030\013 \001(\005", 500);
+    "\022\016\n\006height\030\005 \002(\005\"5\n\nTargetList\022\'\n\006target"
+    "\030\001 \003(\0132\027.eveobjects.targetentry\"Q\n\013targe"
+    "tentry\022\037\n\004text\030\001 \001(\0132\021.eveobjects.label\022"
+    "!\n\004jams\030\002 \001(\0132\023.eveobjects.jammers\"\031\n\007ja"
+    "mmers\022\016\n\006jammer\030\001 \003(\t\"\361\001\n\tInterface\022\014\n\004n"
+    "ame\030\001 \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010topleftY\030"
+    "\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005 \002(\005\022\026\n\016"
+    "hasCloseButton\030\006 \001(\010\022\025\n\rcloseTopLeftX\030\007 "
+    "\001(\005\022\025\n\rcloseTopLeftY\030\010 \001(\005\022\031\n\021hasContinu"
+    "eButton\030\t \001(\010\022\030\n\020continueTopLeftX\030\n \001(\005\022"
+    "\030\n\020continueTopLeftY\030\013 \001(\005", 665);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "objects.proto", &protobuf_RegisterTypes);
   BooleanObject::default_instance_ = new BooleanObject();
   functionCall::default_instance_ = new functionCall();
   overview::default_instance_ = new overview();
   label::default_instance_ = new label();
+  TargetList::default_instance_ = new TargetList();
+  targetentry::default_instance_ = new targetentry();
+  jammers::default_instance_ = new jammers();
   Interface::default_instance_ = new Interface();
   BooleanObject::default_instance_->InitAsDefaultInstance();
   functionCall::default_instance_->InitAsDefaultInstance();
   overview::default_instance_->InitAsDefaultInstance();
   label::default_instance_->InitAsDefaultInstance();
+  TargetList::default_instance_->InitAsDefaultInstance();
+  targetentry::default_instance_->InitAsDefaultInstance();
+  jammers::default_instance_->InitAsDefaultInstance();
   Interface::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_objects_2eproto);
 }
@@ -1289,6 +1366,680 @@ void label::Swap(label* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = label_descriptor_;
   metadata.reflection = label_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int TargetList::kTargetFieldNumber;
+#endif  // !_MSC_VER
+
+TargetList::TargetList()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void TargetList::InitAsDefaultInstance() {
+}
+
+TargetList::TargetList(const TargetList& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void TargetList::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+TargetList::~TargetList() {
+  SharedDtor();
+}
+
+void TargetList::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void TargetList::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* TargetList::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return TargetList_descriptor_;
+}
+
+const TargetList& TargetList::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_objects_2eproto();  return *default_instance_;
+}
+
+TargetList* TargetList::default_instance_ = NULL;
+
+TargetList* TargetList::New() const {
+  return new TargetList;
+}
+
+void TargetList::Clear() {
+  target_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool TargetList::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .eveobjects.targetentry target = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_target:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_target()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(10)) goto parse_target;
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void TargetList::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // repeated .eveobjects.targetentry target = 1;
+  for (int i = 0; i < this->target_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->target(i), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* TargetList::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // repeated .eveobjects.targetentry target = 1;
+  for (int i = 0; i < this->target_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->target(i), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int TargetList::ByteSize() const {
+  int total_size = 0;
+  
+  // repeated .eveobjects.targetentry target = 1;
+  total_size += 1 * this->target_size();
+  for (int i = 0; i < this->target_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->target(i));
+  }
+  
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void TargetList::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const TargetList* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const TargetList*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void TargetList::MergeFrom(const TargetList& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  target_.MergeFrom(from.target_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void TargetList::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void TargetList::CopyFrom(const TargetList& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool TargetList::IsInitialized() const {
+  
+  for (int i = 0; i < target_size(); i++) {
+    if (!this->target(i).IsInitialized()) return false;
+  }
+  return true;
+}
+
+void TargetList::Swap(TargetList* other) {
+  if (other != this) {
+    target_.Swap(&other->target_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata TargetList::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = TargetList_descriptor_;
+  metadata.reflection = TargetList_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int targetentry::kTextFieldNumber;
+const int targetentry::kJamsFieldNumber;
+#endif  // !_MSC_VER
+
+targetentry::targetentry()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void targetentry::InitAsDefaultInstance() {
+  text_ = const_cast< ::eveobjects::label*>(&::eveobjects::label::default_instance());
+  jams_ = const_cast< ::eveobjects::jammers*>(&::eveobjects::jammers::default_instance());
+}
+
+targetentry::targetentry(const targetentry& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void targetentry::SharedCtor() {
+  _cached_size_ = 0;
+  text_ = NULL;
+  jams_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+targetentry::~targetentry() {
+  SharedDtor();
+}
+
+void targetentry::SharedDtor() {
+  if (this != default_instance_) {
+    delete text_;
+    delete jams_;
+  }
+}
+
+void targetentry::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* targetentry::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return targetentry_descriptor_;
+}
+
+const targetentry& targetentry::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_objects_2eproto();  return *default_instance_;
+}
+
+targetentry* targetentry::default_instance_ = NULL;
+
+targetentry* targetentry::New() const {
+  return new targetentry;
+}
+
+void targetentry::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_text()) {
+      if (text_ != NULL) text_->::eveobjects::label::Clear();
+    }
+    if (has_jams()) {
+      if (jams_ != NULL) jams_->::eveobjects::jammers::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool targetentry::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .eveobjects.label text = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_text()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_jams;
+        break;
+      }
+      
+      // optional .eveobjects.jammers jams = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_jams:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_jams()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void targetentry::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .eveobjects.label text = 1;
+  if (has_text()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->text(), output);
+  }
+  
+  // optional .eveobjects.jammers jams = 2;
+  if (has_jams()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->jams(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* targetentry::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional .eveobjects.label text = 1;
+  if (has_text()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->text(), target);
+  }
+  
+  // optional .eveobjects.jammers jams = 2;
+  if (has_jams()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->jams(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int targetentry::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .eveobjects.label text = 1;
+    if (has_text()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->text());
+    }
+    
+    // optional .eveobjects.jammers jams = 2;
+    if (has_jams()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->jams());
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void targetentry::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const targetentry* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const targetentry*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void targetentry::MergeFrom(const targetentry& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_text()) {
+      mutable_text()->::eveobjects::label::MergeFrom(from.text());
+    }
+    if (from.has_jams()) {
+      mutable_jams()->::eveobjects::jammers::MergeFrom(from.jams());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void targetentry::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void targetentry::CopyFrom(const targetentry& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool targetentry::IsInitialized() const {
+  
+  if (has_text()) {
+    if (!this->text().IsInitialized()) return false;
+  }
+  return true;
+}
+
+void targetentry::Swap(targetentry* other) {
+  if (other != this) {
+    std::swap(text_, other->text_);
+    std::swap(jams_, other->jams_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata targetentry::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = targetentry_descriptor_;
+  metadata.reflection = targetentry_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int jammers::kJammerFieldNumber;
+#endif  // !_MSC_VER
+
+jammers::jammers()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void jammers::InitAsDefaultInstance() {
+}
+
+jammers::jammers(const jammers& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void jammers::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+jammers::~jammers() {
+  SharedDtor();
+}
+
+void jammers::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void jammers::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* jammers::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return jammers_descriptor_;
+}
+
+const jammers& jammers::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_objects_2eproto();  return *default_instance_;
+}
+
+jammers* jammers::default_instance_ = NULL;
+
+jammers* jammers::New() const {
+  return new jammers;
+}
+
+void jammers::Clear() {
+  jammer_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool jammers::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated string jammer = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_jammer:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_jammer()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->jammer(0).data(), this->jammer(0).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(10)) goto parse_jammer;
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void jammers::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // repeated string jammer = 1;
+  for (int i = 0; i < this->jammer_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->jammer(i).data(), this->jammer(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->jammer(i), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* jammers::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // repeated string jammer = 1;
+  for (int i = 0; i < this->jammer_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->jammer(i).data(), this->jammer(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(1, this->jammer(i), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int jammers::ByteSize() const {
+  int total_size = 0;
+  
+  // repeated string jammer = 1;
+  total_size += 1 * this->jammer_size();
+  for (int i = 0; i < this->jammer_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->jammer(i));
+  }
+  
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void jammers::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const jammers* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const jammers*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void jammers::MergeFrom(const jammers& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  jammer_.MergeFrom(from.jammer_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void jammers::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void jammers::CopyFrom(const jammers& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool jammers::IsInitialized() const {
+  
+  return true;
+}
+
+void jammers::Swap(jammers* other) {
+  if (other != this) {
+    jammer_.Swap(&other->jammer_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata jammers::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = jammers_descriptor_;
+  metadata.reflection = jammers_reflection_;
   return metadata;
 }
 
