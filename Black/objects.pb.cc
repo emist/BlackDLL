@@ -18,6 +18,9 @@ namespace eveobjects {
 
 namespace {
 
+const ::google::protobuf::Descriptor* infoObject_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  infoObject_reflection_ = NULL;
 const ::google::protobuf::Descriptor* BooleanObject_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   BooleanObject_reflection_ = NULL;
@@ -52,7 +55,23 @@ void protobuf_AssignDesc_objects_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "objects.proto");
   GOOGLE_CHECK(file != NULL);
-  BooleanObject_descriptor_ = file->message_type(0);
+  infoObject_descriptor_ = file->message_type(0);
+  static const int infoObject_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(infoObject, text_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(infoObject, value_),
+  };
+  infoObject_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      infoObject_descriptor_,
+      infoObject::default_instance_,
+      infoObject_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(infoObject, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(infoObject, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(infoObject));
+  BooleanObject_descriptor_ = file->message_type(1);
   static const int BooleanObject_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BooleanObject, istrue_),
   };
@@ -67,7 +86,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BooleanObject));
-  functionCall_descriptor_ = file->message_type(1);
+  functionCall_descriptor_ = file->message_type(2);
   static const int functionCall_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(functionCall, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(functionCall, strparameter_),
@@ -83,7 +102,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(functionCall));
-  overview_descriptor_ = file->message_type(2);
+  overview_descriptor_ = file->message_type(3);
   static const int overview_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(overview, overviewentry_),
   };
@@ -98,7 +117,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(overview));
-  label_descriptor_ = file->message_type(3);
+  label_descriptor_ = file->message_type(4);
   static const int label_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, text_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, topleftx_),
@@ -117,7 +136,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(label));
-  TargetList_descriptor_ = file->message_type(4);
+  TargetList_descriptor_ = file->message_type(5);
   static const int TargetList_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TargetList, thistarget_),
   };
@@ -132,7 +151,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TargetList));
-  targetentry_descriptor_ = file->message_type(5);
+  targetentry_descriptor_ = file->message_type(6);
   static const int targetentry_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(targetentry, text_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(targetentry, jams_),
@@ -148,7 +167,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(targetentry));
-  jammers_descriptor_ = file->message_type(6);
+  jammers_descriptor_ = file->message_type(7);
   static const int jammers_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(jammers, jammer_),
   };
@@ -163,7 +182,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(jammers));
-  Interface_descriptor_ = file->message_type(7);
+  Interface_descriptor_ = file->message_type(8);
   static const int Interface_offsets_[11] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, topleftx_),
@@ -201,6 +220,8 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    infoObject_descriptor_, &infoObject::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     BooleanObject_descriptor_, &BooleanObject::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     functionCall_descriptor_, &functionCall::default_instance());
@@ -221,6 +242,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 }  // namespace
 
 void protobuf_ShutdownFile_objects_2eproto() {
+  delete infoObject::default_instance_;
+  delete infoObject_reflection_;
   delete BooleanObject::default_instance_;
   delete BooleanObject_reflection_;
   delete functionCall::default_instance_;
@@ -246,25 +269,27 @@ void protobuf_AddDesc_objects_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\robjects.proto\022\neveobjects\"\037\n\rBooleanOb"
-    "ject\022\016\n\006istrue\030\001 \002(\010\"2\n\014functionCall\022\014\n\004"
-    "name\030\001 \002(\t\022\024\n\014strparameter\030\002 \001(\t\"4\n\010over"
-    "view\022(\n\roverviewEntry\030\001 \003(\0132\021.eveobjects"
-    ".label\"X\n\005label\022\014\n\004text\030\001 \002(\t\022\020\n\010topLeft"
-    "X\030\002 \002(\005\022\020\n\010topLeftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005"
-    "\022\016\n\006height\030\005 \002(\005\"9\n\nTargetList\022+\n\nthista"
-    "rget\030\001 \003(\0132\027.eveobjects.targetentry\"Q\n\013t"
-    "argetentry\022\037\n\004text\030\001 \001(\0132\021.eveobjects.la"
-    "bel\022!\n\004jams\030\002 \001(\0132\023.eveobjects.jammers\"\031"
-    "\n\007jammers\022\016\n\006jammer\030\001 \003(\t\"\361\001\n\tInterface\022"
-    "\014\n\004name\030\001 \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010tople"
-    "ftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005 \002(\005"
-    "\022\026\n\016hasCloseButton\030\006 \001(\010\022\025\n\rcloseTopLeft"
-    "X\030\007 \001(\005\022\025\n\rcloseTopLeftY\030\010 \001(\005\022\031\n\021hasCon"
-    "tinueButton\030\t \001(\010\022\030\n\020continueTopLeftX\030\n "
-    "\001(\005\022\030\n\020continueTopLeftY\030\013 \001(\005", 669);
+    "\n\robjects.proto\022\neveobjects\")\n\ninfoObjec"
+    "t\022\014\n\004text\030\001 \001(\t\022\r\n\005value\030\002 \001(\005\"\037\n\rBoolea"
+    "nObject\022\016\n\006istrue\030\001 \002(\010\"2\n\014functionCall\022"
+    "\014\n\004name\030\001 \002(\t\022\024\n\014strparameter\030\002 \001(\t\"4\n\010o"
+    "verview\022(\n\roverviewEntry\030\001 \003(\0132\021.eveobje"
+    "cts.label\"X\n\005label\022\014\n\004text\030\001 \002(\t\022\020\n\010topL"
+    "eftX\030\002 \002(\005\022\020\n\010topLeftY\030\003 \002(\005\022\r\n\005width\030\004 "
+    "\002(\005\022\016\n\006height\030\005 \002(\005\"9\n\nTargetList\022+\n\nthi"
+    "starget\030\001 \003(\0132\027.eveobjects.targetentry\"Q"
+    "\n\013targetentry\022\037\n\004text\030\001 \001(\0132\021.eveobjects"
+    ".label\022!\n\004jams\030\002 \001(\0132\023.eveobjects.jammer"
+    "s\"\031\n\007jammers\022\016\n\006jammer\030\001 \003(\t\"\361\001\n\tInterfa"
+    "ce\022\014\n\004name\030\001 \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010to"
+    "pleftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005 "
+    "\002(\005\022\026\n\016hasCloseButton\030\006 \001(\010\022\025\n\rcloseTopL"
+    "eftX\030\007 \001(\005\022\025\n\rcloseTopLeftY\030\010 \001(\005\022\031\n\021has"
+    "ContinueButton\030\t \001(\010\022\030\n\020continueTopLeftX"
+    "\030\n \001(\005\022\030\n\020continueTopLeftY\030\013 \001(\005", 712);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "objects.proto", &protobuf_RegisterTypes);
+  infoObject::default_instance_ = new infoObject();
   BooleanObject::default_instance_ = new BooleanObject();
   functionCall::default_instance_ = new functionCall();
   overview::default_instance_ = new overview();
@@ -273,6 +298,7 @@ void protobuf_AddDesc_objects_2eproto() {
   targetentry::default_instance_ = new targetentry();
   jammers::default_instance_ = new jammers();
   Interface::default_instance_ = new Interface();
+  infoObject::default_instance_->InitAsDefaultInstance();
   BooleanObject::default_instance_->InitAsDefaultInstance();
   functionCall::default_instance_->InitAsDefaultInstance();
   overview::default_instance_->InitAsDefaultInstance();
@@ -290,6 +316,270 @@ struct StaticDescriptorInitializer_objects_2eproto {
     protobuf_AddDesc_objects_2eproto();
   }
 } static_descriptor_initializer_objects_2eproto_;
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int infoObject::kTextFieldNumber;
+const int infoObject::kValueFieldNumber;
+#endif  // !_MSC_VER
+
+infoObject::infoObject()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void infoObject::InitAsDefaultInstance() {
+}
+
+infoObject::infoObject(const infoObject& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void infoObject::SharedCtor() {
+  _cached_size_ = 0;
+  text_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  value_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+infoObject::~infoObject() {
+  SharedDtor();
+}
+
+void infoObject::SharedDtor() {
+  if (text_ != &::google::protobuf::internal::kEmptyString) {
+    delete text_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void infoObject::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* infoObject::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return infoObject_descriptor_;
+}
+
+const infoObject& infoObject::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_objects_2eproto();  return *default_instance_;
+}
+
+infoObject* infoObject::default_instance_ = NULL;
+
+infoObject* infoObject::New() const {
+  return new infoObject;
+}
+
+void infoObject::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_text()) {
+      if (text_ != &::google::protobuf::internal::kEmptyString) {
+        text_->clear();
+      }
+    }
+    value_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool infoObject::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string text = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_text()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->text().data(), this->text().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_value;
+        break;
+      }
+      
+      // optional int32 value = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_value:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &value_)));
+          set_has_value();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void infoObject::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string text = 1;
+  if (has_text()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->text().data(), this->text().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->text(), output);
+  }
+  
+  // optional int32 value = 2;
+  if (has_value()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->value(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* infoObject::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string text = 1;
+  if (has_text()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->text().data(), this->text().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->text(), target);
+  }
+  
+  // optional int32 value = 2;
+  if (has_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->value(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int infoObject::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string text = 1;
+    if (has_text()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->text());
+    }
+    
+    // optional int32 value = 2;
+    if (has_value()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->value());
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void infoObject::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const infoObject* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const infoObject*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void infoObject::MergeFrom(const infoObject& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_text()) {
+      set_text(from.text());
+    }
+    if (from.has_value()) {
+      set_value(from.value());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void infoObject::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void infoObject::CopyFrom(const infoObject& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool infoObject::IsInitialized() const {
+  
+  return true;
+}
+
+void infoObject::Swap(infoObject* other) {
+  if (other != this) {
+    std::swap(text_, other->text_);
+    std::swap(value_, other->value_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata infoObject::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = infoObject_descriptor_;
+  metadata.reflection = infoObject_reflection_;
+  return metadata;
+}
 
 
 // ===================================================================

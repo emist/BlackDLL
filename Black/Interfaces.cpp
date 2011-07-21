@@ -558,6 +558,161 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 	return output;
 }
 
+PyObject * Interfaces::_findModule(string module)
+{
+	PyObject * shipui = _getLayer("shipui");
+
+	if(shipui == NULL)
+	{
+		log.elog("shipui is null");
+		return NULL;
+	}
+
+	PyObject * slotsContainer  = _findByNameLayer(shipui, "slotsContainer");
+	if(slotsContainer == NULL)
+	{
+		log.elog("doesn't have a slots container");
+		Py_DECREF(shipui);
+		return NULL;
+	}
+
+	PyObject * mod = _findByNameLayer(slotsContainer, module);
+	if(mod == NULL)
+	{
+		log.elog("Mod not visible");
+		Py_DECREF(shipui);
+		Py_DECREF(slotsContainer);
+		return NULL;
+	}
+
+	return mod;
+}
+
+char * Interfaces::_buildModule(PyObject * mod, string name, int & size)
+{
+	if(mod == NULL)
+		return NULL;
+
+	PyObject * height, * width, *absoluteTop, *absoluteLeft;
+
+	height = _getHeight(mod);
+	if(height == NULL)
+	{
+		log.elog("Couldn't get height");
+		return NULL;
+	}
+
+	width = _getWidth(mod);
+	if(width == NULL)
+	{
+		log.elog("Coudn't get width");
+		Py_DECREF(height);
+		return NULL;
+	}
+	absoluteTop = _getAbsoluteTop(mod);
+	if(absoluteTop == NULL)
+	{
+		log.elog("Couldn't get absoluteTop");
+		Py_DECREF(width);
+		Py_DECREF(height);
+		return NULL;
+	}
+
+	absoluteLeft = _getAbsoluteLeft(mod);
+	if(absoluteLeft == NULL)
+	{
+		log.elog("Couldn't get absoluteLeft");
+		Py_DECREF(width);
+		Py_DECREF(height);
+		Py_DECREF(absoluteTop);
+		return NULL;		
+	}
+
+	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	return output;
+
+}
+
+char * Interfaces::_GetSlot(string name, string  outputname, int & size)
+{
+	PyObject * mod = _findModule(name);
+	if(mod == NULL)
+	{
+		log.elog("No module found");
+		return NULL;
+	}
+	char * output = _buildModule(mod, outputname, size);
+	Py_DECREF(mod);
+	return output;
+}
+
+char * Interfaces::GetFirstHighSlot(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetSlot("inFlightHighSlot1", "FirstHighSlot", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetSecondHighSlot(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetSlot("inFlightHighSlot2", "SecondHighSlot", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetThirdHighSlot(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetSlot("inFlightHighSlot3", "ThirdHighSlot", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetFourthHighSlot(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetSlot("inFlightHighSlot4", "FourthHighSlot", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetFifthHighSlot(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetSlot("inFlightHighSlot5", "FifthHighSlot", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetSixthHighSlot(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetSlot("inFlightHighSlot6", "SixthHighSlot", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetSeventhHighSlot(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetSlot("inFlightHighSlot7", "SeventhHighSlot", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetEigthHighSlot(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetSlot("inFlightHighSlot8", "EigthHighSlot", size);
+	PyGILState_Release(gstate);
+	return output;
+}
 
 
 char * Interfaces::GetSelectedItem(int & size)

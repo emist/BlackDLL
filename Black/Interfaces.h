@@ -28,12 +28,23 @@ class Interfaces{
 	PyObject * _getWidth(PyObject * result);
 	PyObject * _findByNameLayer(PyObject * layer, string name);
 	PyObject * _getLayer(string layername);
+	PyObject * _findModule(string module);
 
 	char * _findByTextGeneric(string layername, string label, int & size);
 	char * _findByNameGeneric(string layername, string name, int & size);
 	char * _getLayerWithAttributes(string layername, int & size);
+	char * _buildModule(PyObject * mod, string name, int & size);
+	char * Interfaces::_GetSlot(string name, string outputname, int & size);
 
 public:
+	char * GetEigthHighSlot(int & size);
+	char * GetSeventhHighSlot(int & size);
+	char * GetSixthHighSlot(int & size);
+	char * GetFifthHighSlot(int & size);
+	char * GetFourthHighSlot(int & size);
+	char * GetThirdHighSlot(int & size);
+	char * GetSecondHighSlot(int & size);
+	char * GetFirstHighSlot(int & size);
 	char * GetTargetList(int & size);
 	char * GetSelectedItem(int & size);
 	char * isMenuOpen(int & size);
