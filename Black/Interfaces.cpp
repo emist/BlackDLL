@@ -729,10 +729,11 @@ char * Interfaces::GetTargetList(int & size)
 			return NULL;
 		}
 		
-		if(strcmp(fname, "xtriui.Target") == 0)
+		if(strcmp(fname, "Target") == 0)
 		{
 			log.elog("Found target object");
-			PyObject * label, *text, * width, * height, *absoluteLeft, *absoluteTop;
+			PyObject * label, * width, * height, *absoluteLeft, *absoluteTop;
+			char * text;
 			label = _getAttribute(pvalue, "label");
 			if(label == NULL)
 			{
@@ -744,7 +745,7 @@ char * Interfaces::GetTargetList(int & size)
 				return NULL;
 			}
 			
-			text = _getText(label);
+			text = PyString_AsString(label);
 			if(text == NULL)
 			{
 				log.elog("Couldn't pull the text off the label");
@@ -764,7 +765,6 @@ char * Interfaces::GetTargetList(int & size)
 				Py_DECREF(target);
 				Py_DECREF(pvalue);
 				Py_DECREF(label);
-				Py_DECREF(text);
 				PyGILState_Release(gstate);
 				return NULL;
 			}
@@ -777,7 +777,6 @@ char * Interfaces::GetTargetList(int & size)
 				Py_DECREF(target);
 				Py_DECREF(pvalue);
 				Py_DECREF(label);
-				Py_DECREF(text);
 				Py_DECREF(width);
 				PyGILState_Release(gstate);
 				return NULL;
@@ -791,7 +790,6 @@ char * Interfaces::GetTargetList(int & size)
 				Py_DECREF(target);
 				Py_DECREF(pvalue);
 				Py_DECREF(label);
-				Py_DECREF(text);
 				Py_DECREF(height);
 				Py_DECREF(width);
 				PyGILState_Release(gstate);
@@ -806,7 +804,6 @@ char * Interfaces::GetTargetList(int & size)
 				Py_DECREF(target);
 				Py_DECREF(pvalue);
 				Py_DECREF(label);
-				Py_DECREF(text);
 				Py_DECREF(height);
 				Py_DECREF(width);
 				Py_DECREF(absoluteLeft);
@@ -814,22 +811,25 @@ char * Interfaces::GetTargetList(int & size)
 				return NULL;
 			}
 			ObjectBuilder::targetEntry * tEntry = new ObjectBuilder::targetEntry();
-			tEntry->name = PyString_AsString(text);
+			tEntry->name = text;
 			tEntry->height = PyInt_AsLong(height);
 			tEntry->width = PyInt_AsLong(width);
 			tEntry->topLeftX = PyInt_AsLong(absoluteLeft);
 			tEntry->topLeftY = PyInt_AsLong(absoluteTop);
 			targets.push_back(tEntry);
-			log.elog("Couldn't get absoluteTop");
+			log.elog("adding target entry");
 			Py_DECREF(pvalue);
 			Py_DECREF(label);
-			Py_DECREF(text);
 			Py_DECREF(height);
 			Py_DECREF(width);
 			Py_DECREF(absoluteLeft);
 			Py_DECREF(absoluteTop);
 			
 		}		
+		else
+		{
+			log.elog("Not a target type");
+		}
 
 	}
 	log.elog("Building target object");
@@ -1322,14 +1322,12 @@ PyObject * Interfaces::_getAttribute(PyObject * result, string attr)
 		if(attribute == NULL)
 		{
 			log.elog("Failed to get " + attr);
-			Py_DECREF(result);
 			return NULL;
 		}
 	}
 	else
 	{
-		log.elog("Doesn't have name" + attr);
-		Py_DECREF(result);
+		log.elog("Doesn't have attribute " + attr);
 		return NULL;
 	}
 	return attribute;
