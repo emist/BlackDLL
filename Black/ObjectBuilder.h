@@ -38,6 +38,7 @@ public:
 			int height;
 			list<string> jammers;
 		};
+
 		char * buildBooleanObject( bool value, int & size );
 		char * buildInterfaceObject( string name, int posX, int posY, int width, int height, int & size );
 		char * buildOverViewObject(list<overViewEntry *> & labels, int & size);
