@@ -34,17 +34,12 @@ class Interfaces{
 	char * _findByNameGeneric(string layername, string name, int & size);
 	char * _getLayerWithAttributes(string layername, int & size);
 	char * _buildModule(PyObject * mod, string name, int & size);
-	char * Interfaces::_GetSlot(string name, string outputname, int & size);
+	char * _GetSlot(string name, string outputname, int & size);
+	char * _isModuleActive(string name, int & size);
 
 public:
-	char * GetEigthHighSlot(int & size);
-	char * GetSeventhHighSlot(int & size);
-	char * GetSixthHighSlot(int & size);
-	char * GetFifthHighSlot(int & size);
-	char * GetFourthHighSlot(int & size);
-	char * GetThirdHighSlot(int & size);
-	char * GetSecondHighSlot(int & size);
-	char * GetFirstHighSlot(int & size);
+	char * IsHighSlotActive(int number, int & size);
+	char * GetHighSlot(int number, int & size);
 	char * GetTargetList(int & size);
 	char * GetSelectedItem(int & size);
 	char * isMenuOpen(int & size);

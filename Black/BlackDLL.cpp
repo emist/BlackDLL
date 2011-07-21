@@ -379,48 +379,19 @@ bool EchoIncomingPackets(SOCKET sd)
 				 output = interfaces.GetTargetList(size);
 			 }
 
-			 if(func.name().compare("getFirstHighSlot") == 0)
+			 if(func.name().compare("getHighSlot") == 0)
 			 {
 				 log.elog(func.name());
-				 output = interfaces.GetFirstHighSlot(size);
+				 log.elog(func.strparameter());
+				 output = interfaces.GetHighSlot(atoi(func.strparameter().c_str()), size);
 			 }
 
-			 if(func.name().compare("getSecondHighSlot") == 0)
+			 if(func.name().compare("isHighSlotActive") == 0)
 			 {
 				 log.elog(func.name());
-				 output = interfaces.GetSecondHighSlot(size);
+				 log.elog(func.strparameter());
+				 output = interfaces.IsHighSlotActive(atoi(func.strparameter().c_str()), size);
 			 }
-			 if(func.name().compare("getThirdHighSlot") == 0)
-			 {
-				 log.elog(func.name());
-				 output = interfaces.GetThirdHighSlot(size);
-			 }
-			 if(func.name().compare("getFourthHighSlot") == 0)
-			 {
-				 log.elog(func.name());
-				 output = interfaces.GetFourthHighSlot(size);
-			 }
-			 if(func.name().compare("getFifthHighSlot") == 0)
-			 {
-				 log.elog(func.name());
-				 output = interfaces.GetFifthHighSlot(size);
-			 }
-			 if(func.name().compare("getSixthHighSlot") == 0)
-			 {
-				 log.elog(func.name());
-				 output = interfaces.GetSixthHighSlot(size);
-			 }
- 			 if(func.name().compare("getSeventhHighSlot") == 0)
-			 {
-				 log.elog(func.name());
-				 output = interfaces.GetSeventhHighSlot(size);
-			 }
-			 if(func.name().compare("getEigthHighSlot") == 0)
-			 {
-				 log.elog(func.name());
-				 output = interfaces.GetEigthHighSlot(size);
-			 }
-
 
 
 			 Sleep(300);

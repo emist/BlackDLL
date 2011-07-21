@@ -637,6 +637,141 @@ char * Interfaces::_buildModule(PyObject * mod, string name, int & size)
 
 }
 
+char * Interfaces::IsHighSlotActive(int number, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	switch(number)
+	{
+		case 1:
+		{
+			output = _isModuleActive("inFlightHighSlot1", size);
+			break;
+		}
+		case 2:
+		{
+			output = _isModuleActive("inFlightHighSlot2", size);
+			break;
+		}
+		case 3:
+		{
+			output = _isModuleActive("inFlightHighSlot3", size);
+			break;
+		}
+		case 4:
+		{
+			output = _isModuleActive("inFlightHighSlot4", size);
+			break;
+		}
+		case 5:
+		{
+			output = _isModuleActive("inFlightHighSlot5", size);
+			break;
+		}
+		case 6:
+		{
+			output = _isModuleActive("inFlightHighSlot6", size);
+			break;
+		}
+		case 7:
+		{
+			output = _isModuleActive("inFlightHighSlot7", size);
+			break;
+		}
+		case 8:
+		{
+			output = _isModuleActive("inFlightHighSlot8", size);
+			break;
+		}
+		case 9:
+		{
+			output = _isModuleActive("inFlightHighSlot9", size);
+			break;
+		}
+	}
+
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::_isModuleActive(string name, int & size)
+{
+	PyObject * module = _findModule(name);
+	bool isActive = false;
+	if(module == NULL)
+	{
+		log.elog("Couldn't find the module");
+		return NULL;
+	}
+
+	PyObject * sr = _getAttribute(module, "sr");
+	if(sr == NULL)
+	{
+		log.elog("Couldn't get sr");
+		Py_DECREF(module);
+		return NULL;
+	}
+	PyObject * srmodule = _getAttribute(sr, "module");
+	if(srmodule == NULL)
+	{
+		log.elog("Couldn't find srmodule");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		return NULL;
+	}
+
+	PyObject * sragain = _getAttribute(srmodule, "sr");
+	if(sragain == NULL)
+	{
+		log.elog("sragain is null");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		return NULL;
+	}
+
+	PyObject * glow = _getAttribute(sragain, "glow");
+	if(glow == NULL)
+	{
+		log.elog("Can't get the glow");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		return NULL;
+	}
+
+	PyObject * state = _getAttribute(glow, "state");
+	if(state == NULL)
+	{
+		log.elog("Couldn't get state");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		Py_DECREF(glow);
+		return NULL;
+	}
+
+	int istate = PyInt_AsLong(state);
+	if(istate == 1)
+	{
+		isActive = true;
+	}
+
+	log.elog("Outputing isActive");
+	char * output = builder.buildBooleanObject(isActive, size);
+	Py_DECREF(module);
+	Py_DECREF(sr);
+	Py_DECREF(srmodule);
+	Py_DECREF(sragain);
+	Py_DECREF(glow);
+	Py_DECREF(state);
+	return output;
+
+
+}
+
 char * Interfaces::_GetSlot(string name, string  outputname, int & size)
 {
 	PyObject * mod = _findModule(name);
@@ -650,66 +785,58 @@ char * Interfaces::_GetSlot(string name, string  outputname, int & size)
 	return output;
 }
 
-char * Interfaces::GetFirstHighSlot(int & size)
+char * Interfaces::GetHighSlot(int number, int & size)
 {
+	char * output = NULL;
 	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _GetSlot("inFlightHighSlot1", "FirstHighSlot", size);
-	PyGILState_Release(gstate);
-	return output;
-}
-
-char * Interfaces::GetSecondHighSlot(int & size)
-{
-	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _GetSlot("inFlightHighSlot2", "SecondHighSlot", size);
-	PyGILState_Release(gstate);
-	return output;
-}
-
-char * Interfaces::GetThirdHighSlot(int & size)
-{
-	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _GetSlot("inFlightHighSlot3", "ThirdHighSlot", size);
-	PyGILState_Release(gstate);
-	return output;
-}
-
-char * Interfaces::GetFourthHighSlot(int & size)
-{
-	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _GetSlot("inFlightHighSlot4", "FourthHighSlot", size);
-	PyGILState_Release(gstate);
-	return output;
-}
-
-char * Interfaces::GetFifthHighSlot(int & size)
-{
-	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _GetSlot("inFlightHighSlot5", "FifthHighSlot", size);
-	PyGILState_Release(gstate);
-	return output;
-}
-
-char * Interfaces::GetSixthHighSlot(int & size)
-{
-	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _GetSlot("inFlightHighSlot6", "SixthHighSlot", size);
-	PyGILState_Release(gstate);
-	return output;
-}
-
-char * Interfaces::GetSeventhHighSlot(int & size)
-{
-	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _GetSlot("inFlightHighSlot7", "SeventhHighSlot", size);
-	PyGILState_Release(gstate);
-	return output;
-}
-
-char * Interfaces::GetEigthHighSlot(int & size)
-{
-	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _GetSlot("inFlightHighSlot8", "EigthHighSlot", size);
+	switch(number)
+	{
+		case 1:
+		{
+			output = _GetSlot("inFlightHighSlot1", "FirstHighSlot", size);
+			break;
+		}
+		case 2:
+		{
+			output = _GetSlot("inFlightHighSlot2", "SecondHighSlot", size);
+			break;
+		}
+		case 3:
+		{
+			output = _GetSlot("inFlightHighSlot3", "ThirdHighSlot", size);
+			break;
+		}
+		case 4:
+		{
+			output = _GetSlot("inFlightHighSlot4", "FourthHighSlot", size);
+			break;
+		}
+		case 5:
+		{
+			output = _GetSlot("inFlightHighSlot5", "FifthHighSlot", size);
+			break;
+		}
+		case 6:
+		{
+			output = _GetSlot("inFlightHighSlot6", "SixthHighSlot", size);
+			break;
+		}
+		case 7:
+		{
+			output = _GetSlot("inFlightHighSlot7", "SeventhHighSlot", size);
+			break;
+		}
+		case 8:
+		{
+			output = _GetSlot("inFlightHighSlot8", "EigthHighSlot", size);
+			break;
+		}
+		case 9:
+		{
+			output = _GetSlot("inFlightHighSlot9", "NinenthHighSlot", size);
+			break;
+		}
+	}
 	PyGILState_Release(gstate);
 	return output;
 }
