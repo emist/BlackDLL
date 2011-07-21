@@ -69,6 +69,34 @@ extern "C" __declspec(dllexport) void dllCalcTest(HWND handle)
 
 
 
+extern "C" __declspec(dllexport) void dllMouseButtonDown(HWND handle, bool left, int x, int y)
+{
+	if(handle == NULL)
+		cout << "Handle is NULL" << endl;
+
+	if(handle != NULL)
+	{
+		if(left)
+			SendMessage(handle, WM_LBUTTONDOWN, 0, MAKELPARAM(x,y));
+		else
+			SendMessage(handle, WM_RBUTTONDOWN, 0, MAKELPARAM(x,y));
+	}
+}
+
+extern "C" __declspec(dllexport) void dllMouseButtonUp(HWND handle, bool left, int x, int y)
+{
+	if(handle == NULL)
+		cout << "Handle is NULL" << endl;
+
+	if(handle != NULL)
+	{
+		if(left)
+			SendMessage(handle, WM_LBUTTONUP, 0, MAKELPARAM(x,y));
+		else
+			SendMessage(handle, WM_RBUTTONUP, 0, MAKELPARAM(x,y));
+	}
+}
+
 extern "C" __declspec(dllexport) void dllMouseClick(HWND handle, bool left, int x, int y)
 {
 
