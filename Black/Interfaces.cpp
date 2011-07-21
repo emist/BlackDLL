@@ -558,6 +558,8 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 	return output;
 }
 
+
+
 char * Interfaces::GetSelectedItem(int & size)
 {
 	
@@ -666,6 +668,183 @@ char * Interfaces::GetSelectedItem(int & size)
 	Py_DECREF(label);
 	PyGILState_Release(gstate);
 	return output;
+}
+
+
+char * Interfaces::GetTargetList(int & size)
+{
+	list<ObjectBuilder::targetEntry *> targets;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * target = _getLayer("target");
+	if(target == NULL)
+	{
+		log.elog("Can't get the target layer");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * children = _getAttribute(target, "children");
+	if(children == NULL)
+	{
+		log.elog("Target has no children");
+		Py_DECREF(target);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	int len = PyObject_Size(children);
+
+	if(len < 1)
+	{
+		log.elog("Target has no children");
+		Py_DECREF(children);
+		Py_DECREF(target);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * pkey, *pvalue;
+	const char * fname;
+	for(int i = 0; i < len; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get the child value");
+			Py_DECREF(children);
+			Py_DECREF(target);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+		
+		fname = PyEval_GetFuncName(pvalue);
+		if(fname == NULL)
+		{
+			log.elog("Couldn't get type name");
+			Py_DECREF(children);
+			Py_DECREF(target);
+			Py_DECREF(pvalue);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+		
+		if(strcmp(fname, "xtriui.Target") == 0)
+		{
+			log.elog("Found target object");
+			PyObject * label, *text, * width, * height, *absoluteLeft, *absoluteTop;
+			label = _getAttribute(pvalue, "label");
+			if(label == NULL)
+			{
+				log.elog("Couldn't pull the label attribute off the target");
+				Py_DECREF(children);
+				Py_DECREF(target);
+				Py_DECREF(pvalue);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			
+			text = _getText(label);
+			if(text == NULL)
+			{
+				log.elog("Couldn't pull the text off the label");
+				Py_DECREF(children);
+				Py_DECREF(target);
+				Py_DECREF(pvalue);
+				Py_DECREF(label);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			
+			width = _getWidth(pvalue);
+			if(width == NULL)
+			{
+				log.elog("Couldn't get width");
+				Py_DECREF(children);
+				Py_DECREF(target);
+				Py_DECREF(pvalue);
+				Py_DECREF(label);
+				Py_DECREF(text);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			
+			height = _getHeight(pvalue);
+			if(height == NULL)
+			{
+				log.elog("Couldn't get height");
+				Py_DECREF(children);
+				Py_DECREF(target);
+				Py_DECREF(pvalue);
+				Py_DECREF(label);
+				Py_DECREF(text);
+				Py_DECREF(width);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			
+			absoluteLeft = _getAbsoluteLeft(pvalue);
+			if(absoluteLeft == NULL)
+			{
+				log.elog("Couldn't get absoluteLeft");
+				Py_DECREF(children);
+				Py_DECREF(target);
+				Py_DECREF(pvalue);
+				Py_DECREF(label);
+				Py_DECREF(text);
+				Py_DECREF(height);
+				Py_DECREF(width);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+
+			absoluteTop = _getAbsoluteTop(pvalue);
+			if(absoluteTop == NULL)
+			{
+				log.elog("Couldn't get absoluteTop");
+				Py_DECREF(children);
+				Py_DECREF(target);
+				Py_DECREF(pvalue);
+				Py_DECREF(label);
+				Py_DECREF(text);
+				Py_DECREF(height);
+				Py_DECREF(width);
+				Py_DECREF(absoluteLeft);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			ObjectBuilder::targetEntry * tEntry = new ObjectBuilder::targetEntry();
+			tEntry->name = PyString_AsString(text);
+			tEntry->height = PyInt_AsLong(height);
+			tEntry->width = PyInt_AsLong(width);
+			tEntry->topLeftX = PyInt_AsLong(absoluteLeft);
+			tEntry->topLeftY = PyInt_AsLong(absoluteTop);
+			targets.push_back(tEntry);
+			log.elog("Couldn't get absoluteTop");
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			Py_DECREF(text);
+			Py_DECREF(height);
+			Py_DECREF(width);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(absoluteTop);
+			
+		}		
+
+	}
+	log.elog("Building target object");
+	char * output = builder.buildTargetObject(targets, size);
+
+	for(list<ObjectBuilder::targetEntry *>::iterator it = targets.begin(); it != targets.end(); it++)
+	{
+		delete (*it);
+	}
+
+	Py_DECREF(target);
+	Py_DECREF(children);
+	PyGILState_Release(gstate);
+	return output;
+
 }
 
 char * Interfaces::OverViewGetMembers(int & size)

@@ -34,7 +34,8 @@ class Interfaces{
 	char * _getLayerWithAttributes(string layername, int & size);
 
 public:
-	char * Interfaces::GetSelectedItem(int & size);
+	char * GetTargetList(int & size);
+	char * GetSelectedItem(int & size);
 	char * isMenuOpen(int & size);
 	char * OverViewGetMembers(int & size);
 	char * getInflightInterface(int & size);
