@@ -19,8 +19,8 @@ char * ObjectBuilder::buildTargetObject(list<targetEntry *> & labels, int & size
 
 	for(list<targetEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
 	{
-		//log.elog("Iterating through the overViewEntry list in objectbuilder");
-		eveobjects::targetentry * targetEntry = targetObject.add_target();
+		//log.elog("Iterating through the targetEntry list in objectbuilder");
+		eveobjects::targetentry * targetEntry = targetObject.add_thistarget();
 		eveobjects::label * targetLabel = targetEntry->mutable_text();
 		
 		targetLabel->set_text((*it)->name);
