@@ -12,6 +12,33 @@ char * ObjectBuilder::buildBooleanObject( bool value, int & size  )
 	return output;
 }
 
+char * ObjectBuilder::buildTargetObject(list<targetEntry *> & labels, int & size)
+{
+	eveobjects::TargetList targetObject;
+	int temps = targetObject.ByteSize();
+
+	for(list<targetEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
+	{
+		//log.elog("Iterating through the overViewEntry list in objectbuilder");
+		eveobjects::targetentry * targetEntry = targetObject.add_target();
+		eveobjects::label * targetLabel = targetEntry->mutable_text();
+		
+		targetLabel->set_text((*it)->name);
+		targetLabel->set_height((*it)->height);
+		targetLabel->set_width((*it)->width);
+		targetLabel->set_topleftx((*it)->topLeftX);
+		targetLabel->set_toplefty((*it)->topLeftY);
+		
+	}
+
+	
+	if(targetObject.ByteSize() > temps)
+	{
+		//log.elog("overviewObject increased in size");
+	}
+	return putToByteArray(targetObject, size);
+}
+
 char * ObjectBuilder::buildOverViewObject(list<overViewEntry *> & labels, int & size)
 {
 	eveobjects::overview overviewObject;
