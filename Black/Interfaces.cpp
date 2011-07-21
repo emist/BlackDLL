@@ -558,6 +558,115 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 	return output;
 }
 
+char * Interfaces::GetSelectedItem(int & size)
+{
+	
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * selectedItemView = _findByNameLayer(main, "selecteditemview");
+	if(selectedItemView == NULL)
+	{
+		log.elog("selectedItemView is null");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * maincontainer = _findByNameLayer(selectedItemView, "__maincontainer");
+	if(maincontainer == NULL)
+	{
+		log.elog("__maincontainer is null");
+		Py_DECREF(main);
+		Py_DECREF(selectedItemView);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * mainitem = _findByNameLayer(maincontainer, "main");
+	if(mainitem == NULL)
+	{
+		log.elog("mainitem is null");
+		Py_DECREF(main);
+		Py_DECREF(selectedItemView);
+		Py_DECREF(maincontainer);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * toparea = _findByNameLayer(mainitem, "toparea");
+	if(toparea == NULL)
+	{
+		log.elog("toparea is null");
+		Py_DECREF(main);
+		Py_DECREF(selectedItemView);
+		Py_DECREF(maincontainer);
+		Py_DECREF(mainitem);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * text = _findByNameLayer(toparea, "text");
+	if(text == NULL)
+	{
+		log.elog("text is null");
+		Py_DECREF(main);
+		Py_DECREF(selectedItemView);
+		Py_DECREF(maincontainer);
+		Py_DECREF(mainitem);
+		Py_DECREF(toparea);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * result = _getAttribute(text, "text");
+	if(result == NULL)
+	{
+		log.elog("Couldn't get the text attribute");
+		Py_DECREF(main);
+		Py_DECREF(selectedItemView);
+		Py_DECREF(maincontainer);
+		Py_DECREF(mainitem);
+		Py_DECREF(toparea);
+		Py_DECREF(text);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * label = PyString_AsString(result);
+	if(label == NULL)
+	{
+		log.elog("Couldn't turn label into string");
+		Py_DECREF(main);
+		Py_DECREF(selectedItemView);
+		Py_DECREF(maincontainer);
+		Py_DECREF(mainitem);
+		Py_DECREF(toparea);
+		Py_DECREF(text);
+		Py_DECREF(label);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	char * output = builder.buildInterfaceObject(label,  0 ,0, 0, 0, size);
+
+	Py_DECREF(main);
+	Py_DECREF(selectedItemView);
+	Py_DECREF(maincontainer);
+	Py_DECREF(mainitem);
+	Py_DECREF(toparea);
+	Py_DECREF(text);
+	Py_DECREF(label);
+	PyGILState_Release(gstate);
+	return output;
+}
 
 char * Interfaces::OverViewGetMembers(int & size)
 {

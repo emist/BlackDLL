@@ -360,11 +360,17 @@ bool EchoIncomingPackets(SOCKET sd)
 				 output = interfaces.isMenuOpen(size);
 			 }
 
-			 ///FOr testing purposes
+			 
 			 if(func.name().compare("getOverViewItems") == 0)
 			 {
 				 log.elog(func.name());
 				 output = interfaces.OverViewGetMembers(size);
+			 }
+
+			 if(func.name().compare("getSelectedItem") == 0)
+			 {
+				 log.elog(func.name());
+				 output = interfaces.GetSelectedItem(size);
 			 }
 
 
