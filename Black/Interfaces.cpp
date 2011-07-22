@@ -790,7 +790,12 @@ char * Interfaces::GetCargoList(int & size)
 	}
 
 	PyGILState_Release(gstate);
-	return builder.buildOverViewObject(labels, size);
+	char * output = builder.buildOverViewObject(labels, size);
+	for(list<ObjectBuilder::overViewEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
+	{
+		delete (*it);
+	}
+	return output;
 
 }
 
