@@ -393,6 +393,11 @@ bool EchoIncomingPackets(SOCKET sd)
 				 output = interfaces.IsHighSlotActive(atoi(func.strparameter().c_str()), size);
 			 }
 
+			 if(func.name().compare("getCargoList") == 0)
+			 {
+				 log.elog(func.name());
+				 output = interfaces.GetCargoList(size);
+			 }
 
 			 Sleep(300);
 

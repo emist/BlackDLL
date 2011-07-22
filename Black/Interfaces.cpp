@@ -2,6 +2,8 @@
 #include "Interfaces.h"
 #include <List>
 #include "ObjectBuilder.h"
+#include <sstream>
+#include <iostream>
 
 ///_functions should never aquire the GIL, its the caller's responsibility to do so.
 
@@ -635,6 +637,291 @@ char * Interfaces::_buildModule(PyObject * mod, string name, int & size)
 	Py_DECREF(absoluteLeft);
 	return output;
 
+}
+
+PyObject * Interfaces::_GetInflightCargoView()
+{
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		return NULL;
+	}
+
+	PyObject * children = _getAttribute(main, "children");
+	if(children == NULL)
+	{
+		log.elog("children is null");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	int csize = PyObject_Size(children);
+
+	PyObject * pvalue = NULL;
+	PyObject * pkey = NULL;
+	
+	for(int i = 0; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+		
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get the value");
+			Py_DECREF(main);
+			Py_DECREF(children);
+			return NULL;
+		}
+		
+		log.elog(PyEval_GetFuncName(pvalue));
+		if(strcmp(PyEval_GetFuncName(pvalue), "InflightCargoView") == 0)
+		{
+			log.elog("Found cargoview");
+			Py_DECREF(pvalue);
+			return pvalue;
+		}
+		Py_DECREF(pvalue);
+	}
+
+	return NULL;
+}
+
+
+PyObject * Interfaces::_GetEntry(string entryname)
+{
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		return NULL;
+	}
+
+	PyObject * children = _getAttribute(main, "children");
+	if(children == NULL)
+	{
+		log.elog("children is null");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	int csize = PyObject_Size(children);
+
+	PyObject * pvalue = NULL;
+	PyObject * pkey = NULL;
+	PyObject * name = NULL;
+	PyObject * width = NULL;
+	PyObject * height = NULL;
+	PyObject * absoluteTop = NULL;
+	PyObject * absoluteLeft = NULL;
+	PyObject * entry = NULL;
+	PyObject * sr = NULL;
+	PyObject * node = NULL;
+	
+	for(int i = 0; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+		
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get the value");
+			Py_DECREF(main);
+			Py_DECREF(children);
+			return NULL;
+		}
+		
+		log.elog(PyEval_GetFuncName(pvalue));
+		if(strcmp(PyEval_GetFuncName(pvalue), "InflightCargoView") == 0)
+		{
+			log.elog("Found cargoview");
+			entry = _findByNameLayer(pvalue, entryname);
+			if(entry == NULL)
+			{
+				log.elog("cant find entry " + entryname);
+				Py_DECREF(main);
+				Py_DECREF(children);
+				Py_DECREF(pvalue);
+				return NULL;
+			}
+		}
+		Py_DECREF(pvalue);
+	}
+
+	if(entry == NULL)
+	{
+		log.elog("doesn't have an entry " + entryname);
+		Py_DECREF(main);
+		Py_DECREF(children);
+		return NULL;
+	}
+
+	Py_DECREF(main);
+	Py_DECREF(children);
+	return entry;
+
+}
+
+char * Interfaces::GetCargoList(int & size)
+{
+	list<ObjectBuilder::overViewEntry *> labels;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * cargoView = _GetInflightCargoView();
+	if(cargoView == NULL)
+	{
+		log.elog("Couldn't get cargoview");
+		PyGILState_Release(gstate);
+		return NULL;;
+	}
+
+	PyObject * entry = _findByNameLayer(cargoView, "entry_0");
+	stringstream os;
+	os << "entry_";
+
+
+	for(int i = 1; entry != NULL; i++)
+	{
+		_IterateThroughEntryAndBuild(entry, labels);
+		os.str("");
+		os << "entry_" << i;
+
+		log.elog(os.str());
+		entry = _findByNameLayer(cargoView, os.str());
+	}
+
+	PyGILState_Release(gstate);
+	return builder.buildOverViewObject(labels, size);
+
+}
+
+void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuilder::overViewEntry *> & labels)
+{	
+
+	PyObject * entry_children = _getAttribute(entry, "children");
+	if(entry_children == NULL)
+	{
+		log.elog("couldn't get entry children");
+		return;
+	}
+
+
+	PyObject * pkey = NULL, * pvalue = NULL, *sr = NULL, *node = NULL, *name = NULL, *height = NULL;
+	PyObject * absoluteTop = NULL, *absoluteLeft = NULL, *width = NULL;
+	int csize = PyObject_Size(entry_children);
+	for(int i = 0; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(entry_children, pkey);
+		if(pvalue == NULL)
+		{
+			log.elog("pvalue is null");
+			Py_DECREF(entry_children);
+			return;
+		}
+
+		sr = _getAttribute(pvalue, "sr");
+		if(sr == NULL)
+		{
+			log.elog("sr null");
+			Py_DECREF(pvalue);
+			Py_DECREF(entry_children);
+			return;
+		}
+
+		node = _getAttribute(sr, "node");
+		if(node == NULL)
+		{
+			log.elog("node is null");
+			Py_DECREF(pvalue);
+			Py_DECREF(sr);
+			Py_DECREF(entry_children);
+			return;
+		}
+
+		name = _getAttribute(node, "name");
+		if(name == NULL)
+		{
+			log.elog("couldn't get the name");
+			Py_DECREF(pvalue);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(entry_children);
+			return;
+		}
+		//Got name, get absoluteTop, absoluteLeft, width, height
+		absoluteTop = _getAttribute(pvalue, "absoluteTop");
+		if(absoluteTop == NULL)
+		{
+			log.elog("Couldn't get absoluteTop");
+			Py_DECREF(pvalue);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(name);
+			Py_DECREF(entry_children);
+			return;
+		}
+
+		absoluteLeft = _getAttribute(pvalue, "absoluteLeft");
+		if(absoluteLeft == NULL)
+		{
+			Py_DECREF(pvalue);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(name);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(entry_children);
+			return;
+		}
+
+		width = _getAttribute(pvalue, "width");
+		if(width == NULL)
+		{
+			Py_DECREF(name);
+			Py_DECREF(pvalue);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(entry_children);
+			return;
+		}
+
+		height = _getAttribute(pvalue, "height");
+		if(height == NULL)
+		{
+			Py_DECREF(name);
+			Py_DECREF(pvalue);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(width);
+			Py_DECREF(entry_children);
+			return;
+		}
+
+
+		ObjectBuilder::overViewEntry * over = new ObjectBuilder::overViewEntry();
+		over->text = PyString_AsString(name);
+		over->topLeftX = PyInt_AsLong(absoluteLeft);
+		over->topLeftY = PyInt_AsLong(absoluteTop);
+		over->width = PyInt_AsLong(width);
+		over->height = PyInt_AsLong(height);
+		
+		labels.push_back(over);
+		Py_DECREF(pvalue);
+		Py_DECREF(height);
+		Py_DECREF(name);
+		Py_DECREF(sr);
+		Py_DECREF(node);
+		Py_DECREF(absoluteLeft);
+		Py_DECREF(absoluteTop);
+		Py_DECREF(width);
+
+	}///end of for
+
+	Py_DECREF(entry_children);
+		
 }
 
 char * Interfaces::IsHighSlotActive(int number, int & size)
@@ -1359,7 +1646,7 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 	log.elog(name);
 	if(layer == NULL)
 	{
-		log.elog("Login Interface is null");
+		log.elog("Interface is null");
 		return NULL;
 	}
 	
@@ -1416,6 +1703,14 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 			{
 				log.elog("Error calling FindChild(param)");
 				log.elog(PyString_AsString(param));
+				Py_DECREF(findChild);
+				Py_DECREF(args);
+				Py_DECREF(param);
+				return NULL;
+			}
+			if(PyObject_Not(soughtInterface))
+			{
+				log.elog("FindChild returned blank");
 				Py_DECREF(findChild);
 				Py_DECREF(args);
 				Py_DECREF(param);

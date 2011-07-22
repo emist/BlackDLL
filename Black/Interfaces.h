@@ -29,6 +29,9 @@ class Interfaces{
 	PyObject * _findByNameLayer(PyObject * layer, string name);
 	PyObject * _getLayer(string layername);
 	PyObject * _findModule(string module);
+	PyObject * _GetEntry(string name);
+	PyObject * _GetInflightCargoView();
+	void _IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuilder::overViewEntry *> & labels );
 
 	char * _findByTextGeneric(string layername, string label, int & size);
 	char * _findByNameGeneric(string layername, string name, int & size);
@@ -38,6 +41,7 @@ class Interfaces{
 	char * _isModuleActive(string name, int & size);
 
 public:
+	char * GetCargoList(int & size);
 	char * IsHighSlotActive(int number, int & size);
 	char * GetHighSlot(int number, int & size);
 	char * GetTargetList(int & size);
