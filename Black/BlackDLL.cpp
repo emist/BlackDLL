@@ -411,6 +411,18 @@ bool EchoIncomingPackets(SOCKET sd)
 				output = interfaces.GetShipHangar(size);
 			}
 
+			if(func.name().compare("getStationHangar") == 0)
+			{
+				log.elog(func.name());
+				output = interfaces.GetStationHangar(size);
+			}
+
+			if(func.name().compare("getItemsButton") == 0)
+			{
+				log.elog(func.name());
+				output = interfaces.GetStationItemsButton(size);
+			}
+
 			 Sleep(300);
 
 			 if(output == NULL)

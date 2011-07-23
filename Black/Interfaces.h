@@ -45,6 +45,8 @@ class Interfaces{
 	char * _isModuleActive(string name, int & size);
 
 public:
+	char * GetStationHangar(int & size);
+	char * GetStationItemsButton(int & size);
 	char * GetCargoList(int & size);
 	char * GetUndockButton(int & size);
 	char * IsHighSlotActive(int number, int & size);

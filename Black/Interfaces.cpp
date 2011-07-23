@@ -870,7 +870,7 @@ char * Interfaces::GetShipHangar(int & size)
 		return NULL;
 	}
 
-	PyObject * shipHangar = _findByNameLayer(main, "hangarFloor");
+	PyObject * shipHangar = _findByNameLayer(main, "shipHangar");
 	if(shipHangar == NULL)
 	{
 		log.elog("shipHangar is null");
@@ -893,6 +893,51 @@ char * Interfaces::GetShipHangar(int & size)
 	char * output = builder.buildInterfaceObject("shipHangar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
 	Py_DECREF(main);
 	Py_DECREF(shipHangar);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(absoluteTop);
+
+	PyGILState_Release(gstate);
+	return output;
+		
+}
+
+
+char * Interfaces::GetStationHangar(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * stationHangar = _findByNameLayer(main, "hangarFloor");
+	if(stationHangar == NULL)
+	{
+		log.elog("stationHangar is null");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+
+	bool ok = _populateAttributesDisplay(stationHangar, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		Py_DECREF(main);
+		Py_DECREF(stationHangar);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("stationHangar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(stationHangar);
 	Py_DECREF(width);
 	Py_DECREF(height);
 	Py_DECREF(absoluteLeft);
@@ -1008,6 +1053,39 @@ char * Interfaces::GetUndockButton(int & size)
 	}
 	
 	char * output = builder.buildInterfaceObject("UndockButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(buttonIcon);
+	
+	PyGILState_Release(gstate);
+	return output;
+}
+
+
+char * Interfaces::GetStationItemsButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * buttonIcon = _getNeocomButton("items");
+	if(buttonIcon == NULL)
+	{
+		log.elog("Couldn't find the icon");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+	bool ok = _populateAttributesDisplay(buttonIcon, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't get attributes");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	char * output = builder.buildInterfaceObject("ItemsButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
 	
 	Py_DECREF(width);
 	Py_DECREF(height);
