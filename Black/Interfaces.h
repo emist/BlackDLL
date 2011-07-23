@@ -31,6 +31,10 @@ class Interfaces{
 	PyObject * _findModule(string module);
 	PyObject * _GetEntry(string name);
 	PyObject * _GetInflightCargoView();
+	PyObject * _findType(string name, PyObject * children);
+	PyObject * _getNeocomButton(string buttonname);
+	bool _populateAttributes(PyObject * item, PyObject ** width, PyObject ** height, PyObject ** absoluteTop, PyObject ** absoluteLeft);
+	bool _populateAttributesDisplay(PyObject * item, PyObject ** width, PyObject ** height, PyObject ** absoluteTop, PyObject ** absoluteLeft);
 	void _IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuilder::itemEntry *> & labels );
 
 	char * _findByTextGeneric(string layername, string label, int & size);
@@ -42,6 +46,7 @@ class Interfaces{
 
 public:
 	char * GetCargoList(int & size);
+	char * GetUndockButton(int & size);
 	char * IsHighSlotActive(int number, int & size);
 	char * GetHighSlot(int number, int & size);
 	char * GetTargetList(int & size);
@@ -53,5 +58,6 @@ public:
 	char * findByTextMenu(string label, int & size);
 	char * findByNameLogin(string name, int & size);
 	char * findByTextLogin(string text, int & size);
+	char * GetShipHangar(int & size);
 };
 #endif

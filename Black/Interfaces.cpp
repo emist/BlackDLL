@@ -688,6 +688,41 @@ PyObject * Interfaces::_GetInflightCargoView()
 }
 
 
+PyObject * Interfaces::_findType(string name, PyObject * children)
+{
+	int csize = PyObject_Size(children);
+
+	PyObject * pvalue = NULL;
+	PyObject * pkey = NULL;
+
+	log.elog("inside findType");
+	for(int i = 0; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+	
+		log.elog("iterating through neocom children");
+
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get the value");
+			return NULL;
+		}
+		
+		log.elog(PyEval_GetFuncName(pvalue));
+		if(strcmp(PyEval_GetFuncName(pvalue), name.c_str()) == 0)
+		{
+			log.elog("Found " + name);
+			return pvalue;
+		}
+		Py_DECREF(pvalue);
+	}
+
+	
+	return NULL;
+}
+
+
 PyObject * Interfaces::_GetEntry(string entryname)
 {
 	PyObject * main = _getLayer("main");
@@ -761,6 +796,229 @@ PyObject * Interfaces::_GetEntry(string entryname)
 	return entry;
 
 }
+
+PyObject * Interfaces::_getNeocomButton(string buttonname)
+{
+	PyObject * layer = _getLayer("neocom");
+	
+	if(layer == NULL)
+	{	
+		return NULL;
+	}
+	
+	PyObject * neocom = _findByNameLayer(layer, "neocom");
+	if(neocom == NULL)
+	{
+		log.elog("Couldn't get neocom layer");
+		Py_DECREF(layer);
+		return NULL;
+	}
+
+	PyObject * maincontainer = _findByNameLayer(neocom, "maincontainer");
+	if(maincontainer == NULL)
+	{
+		log.elog("Couldn't get maincontainer");
+		Py_DECREF(layer);
+		Py_DECREF(neocom);
+		return NULL;
+	}
+
+	PyObject * button = _findByNameLayer(maincontainer, buttonname);
+	if(button == NULL)
+	{
+		log.elog("couldn't get button");
+		Py_DECREF(layer);
+		Py_DECREF(neocom);
+		Py_DECREF(maincontainer);
+		return NULL;
+	}
+
+	PyObject * buttonchildren = _getAttribute(button, "children");
+	if(buttonchildren == NULL)
+	{
+		log.elog("Couldn't get button's children");
+		Py_DECREF(layer);
+		Py_DECREF(neocom);
+		Py_DECREF(maincontainer);
+		Py_DECREF(button);
+		return NULL;
+	}
+
+	PyObject * icon = _findType("EveIcon", buttonchildren);
+	if(icon == NULL)
+	{
+		log.elog("Couldn't get the icon");
+		Py_DECREF(layer);
+		Py_DECREF(neocom);
+		Py_DECREF(maincontainer);
+		Py_DECREF(button);
+		return NULL;
+	}
+
+	return icon;
+
+}
+
+char * Interfaces::GetShipHangar(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * shipHangar = _findByNameLayer(main, "hangarFloor");
+	if(shipHangar == NULL)
+	{
+		log.elog("shipHangar is null");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+
+	bool ok = _populateAttributesDisplay(shipHangar, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		Py_DECREF(main);
+		Py_DECREF(shipHangar);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("shipHangar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(shipHangar);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(absoluteTop);
+
+	PyGILState_Release(gstate);
+	return output;
+		
+}
+
+
+bool Interfaces::_populateAttributesDisplay(PyObject * item, PyObject ** width, PyObject ** height, PyObject ** absoluteTop, PyObject ** absoluteLeft)
+{
+			*width = _getAttribute(item, "displayWidth");
+			if(*width == NULL)
+			{
+				log.elog("Couldn't get width");
+				return false;
+			}
+			
+			*height = _getAttribute(item, "displayHeight");
+			if(*height == NULL)
+			{
+				log.elog("Couldn't get height");
+				Py_DECREF(width);
+				return false;
+			}
+			
+			*absoluteLeft = _getAbsoluteLeft(item);
+			if(*absoluteLeft == NULL)
+			{
+				log.elog("Couldn't get absoluteLeft");
+				Py_DECREF(height);
+				Py_DECREF(width);
+				return false;
+			}
+
+			*absoluteTop = _getAbsoluteTop(item);
+			if(*absoluteTop == NULL)
+			{
+				log.elog("Couldn't get absoluteTop");
+				Py_DECREF(height);
+				Py_DECREF(width);
+				Py_DECREF(absoluteLeft);
+				return false;
+			}
+
+
+			return true;
+}
+
+
+
+bool Interfaces::_populateAttributes(PyObject * item, PyObject ** width, PyObject ** height, PyObject ** absoluteTop, PyObject ** absoluteLeft)
+{
+			*width = _getWidth(item);
+			if(*width == NULL)
+			{
+				log.elog("Couldn't get width");
+				return false;
+			}
+			
+			*height = _getHeight(item);
+			if(*height == NULL)
+			{
+				log.elog("Couldn't get height");
+				Py_DECREF(width);
+				return false;
+			}
+			
+			*absoluteLeft = _getAbsoluteLeft(item);
+			if(*absoluteLeft == NULL)
+			{
+				log.elog("Couldn't get absoluteLeft");
+				Py_DECREF(height);
+				Py_DECREF(width);
+				return false;
+			}
+
+			*absoluteTop = _getAbsoluteTop(item);
+			if(*absoluteTop == NULL)
+			{
+				log.elog("Couldn't get absoluteTop");
+				Py_DECREF(height);
+				Py_DECREF(width);
+				Py_DECREF(absoluteLeft);
+				return false;
+			}
+
+
+			return true;
+}
+
+
+char * Interfaces::GetUndockButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * buttonIcon = _getNeocomButton("undock");
+	if(buttonIcon == NULL)
+	{
+		log.elog("Couldn't find the icon");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+	bool ok = _populateAttributesDisplay(buttonIcon, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't get attributes");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	char * output = builder.buildInterfaceObject("UndockButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(buttonIcon);
+	
+	PyGILState_Release(gstate);
+	return output;
+}
+
 
 char * Interfaces::GetCargoList(int & size)
 {
