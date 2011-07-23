@@ -65,7 +65,40 @@ char * ObjectBuilder::buildOverViewObject(list<overViewEntry *> & labels, int & 
 	
 }
 
-			
+
+char * ObjectBuilder::buildItemObject(list<itemEntry *> & labels, int & size)
+{
+	eveobjects::itemgroup itemObject;
+	int temps = itemObject.ByteSize();
+
+	for(list<itemEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
+	{
+		//log.elog("Iterating through the overViewEntry list in objectbuilder");
+		eveobjects::item * item = itemObject.add_items();
+		eveobjects::label * itemLabel = item->mutable_data();
+		
+		item->set_name((*it)->name);
+		item->set_meta((*it)->meta);
+		item->set_quantity((*it)->quantity);
+		item->set_volume((*it)->volume);
+		itemLabel->set_text((*it)->name);
+		itemLabel->set_height((*it)->height);
+		itemLabel->set_width((*it)->width);
+		itemLabel->set_topleftx((*it)->topLeftX);
+		itemLabel->set_toplefty((*it)->topLeftY);
+		
+	}
+
+	
+	if(itemObject.ByteSize() > temps)
+	{
+		//log.elog("overviewObject increased in size");
+	}
+	return putToByteArray(itemObject, size);
+	
+}
+
+
 			
 
 char * ObjectBuilder::buildInterfaceObject(string name, int posX, int posY, int width, int height, int & size)

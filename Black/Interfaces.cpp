@@ -764,7 +764,7 @@ PyObject * Interfaces::_GetEntry(string entryname)
 
 char * Interfaces::GetCargoList(int & size)
 {
-	list<ObjectBuilder::overViewEntry *> labels;
+	list<ObjectBuilder::itemEntry *> labels;
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	PyObject * cargoView = _GetInflightCargoView();
 	if(cargoView == NULL)
@@ -790,8 +790,8 @@ char * Interfaces::GetCargoList(int & size)
 	}
 
 	PyGILState_Release(gstate);
-	char * output = builder.buildOverViewObject(labels, size);
-	for(list<ObjectBuilder::overViewEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
+	char * output = builder.buildItemObject(labels, size);
+	for(list<ObjectBuilder::itemEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
 	{
 		delete (*it);
 	}
@@ -799,7 +799,7 @@ char * Interfaces::GetCargoList(int & size)
 
 }
 
-void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuilder::overViewEntry *> & labels)
+void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuilder::itemEntry *> & labels)
 {	
 
 	PyObject * entry_children = _getAttribute(entry, "children");
@@ -811,7 +811,7 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 
 
 	PyObject * pkey = NULL, * pvalue = NULL, *sr = NULL, *node = NULL, *name = NULL, *height = NULL;
-	PyObject * absoluteTop = NULL, *absoluteLeft = NULL, *width = NULL;
+	PyObject * absoluteTop = NULL, *absoluteLeft = NULL, *width = NULL, * sort_qty = NULL, * volume = NULL, * meta = NULL;
 	int csize = PyObject_Size(entry_children);
 	for(int i = 0; i < csize; i++)
 	{
@@ -869,6 +869,7 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		absoluteLeft = _getAttribute(pvalue, "absoluteLeft");
 		if(absoluteLeft == NULL)
 		{
+			log.elog("Couldnt' get absoluteleft");
 			Py_DECREF(pvalue);
 			Py_DECREF(sr);
 			Py_DECREF(node);
@@ -881,6 +882,7 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		width = _getAttribute(pvalue, "width");
 		if(width == NULL)
 		{
+			log.elog("Couldn't get width");
 			Py_DECREF(name);
 			Py_DECREF(pvalue);
 			Py_DECREF(sr);
@@ -894,6 +896,7 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		height = _getAttribute(pvalue, "height");
 		if(height == NULL)
 		{
+			log.elog("Couldn't get height");
 			Py_DECREF(name);
 			Py_DECREF(pvalue);
 			Py_DECREF(sr);
@@ -905,9 +908,74 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 			return;
 		}
 
+		sort_qty = _getAttribute(node, "sort_qty");
+		if(sort_qty == NULL)
+		{
+			log.elog("Couldn't get sort_qty");
+			Py_DECREF(name);
+			Py_DECREF(pvalue);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(width);
+			Py_DECREF(entry_children);
+			Py_DECREF(height);
+			return;			
+		}
 
-		ObjectBuilder::overViewEntry * over = new ObjectBuilder::overViewEntry();
-		over->text = PyString_AsString(name);
+		volume = _getAttribute(node, "volume");
+		if(volume == NULL)
+		{
+			log.elog("Couldn't get volume");
+			Py_DECREF(name);
+			Py_DECREF(pvalue);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(width);
+			Py_DECREF(entry_children);
+			Py_DECREF(height);
+			Py_DECREF(sort_qty);
+			return;			
+		}
+		
+		meta = _getAttribute(node, "meta");
+		if(meta == NULL)
+		{
+			log.elog("Couldn't get meta");
+			Py_DECREF(name);
+			Py_DECREF(pvalue);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(width);
+			Py_DECREF(entry_children);
+			Py_DECREF(height);
+			Py_DECREF(sort_qty);
+			Py_DECREF(volume);
+			return;			
+		}
+
+
+		
+		ObjectBuilder::itemEntry * over = new ObjectBuilder::itemEntry();
+		if(PyObject_Not(meta))
+		{
+			log.elog("Meta is blank");
+			over->meta = "0";
+		}
+		else
+		{
+			over->meta = PyString_AsString(meta);
+		}
+
+		over->quantity = PyInt_AsLong(sort_qty);
+		over->volume = PyString_AsString(volume);
+
+		over->name = PyString_AsString(name);
 		over->topLeftX = PyInt_AsLong(absoluteLeft);
 		over->topLeftY = PyInt_AsLong(absoluteTop);
 		over->width = PyInt_AsLong(width);
@@ -922,6 +990,8 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		Py_DECREF(absoluteLeft);
 		Py_DECREF(absoluteTop);
 		Py_DECREF(width);
+		Py_DECREF(sort_qty);
+		Py_DECREF(volume);
 
 	}///end of for
 

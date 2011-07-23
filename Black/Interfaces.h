@@ -31,7 +31,7 @@ class Interfaces{
 	PyObject * _findModule(string module);
 	PyObject * _GetEntry(string name);
 	PyObject * _GetInflightCargoView();
-	void _IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuilder::overViewEntry *> & labels );
+	void _IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuilder::itemEntry *> & labels );
 
 	char * _findByTextGeneric(string layername, string label, int & size);
 	char * _findByNameGeneric(string layername, string name, int & size);

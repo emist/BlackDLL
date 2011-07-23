@@ -39,9 +39,23 @@ public:
 			list<string> jammers;
 		};
 
+		struct itemEntry
+		{
+			string name;
+			int quantity;
+			string volume;
+			string meta;
+			int topLeftX;
+			int topLeftY;
+			int width;
+			int height;
+		};
+			
+
 		char * buildBooleanObject( bool value, int & size );
 		char * buildInterfaceObject( string name, int posX, int posY, int width, int height, int & size );
 		char * buildOverViewObject(list<overViewEntry *> & labels, int & size);
+		char * buildItemObject(list<itemEntry *> & labels, int & size);
 		char * ObjectBuilder::buildTargetObject(list<targetEntry *> & labels, int & size);
 };
 #endif
