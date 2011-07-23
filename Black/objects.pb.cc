@@ -30,6 +30,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* overview_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   overview_reflection_ = NULL;
+const ::google::protobuf::Descriptor* itemgroup_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  itemgroup_reflection_ = NULL;
+const ::google::protobuf::Descriptor* item_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  item_reflection_ = NULL;
 const ::google::protobuf::Descriptor* label_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   label_reflection_ = NULL;
@@ -117,7 +123,41 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(overview));
-  label_descriptor_ = file->message_type(4);
+  itemgroup_descriptor_ = file->message_type(4);
+  static const int itemgroup_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(itemgroup, items_),
+  };
+  itemgroup_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      itemgroup_descriptor_,
+      itemgroup::default_instance_,
+      itemgroup_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(itemgroup, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(itemgroup, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(itemgroup));
+  item_descriptor_ = file->message_type(5);
+  static const int item_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(item, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(item, quantity_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(item, meta_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(item, volume_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(item, data_),
+  };
+  item_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      item_descriptor_,
+      item::default_instance_,
+      item_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(item, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(item, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(item));
+  label_descriptor_ = file->message_type(6);
   static const int label_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, text_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, topleftx_),
@@ -136,7 +176,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(label));
-  TargetList_descriptor_ = file->message_type(5);
+  TargetList_descriptor_ = file->message_type(7);
   static const int TargetList_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TargetList, thistarget_),
   };
@@ -151,7 +191,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TargetList));
-  targetentry_descriptor_ = file->message_type(6);
+  targetentry_descriptor_ = file->message_type(8);
   static const int targetentry_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(targetentry, text_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(targetentry, jams_),
@@ -167,7 +207,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(targetentry));
-  jammers_descriptor_ = file->message_type(7);
+  jammers_descriptor_ = file->message_type(9);
   static const int jammers_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(jammers, jammer_),
   };
@@ -182,7 +222,7 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(jammers));
-  Interface_descriptor_ = file->message_type(8);
+  Interface_descriptor_ = file->message_type(10);
   static const int Interface_offsets_[11] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Interface, topleftx_),
@@ -228,6 +268,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     overview_descriptor_, &overview::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    itemgroup_descriptor_, &itemgroup::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    item_descriptor_, &item::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     label_descriptor_, &label::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TargetList_descriptor_, &TargetList::default_instance());
@@ -250,6 +294,10 @@ void protobuf_ShutdownFile_objects_2eproto() {
   delete functionCall_reflection_;
   delete overview::default_instance_;
   delete overview_reflection_;
+  delete itemgroup::default_instance_;
+  delete itemgroup_reflection_;
+  delete item::default_instance_;
+  delete item_reflection_;
   delete label::default_instance_;
   delete label_reflection_;
   delete TargetList::default_instance_;
@@ -274,25 +322,31 @@ void protobuf_AddDesc_objects_2eproto() {
     "nObject\022\016\n\006istrue\030\001 \002(\010\"2\n\014functionCall\022"
     "\014\n\004name\030\001 \002(\t\022\024\n\014strparameter\030\002 \001(\t\"4\n\010o"
     "verview\022(\n\roverviewEntry\030\001 \003(\0132\021.eveobje"
-    "cts.label\"X\n\005label\022\014\n\004text\030\001 \002(\t\022\020\n\010topL"
-    "eftX\030\002 \002(\005\022\020\n\010topLeftY\030\003 \002(\005\022\r\n\005width\030\004 "
-    "\002(\005\022\016\n\006height\030\005 \002(\005\"9\n\nTargetList\022+\n\nthi"
-    "starget\030\001 \003(\0132\027.eveobjects.targetentry\"Q"
-    "\n\013targetentry\022\037\n\004text\030\001 \001(\0132\021.eveobjects"
-    ".label\022!\n\004jams\030\002 \001(\0132\023.eveobjects.jammer"
-    "s\"\031\n\007jammers\022\016\n\006jammer\030\001 \003(\t\"\361\001\n\tInterfa"
-    "ce\022\014\n\004name\030\001 \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010to"
-    "pleftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005 "
-    "\002(\005\022\026\n\016hasCloseButton\030\006 \001(\010\022\025\n\rcloseTopL"
-    "eftX\030\007 \001(\005\022\025\n\rcloseTopLeftY\030\010 \001(\005\022\031\n\021has"
-    "ContinueButton\030\t \001(\010\022\030\n\020continueTopLeftX"
-    "\030\n \001(\005\022\030\n\020continueTopLeftY\030\013 \001(\005", 712);
+    "cts.label\",\n\titemgroup\022\037\n\005items\030\001 \003(\0132\020."
+    "eveobjects.item\"e\n\004item\022\014\n\004name\030\001 \002(\t\022\020\n"
+    "\010quantity\030\002 \002(\005\022\014\n\004meta\030\003 \002(\t\022\016\n\006volume\030"
+    "\004 \002(\t\022\037\n\004data\030\005 \002(\0132\021.eveobjects.label\"X"
+    "\n\005label\022\014\n\004text\030\001 \002(\t\022\020\n\010topLeftX\030\002 \002(\005\022"
+    "\020\n\010topLeftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006heig"
+    "ht\030\005 \002(\005\"9\n\nTargetList\022+\n\nthistarget\030\001 \003"
+    "(\0132\027.eveobjects.targetentry\"Q\n\013targetent"
+    "ry\022\037\n\004text\030\001 \001(\0132\021.eveobjects.label\022!\n\004j"
+    "ams\030\002 \001(\0132\023.eveobjects.jammers\"\031\n\007jammer"
+    "s\022\016\n\006jammer\030\001 \003(\t\"\361\001\n\tInterface\022\014\n\004name\030"
+    "\001 \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010topleftY\030\003 \002("
+    "\005\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005 \002(\005\022\026\n\016hasC"
+    "loseButton\030\006 \001(\010\022\025\n\rcloseTopLeftX\030\007 \001(\005\022"
+    "\025\n\rcloseTopLeftY\030\010 \001(\005\022\031\n\021hasContinueBut"
+    "ton\030\t \001(\010\022\030\n\020continueTopLeftX\030\n \001(\005\022\030\n\020c"
+    "ontinueTopLeftY\030\013 \001(\005", 861);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "objects.proto", &protobuf_RegisterTypes);
   infoObject::default_instance_ = new infoObject();
   BooleanObject::default_instance_ = new BooleanObject();
   functionCall::default_instance_ = new functionCall();
   overview::default_instance_ = new overview();
+  itemgroup::default_instance_ = new itemgroup();
+  item::default_instance_ = new item();
   label::default_instance_ = new label();
   TargetList::default_instance_ = new TargetList();
   targetentry::default_instance_ = new targetentry();
@@ -302,6 +356,8 @@ void protobuf_AddDesc_objects_2eproto() {
   BooleanObject::default_instance_->InitAsDefaultInstance();
   functionCall::default_instance_->InitAsDefaultInstance();
   overview::default_instance_->InitAsDefaultInstance();
+  itemgroup::default_instance_->InitAsDefaultInstance();
+  item::default_instance_->InitAsDefaultInstance();
   label::default_instance_->InitAsDefaultInstance();
   TargetList::default_instance_->InitAsDefaultInstance();
   targetentry::default_instance_->InitAsDefaultInstance();
@@ -1271,6 +1327,638 @@ void overview::Swap(overview* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = overview_descriptor_;
   metadata.reflection = overview_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int itemgroup::kItemsFieldNumber;
+#endif  // !_MSC_VER
+
+itemgroup::itemgroup()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void itemgroup::InitAsDefaultInstance() {
+}
+
+itemgroup::itemgroup(const itemgroup& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void itemgroup::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+itemgroup::~itemgroup() {
+  SharedDtor();
+}
+
+void itemgroup::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void itemgroup::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* itemgroup::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return itemgroup_descriptor_;
+}
+
+const itemgroup& itemgroup::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_objects_2eproto();  return *default_instance_;
+}
+
+itemgroup* itemgroup::default_instance_ = NULL;
+
+itemgroup* itemgroup::New() const {
+  return new itemgroup;
+}
+
+void itemgroup::Clear() {
+  items_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool itemgroup::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .eveobjects.item items = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_items:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_items()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(10)) goto parse_items;
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void itemgroup::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // repeated .eveobjects.item items = 1;
+  for (int i = 0; i < this->items_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->items(i), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* itemgroup::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // repeated .eveobjects.item items = 1;
+  for (int i = 0; i < this->items_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->items(i), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int itemgroup::ByteSize() const {
+  int total_size = 0;
+  
+  // repeated .eveobjects.item items = 1;
+  total_size += 1 * this->items_size();
+  for (int i = 0; i < this->items_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->items(i));
+  }
+  
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void itemgroup::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const itemgroup* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const itemgroup*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void itemgroup::MergeFrom(const itemgroup& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  items_.MergeFrom(from.items_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void itemgroup::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void itemgroup::CopyFrom(const itemgroup& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool itemgroup::IsInitialized() const {
+  
+  for (int i = 0; i < items_size(); i++) {
+    if (!this->items(i).IsInitialized()) return false;
+  }
+  return true;
+}
+
+void itemgroup::Swap(itemgroup* other) {
+  if (other != this) {
+    items_.Swap(&other->items_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata itemgroup::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = itemgroup_descriptor_;
+  metadata.reflection = itemgroup_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int item::kNameFieldNumber;
+const int item::kQuantityFieldNumber;
+const int item::kMetaFieldNumber;
+const int item::kVolumeFieldNumber;
+const int item::kDataFieldNumber;
+#endif  // !_MSC_VER
+
+item::item()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void item::InitAsDefaultInstance() {
+  data_ = const_cast< ::eveobjects::label*>(&::eveobjects::label::default_instance());
+}
+
+item::item(const item& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void item::SharedCtor() {
+  _cached_size_ = 0;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  quantity_ = 0;
+  meta_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  volume_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  data_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+item::~item() {
+  SharedDtor();
+}
+
+void item::SharedDtor() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (meta_ != &::google::protobuf::internal::kEmptyString) {
+    delete meta_;
+  }
+  if (volume_ != &::google::protobuf::internal::kEmptyString) {
+    delete volume_;
+  }
+  if (this != default_instance_) {
+    delete data_;
+  }
+}
+
+void item::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* item::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return item_descriptor_;
+}
+
+const item& item::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_objects_2eproto();  return *default_instance_;
+}
+
+item* item::default_instance_ = NULL;
+
+item* item::New() const {
+  return new item;
+}
+
+void item::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
+        name_->clear();
+      }
+    }
+    quantity_ = 0;
+    if (has_meta()) {
+      if (meta_ != &::google::protobuf::internal::kEmptyString) {
+        meta_->clear();
+      }
+    }
+    if (has_volume()) {
+      if (volume_ != &::google::protobuf::internal::kEmptyString) {
+        volume_->clear();
+      }
+    }
+    if (has_data()) {
+      if (data_ != NULL) data_->::eveobjects::label::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool item::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required string name = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_quantity;
+        break;
+      }
+      
+      // required int32 quantity = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_quantity:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &quantity_)));
+          set_has_quantity();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_meta;
+        break;
+      }
+      
+      // required string meta = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_meta:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_meta()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->meta().data(), this->meta().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_volume;
+        break;
+      }
+      
+      // required string volume = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_volume:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_volume()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->volume().data(), this->volume().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(42)) goto parse_data;
+        break;
+      }
+      
+      // required .eveobjects.label data = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_data:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_data()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void item::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->name(), output);
+  }
+  
+  // required int32 quantity = 2;
+  if (has_quantity()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->quantity(), output);
+  }
+  
+  // required string meta = 3;
+  if (has_meta()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->meta().data(), this->meta().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      3, this->meta(), output);
+  }
+  
+  // required string volume = 4;
+  if (has_volume()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->volume().data(), this->volume().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->volume(), output);
+  }
+  
+  // required .eveobjects.label data = 5;
+  if (has_data()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->data(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* item::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+  
+  // required int32 quantity = 2;
+  if (has_quantity()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->quantity(), target);
+  }
+  
+  // required string meta = 3;
+  if (has_meta()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->meta().data(), this->meta().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->meta(), target);
+  }
+  
+  // required string volume = 4;
+  if (has_volume()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->volume().data(), this->volume().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->volume(), target);
+  }
+  
+  // required .eveobjects.label data = 5;
+  if (has_data()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        5, this->data(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int item::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+    
+    // required int32 quantity = 2;
+    if (has_quantity()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->quantity());
+    }
+    
+    // required string meta = 3;
+    if (has_meta()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->meta());
+    }
+    
+    // required string volume = 4;
+    if (has_volume()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->volume());
+    }
+    
+    // required .eveobjects.label data = 5;
+    if (has_data()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->data());
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void item::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const item* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const item*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void item::MergeFrom(const item& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+    if (from.has_quantity()) {
+      set_quantity(from.quantity());
+    }
+    if (from.has_meta()) {
+      set_meta(from.meta());
+    }
+    if (from.has_volume()) {
+      set_volume(from.volume());
+    }
+    if (from.has_data()) {
+      mutable_data()->::eveobjects::label::MergeFrom(from.data());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void item::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void item::CopyFrom(const item& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool item::IsInitialized() const {
+  if ((_has_bits_[0] & 0x0000001f) != 0x0000001f) return false;
+  
+  if (has_data()) {
+    if (!this->data().IsInitialized()) return false;
+  }
+  return true;
+}
+
+void item::Swap(item* other) {
+  if (other != this) {
+    std::swap(name_, other->name_);
+    std::swap(quantity_, other->quantity_);
+    std::swap(meta_, other->meta_);
+    std::swap(volume_, other->volume_);
+    std::swap(data_, other->data_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata item::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = item_descriptor_;
+  metadata.reflection = item_reflection_;
   return metadata;
 }
 

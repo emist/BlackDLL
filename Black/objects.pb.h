@@ -36,6 +36,8 @@ class infoObject;
 class BooleanObject;
 class functionCall;
 class overview;
+class itemgroup;
+class item;
 class label;
 class TargetList;
 class targetentry;
@@ -404,6 +406,226 @@ class overview : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static overview* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class itemgroup : public ::google::protobuf::Message {
+ public:
+  itemgroup();
+  virtual ~itemgroup();
+  
+  itemgroup(const itemgroup& from);
+  
+  inline itemgroup& operator=(const itemgroup& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const itemgroup& default_instance();
+  
+  void Swap(itemgroup* other);
+  
+  // implements Message ----------------------------------------------
+  
+  itemgroup* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const itemgroup& from);
+  void MergeFrom(const itemgroup& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // repeated .eveobjects.item items = 1;
+  inline int items_size() const;
+  inline void clear_items();
+  static const int kItemsFieldNumber = 1;
+  inline const ::eveobjects::item& items(int index) const;
+  inline ::eveobjects::item* mutable_items(int index);
+  inline ::eveobjects::item* add_items();
+  inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::item >&
+      items() const;
+  inline ::google::protobuf::RepeatedPtrField< ::eveobjects::item >*
+      mutable_items();
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.itemgroup)
+ private:
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::RepeatedPtrField< ::eveobjects::item > items_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static itemgroup* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class item : public ::google::protobuf::Message {
+ public:
+  item();
+  virtual ~item();
+  
+  item(const item& from);
+  
+  inline item& operator=(const item& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const item& default_instance();
+  
+  void Swap(item* other);
+  
+  // implements Message ----------------------------------------------
+  
+  item* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const item& from);
+  void MergeFrom(const item& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  
+  // required int32 quantity = 2;
+  inline bool has_quantity() const;
+  inline void clear_quantity();
+  static const int kQuantityFieldNumber = 2;
+  inline ::google::protobuf::int32 quantity() const;
+  inline void set_quantity(::google::protobuf::int32 value);
+  
+  // required string meta = 3;
+  inline bool has_meta() const;
+  inline void clear_meta();
+  static const int kMetaFieldNumber = 3;
+  inline const ::std::string& meta() const;
+  inline void set_meta(const ::std::string& value);
+  inline void set_meta(const char* value);
+  inline void set_meta(const char* value, size_t size);
+  inline ::std::string* mutable_meta();
+  inline ::std::string* release_meta();
+  
+  // required string volume = 4;
+  inline bool has_volume() const;
+  inline void clear_volume();
+  static const int kVolumeFieldNumber = 4;
+  inline const ::std::string& volume() const;
+  inline void set_volume(const ::std::string& value);
+  inline void set_volume(const char* value);
+  inline void set_volume(const char* value, size_t size);
+  inline ::std::string* mutable_volume();
+  inline ::std::string* release_volume();
+  
+  // required .eveobjects.label data = 5;
+  inline bool has_data() const;
+  inline void clear_data();
+  static const int kDataFieldNumber = 5;
+  inline const ::eveobjects::label& data() const;
+  inline ::eveobjects::label* mutable_data();
+  inline ::eveobjects::label* release_data();
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.item)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_quantity();
+  inline void clear_has_quantity();
+  inline void set_has_meta();
+  inline void clear_has_meta();
+  inline void set_has_volume();
+  inline void clear_has_volume();
+  inline void set_has_data();
+  inline void clear_has_data();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::std::string* name_;
+  ::std::string* meta_;
+  ::std::string* volume_;
+  ::eveobjects::label* data_;
+  ::google::protobuf::int32 quantity_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static item* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1245,6 +1467,264 @@ overview::overviewentry() const {
 inline ::google::protobuf::RepeatedPtrField< ::eveobjects::label >*
 overview::mutable_overviewentry() {
   return &overviewentry_;
+}
+
+// -------------------------------------------------------------------
+
+// itemgroup
+
+// repeated .eveobjects.item items = 1;
+inline int itemgroup::items_size() const {
+  return items_.size();
+}
+inline void itemgroup::clear_items() {
+  items_.Clear();
+}
+inline const ::eveobjects::item& itemgroup::items(int index) const {
+  return items_.Get(index);
+}
+inline ::eveobjects::item* itemgroup::mutable_items(int index) {
+  return items_.Mutable(index);
+}
+inline ::eveobjects::item* itemgroup::add_items() {
+  return items_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::item >&
+itemgroup::items() const {
+  return items_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::eveobjects::item >*
+itemgroup::mutable_items() {
+  return &items_;
+}
+
+// -------------------------------------------------------------------
+
+// item
+
+// required string name = 1;
+inline bool item::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void item::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void item::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void item::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& item::name() const {
+  return *name_;
+}
+inline void item::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void item::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void item::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* item::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* item::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// required int32 quantity = 2;
+inline bool item::has_quantity() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void item::set_has_quantity() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void item::clear_has_quantity() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void item::clear_quantity() {
+  quantity_ = 0;
+  clear_has_quantity();
+}
+inline ::google::protobuf::int32 item::quantity() const {
+  return quantity_;
+}
+inline void item::set_quantity(::google::protobuf::int32 value) {
+  set_has_quantity();
+  quantity_ = value;
+}
+
+// required string meta = 3;
+inline bool item::has_meta() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void item::set_has_meta() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void item::clear_has_meta() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void item::clear_meta() {
+  if (meta_ != &::google::protobuf::internal::kEmptyString) {
+    meta_->clear();
+  }
+  clear_has_meta();
+}
+inline const ::std::string& item::meta() const {
+  return *meta_;
+}
+inline void item::set_meta(const ::std::string& value) {
+  set_has_meta();
+  if (meta_ == &::google::protobuf::internal::kEmptyString) {
+    meta_ = new ::std::string;
+  }
+  meta_->assign(value);
+}
+inline void item::set_meta(const char* value) {
+  set_has_meta();
+  if (meta_ == &::google::protobuf::internal::kEmptyString) {
+    meta_ = new ::std::string;
+  }
+  meta_->assign(value);
+}
+inline void item::set_meta(const char* value, size_t size) {
+  set_has_meta();
+  if (meta_ == &::google::protobuf::internal::kEmptyString) {
+    meta_ = new ::std::string;
+  }
+  meta_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* item::mutable_meta() {
+  set_has_meta();
+  if (meta_ == &::google::protobuf::internal::kEmptyString) {
+    meta_ = new ::std::string;
+  }
+  return meta_;
+}
+inline ::std::string* item::release_meta() {
+  clear_has_meta();
+  if (meta_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = meta_;
+    meta_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// required string volume = 4;
+inline bool item::has_volume() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void item::set_has_volume() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void item::clear_has_volume() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void item::clear_volume() {
+  if (volume_ != &::google::protobuf::internal::kEmptyString) {
+    volume_->clear();
+  }
+  clear_has_volume();
+}
+inline const ::std::string& item::volume() const {
+  return *volume_;
+}
+inline void item::set_volume(const ::std::string& value) {
+  set_has_volume();
+  if (volume_ == &::google::protobuf::internal::kEmptyString) {
+    volume_ = new ::std::string;
+  }
+  volume_->assign(value);
+}
+inline void item::set_volume(const char* value) {
+  set_has_volume();
+  if (volume_ == &::google::protobuf::internal::kEmptyString) {
+    volume_ = new ::std::string;
+  }
+  volume_->assign(value);
+}
+inline void item::set_volume(const char* value, size_t size) {
+  set_has_volume();
+  if (volume_ == &::google::protobuf::internal::kEmptyString) {
+    volume_ = new ::std::string;
+  }
+  volume_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* item::mutable_volume() {
+  set_has_volume();
+  if (volume_ == &::google::protobuf::internal::kEmptyString) {
+    volume_ = new ::std::string;
+  }
+  return volume_;
+}
+inline ::std::string* item::release_volume() {
+  clear_has_volume();
+  if (volume_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = volume_;
+    volume_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// required .eveobjects.label data = 5;
+inline bool item::has_data() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void item::set_has_data() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void item::clear_has_data() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void item::clear_data() {
+  if (data_ != NULL) data_->::eveobjects::label::Clear();
+  clear_has_data();
+}
+inline const ::eveobjects::label& item::data() const {
+  return data_ != NULL ? *data_ : *default_instance_->data_;
+}
+inline ::eveobjects::label* item::mutable_data() {
+  set_has_data();
+  if (data_ == NULL) data_ = new ::eveobjects::label;
+  return data_;
+}
+inline ::eveobjects::label* item::release_data() {
+  clear_has_data();
+  ::eveobjects::label* temp = data_;
+  data_ = NULL;
+  return temp;
 }
 
 // -------------------------------------------------------------------
