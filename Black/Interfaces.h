@@ -43,8 +43,13 @@ class Interfaces{
 	char * _buildModule(PyObject * mod, string name, int & size);
 	char * _GetSlot(string name, string outputname, int & size);
 	char * _isModuleActive(string name, int & size);
+	char * _GetShipUIGauge(string name, int & size);
 
 public:
+	char * GetShipArmor(int & size);
+	char * GetShipShield(int & size);
+	char * GetShipStructure(int & size);
+	char * GetShipSpeed(int & size);
 	char * GetStationHangar(int & size);
 	char * GetStationItemsButton(int & size);
 	char * GetCargoList(int & size);

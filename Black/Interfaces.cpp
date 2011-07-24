@@ -866,6 +866,125 @@ PyObject * Interfaces::_getNeocomButton(string buttonname)
 
 }
 
+char * Interfaces::GetShipArmor(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetShipUIGauge("armordGauge", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetShipShield(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetShipUIGauge("shieldGauge", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetShipStructure(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _GetShipUIGauge("structureGauge", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::_GetShipUIGauge(string name, int & size)
+{
+	PyObject * shipui = _getLayer("shipui");
+	if(shipui == NULL)
+	{
+		log.elog("Couldn't get shipui");
+		return NULL;
+	}
+
+	PyObject * underMain = _findByNameLayer(shipui, "underMain");
+	if(underMain == NULL)
+	{
+		log.elog("Couldn't get underMain");
+		Py_DECREF(shipui);
+		return NULL;
+	}
+
+	PyObject * gauge = _findByNameLayer(underMain, name);
+	if(gauge == NULL)
+	{
+		log.elog("Couldn't get structure");
+		Py_DECREF(shipui);
+		Py_DECREF(underMain);
+		return NULL;
+	}
+	
+	PyObject * hint = _getAttribute(gauge, "hint");
+	if(hint == NULL)
+	{
+		log.elog("Couldn't get hint");
+		Py_DECREF(shipui);
+		Py_DECREF(underMain);
+		Py_DECREF(gauge);
+		return NULL;
+	}
+	
+	char * output = builder.buildStringObject(PyString_AsString(hint), size);
+	Py_DECREF(shipui);
+	Py_DECREF(underMain);
+	Py_DECREF(gauge);
+	Py_DECREF(hint);
+	return output;
+}
+
+
+char * Interfaces::GetShipSpeed(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * shipui = _getLayer("shipui");
+	if(shipui == NULL)
+	{
+		log.elog("Couldn't get shipui");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * underMain = _findByNameLayer(shipui, "underMain");
+	if(underMain == NULL)
+	{
+		log.elog("Couldn't get underMain");
+		Py_DECREF(shipui);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * label = _findByNameLayer(underMain, "text");
+	if(label == NULL)
+	{
+		log.elog("Couldn't get label");
+		Py_DECREF(shipui);
+		Py_DECREF(underMain);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * text = _getText(label);
+	if(text == NULL)
+	{
+		log.elog("Couldn't get text");
+		Py_DECREF(shipui);
+		Py_DECREF(underMain);
+		Py_DECREF(label);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	char * output = builder.buildStringObject(PyString_AsString(text), size);
+	Py_DECREF(shipui);
+	Py_DECREF(underMain);
+	Py_DECREF(label);
+	Py_DECREF(text);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetShipHangar(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

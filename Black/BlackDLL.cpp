@@ -423,7 +423,31 @@ bool EchoIncomingPackets(SOCKET sd)
 				output = interfaces.GetStationItemsButton(size);
 			}
 
-			 Sleep(300);
+			if(func.name().compare("getShipArmor") == 0)
+			{
+				log.elog(func.name());
+				output = interfaces.GetShipArmor(size);
+			}
+			
+			if(func.name().compare("getShipShield") == 0)
+			{
+				log.elog(func.name());
+				output = interfaces.GetShipShield(size);
+			}
+			
+			if(func.name().compare("getShipStructure") == 0)
+			{
+				log.elog(func.name());
+				output = interfaces.GetShipStructure(size);
+			}
+		
+			if(func.name().compare("getShipSpeed") == 0)
+			{
+				log.elog(func.name());
+				output = interfaces.GetShipSpeed(size);
+			}
+
+			Sleep(300);
 
 			 if(output == NULL)
 			 {	 
