@@ -1749,6 +1749,7 @@ char * Interfaces::GetSelectedItem(int & size)
 	}
 
 	char * label = PyString_AsString(result);
+	
 	if(label == NULL)
 	{
 		log.elog("Couldn't turn label into string");
@@ -1758,12 +1759,11 @@ char * Interfaces::GetSelectedItem(int & size)
 		Py_DECREF(mainitem);
 		Py_DECREF(toparea);
 		Py_DECREF(text);
-		Py_DECREF(label);
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 	
-	char * output = builder.buildInterfaceObject(label,  0 ,0, 0, 0, size);
+	char * output = builder.buildInterfaceObject(label, 0,0,0,0, size);
 
 	Py_DECREF(main);
 	Py_DECREF(selectedItemView);
@@ -1771,7 +1771,6 @@ char * Interfaces::GetSelectedItem(int & size)
 	Py_DECREF(mainitem);
 	Py_DECREF(toparea);
 	Py_DECREF(text);
-	Py_DECREF(label);
 	PyGILState_Release(gstate);
 	return output;
 }

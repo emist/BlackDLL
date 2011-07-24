@@ -112,6 +112,7 @@ char * ObjectBuilder::buildInterfaceObject(string name, int posX, int posY, int 
 {
 	eveobjects::Interface interfaceObject;
 	interfaceObject.set_name(name);
+	log.elog(name);
 	interfaceObject.set_topleftx(posX);
 	interfaceObject.set_toplefty(posY);
 	interfaceObject.set_width(width);

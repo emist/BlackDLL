@@ -465,6 +465,10 @@ bool EchoIncomingPackets(SOCKET sd)
 				 free(perr);
 				 //cerr<<"Error writing the named pipe\n";
 			 }
+			 else
+			 {
+				 delete output;
+			 }
 			 //NEEDS TO delete output
 			 //log.elog("Returning successfully");
 		  }
