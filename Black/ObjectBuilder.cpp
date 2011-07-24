@@ -12,6 +12,13 @@ char * ObjectBuilder::buildBooleanObject( bool value, int & size  )
 	return output;
 }
 
+char * ObjectBuilder::buildStringObject( string value, int & size  )
+{
+	eveobjects::stringResponse eveobject;
+	eveobject.set_data(value);
+	return putToByteArray(eveobject, size);
+}
+
 char * ObjectBuilder::buildTargetObject(list<targetEntry *> & labels, int & size)
 {
 	eveobjects::TargetList targetObject;

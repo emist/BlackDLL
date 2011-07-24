@@ -57,5 +57,6 @@ public:
 		char * buildOverViewObject(list<overViewEntry *> & labels, int & size);
 		char * buildItemObject(list<itemEntry *> & labels, int & size);
 		char * ObjectBuilder::buildTargetObject(list<targetEntry *> & labels, int & size);
+		char * ObjectBuilder::buildStringObject( string value, int & size  );
 };
 #endif
