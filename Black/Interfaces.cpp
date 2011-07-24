@@ -681,6 +681,12 @@ PyObject * Interfaces::_GetInflightCargoView()
 			Py_DECREF(pvalue);
 			return pvalue;
 		}
+		if(strcmp(PyEval_GetFuncName(pvalue), "DockedCargoView") == 0)
+		{
+			log.elog("Found docked cargoview");
+			Py_DECREF(pvalue);
+			return pvalue;
+		}
 		Py_DECREF(pvalue);
 	}
 
@@ -926,7 +932,7 @@ char * Interfaces::GetStationHangar(int & size)
 
 	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
 
-	bool ok = _populateAttributesDisplay(stationHangar, &width, &height, &absoluteTop, &absoluteLeft);
+	bool ok = _populateAttributesDisplay(stationHangar, &width, &height,, &absoluteLeft);
 	if(!ok)
 	{
 		Py_DECREF(main);
