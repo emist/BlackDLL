@@ -239,6 +239,7 @@ char * Interfaces::isMenuOpen(int & size)
 }
 
 
+
 char * Interfaces::_findByTextGeneric(string layername, string label, int & size)
 {
 
@@ -932,7 +933,7 @@ char * Interfaces::GetStationHangar(int & size)
 
 	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
 
-	bool ok = _populateAttributesDisplay(stationHangar, &width, &height,, &absoluteLeft);
+	bool ok = _populateAttributesDisplay(stationHangar, &width, &height, &absoluteTop, &absoluteLeft);
 	if(!ok)
 	{
 		Py_DECREF(main);
@@ -2207,7 +2208,7 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 
 	if(!PyObject_HasAttrString(parentInt, "children"))
 	{
-		//log.elog("Interface has no children");
+		log.elog("Interface has no children");
 		return;
 	}
 	
@@ -2276,8 +2277,8 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 					Py_DECREF(ptext);
 					return;
 				}
-
-				if(strcmp(ctext, text.c_str()) == 0)
+				string check(ctext);
+				if(check.find(text) != check.npos)
 				{
 					//log.elog("Found text");
 					*result = pvalue;
