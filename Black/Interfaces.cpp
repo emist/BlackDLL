@@ -869,7 +869,7 @@ PyObject * Interfaces::_getNeocomButton(string buttonname)
 char * Interfaces::GetShipArmor(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _GetShipUIGauge("armordGauge", size);
+	char * output = _GetShipUIGauge("armorGauge", size);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -1221,6 +1221,46 @@ char * Interfaces::GetStationItemsButton(int & size)
 	
 	PyGILState_Release(gstate);
 	return output;
+}
+
+
+
+char * Interfaces::GetShipCapacity(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * cargoView = _GetInflightCargoView();
+	
+	if(cargoView == NULL)
+	{
+		log.elog("Couldn't get cargoview");
+		PyGILState_Release(gstate);
+		return NULL;;
+	}
+
+	PyObject * label = _findByNameLayer(cargoView, "capacityText");
+	if(label == NULL)
+	{
+		log.elog("Couldn't get capacityLabel");
+		Py_DECREF(cargoView);
+		PyGILState_Release(gstate);
+		return NULL;;
+	}
+
+	PyObject * ptext = _getText(label);
+	if(ptext == NULL)
+	{
+		log.elog("Couldn't pull the text off the label");
+		Py_DECREF(cargoView);
+		Py_DECREF(label);
+		PyGILState_Release(gstate);
+		return NULL;;
+	}
+
+
+	char * output = builder.buildStringObject(PyString_AsString(ptext), size);
+	PyGILState_Release(gstate);
+	return output;
+
 }
 
 
@@ -1763,7 +1803,7 @@ char * Interfaces::GetSelectedItem(int & size)
 		return NULL;
 	}
 	
-	char * output = builder.buildInterfaceObject(label, 0,0,0,0, size);
+	char * output = builder.buildStringObject(label, size);
 
 	Py_DECREF(main);
 	Py_DECREF(selectedItemView);
