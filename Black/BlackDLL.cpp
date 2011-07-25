@@ -447,7 +447,13 @@ bool EchoIncomingPackets(SOCKET sd)
 				output = interfaces.GetShipSpeed(size);
 			}
 
-			Sleep(300);
+			if(func.name().compare("getShipCapacity") == 0)
+			{
+				log.elog(func.name());
+				output = interfaces.GetShipCapacity(size);
+			}
+
+			//Sleep(300);
 
 			 if(output == NULL)
 			 {	 
@@ -467,7 +473,8 @@ bool EchoIncomingPackets(SOCKET sd)
 			 }
 			 else
 			 {
-				 delete output;
+				 if(output != NULL && strcmp(output, "\0") != 0)
+					delete output;
 			 }
 			 //NEEDS TO delete output
 			 //log.elog("Returning successfully");
