@@ -2036,12 +2036,12 @@ char * Interfaces::GetTargetList(int & size)
 		if(strcmp(fname, "Target") == 0)
 		{
 			log.elog("Found target object");
-			PyObject * label, * width, * height, *absoluteLeft, *absoluteTop;
-			char * text;
-			label = _getAttribute(pvalue, "label");
+			PyObject * label = NULL, * text = NULL, * width =NULL, * height=NULL, *absoluteLeft=NULL, *absoluteTop=NULL;
+			char * ctext;
+			label = _findByNameLayer(pvalue, "text");
 			if(label == NULL)
 			{
-				log.elog("Couldn't pull the label attribute off the target");
+				log.elog("Couldn't pull the text child off the target");
 				Py_DECREF(children);
 				Py_DECREF(target);
 				Py_DECREF(pvalue);
@@ -2049,7 +2049,19 @@ char * Interfaces::GetTargetList(int & size)
 				return NULL;
 			}
 			
-			text = PyString_AsString(label);
+			text= _getAttribute(label, "text");
+			if(text == NULL)
+			{
+				log.elog("Couldn't pull the text attribute off the label");
+				Py_DECREF(children);
+				Py_DECREF(target);
+				Py_DECREF(pvalue);
+				Py_DECREF(label);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+
+			ctext = PyString_AsString(text);
 			if(text == NULL)
 			{
 				log.elog("Couldn't pull the text off the label");
@@ -2057,11 +2069,12 @@ char * Interfaces::GetTargetList(int & size)
 				Py_DECREF(target);
 				Py_DECREF(pvalue);
 				Py_DECREF(label);
+				Py_DECREF(text);
 				PyGILState_Release(gstate);
 				return NULL;
 			}
 			
-			width = _getWidth(pvalue);
+			width = _getWidth(label);
 			if(width == NULL)
 			{
 				log.elog("Couldn't get width");
@@ -2069,11 +2082,12 @@ char * Interfaces::GetTargetList(int & size)
 				Py_DECREF(target);
 				Py_DECREF(pvalue);
 				Py_DECREF(label);
+				Py_DECREF(text);
 				PyGILState_Release(gstate);
 				return NULL;
 			}
 			
-			height = _getHeight(pvalue);
+			height = _getHeight(label);
 			if(height == NULL)
 			{
 				log.elog("Couldn't get height");
@@ -2081,18 +2095,20 @@ char * Interfaces::GetTargetList(int & size)
 				Py_DECREF(target);
 				Py_DECREF(pvalue);
 				Py_DECREF(label);
+				Py_DECREF(text);
 				Py_DECREF(width);
 				PyGILState_Release(gstate);
 				return NULL;
 			}
 			
-			absoluteLeft = _getAbsoluteLeft(pvalue);
+			absoluteLeft = _getAbsoluteLeft(label);
 			if(absoluteLeft == NULL)
 			{
 				log.elog("Couldn't get absoluteLeft");
 				Py_DECREF(children);
 				Py_DECREF(target);
 				Py_DECREF(pvalue);
+				Py_DECREF(text);
 				Py_DECREF(label);
 				Py_DECREF(height);
 				Py_DECREF(width);
@@ -2100,7 +2116,7 @@ char * Interfaces::GetTargetList(int & size)
 				return NULL;
 			}
 
-			absoluteTop = _getAbsoluteTop(pvalue);
+			absoluteTop = _getAbsoluteTop(label);
 			if(absoluteTop == NULL)
 			{
 				log.elog("Couldn't get absoluteTop");
@@ -2110,12 +2126,13 @@ char * Interfaces::GetTargetList(int & size)
 				Py_DECREF(label);
 				Py_DECREF(height);
 				Py_DECREF(width);
+				Py_DECREF(text);
 				Py_DECREF(absoluteLeft);
 				PyGILState_Release(gstate);
 				return NULL;
 			}
 			ObjectBuilder::targetEntry * tEntry = new ObjectBuilder::targetEntry();
-			tEntry->name = text;
+			tEntry->name = ctext;
 			tEntry->height = PyInt_AsLong(height);
 			tEntry->width = PyInt_AsLong(width);
 			tEntry->topLeftX = PyInt_AsLong(absoluteLeft);
@@ -2126,6 +2143,7 @@ char * Interfaces::GetTargetList(int & size)
 			Py_DECREF(label);
 			Py_DECREF(height);
 			Py_DECREF(width);
+			Py_DECREF(text);
 			Py_DECREF(absoluteLeft);
 			Py_DECREF(absoluteTop);
 			
