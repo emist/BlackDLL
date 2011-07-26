@@ -452,6 +452,12 @@ bool EchoIncomingPackets(SOCKET sd)
 				log.elog(func.name());
 				output = interfaces.GetShipCapacity(size);
 			}
+		
+			if(func.name().compare("getMenuItems") == 0)
+			{
+				log.elog(func.name());
+				output = interfaces.GetMenuItems(size);
+			}
 
 			//Sleep(300);
 
