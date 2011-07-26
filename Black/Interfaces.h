@@ -46,6 +46,7 @@ class Interfaces{
 	char * _GetShipUIGauge(string name, int & size);
 
 public:
+	char * Interfaces::GetMenuItems(int & size);
 	char * GetShipCapacity(int & size);
 	char * GetShipArmor(int & size);
 	char * GetShipShield(int & size);

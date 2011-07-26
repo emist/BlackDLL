@@ -1263,6 +1263,165 @@ char * Interfaces::GetShipCapacity(int & size)
 
 }
 
+char * Interfaces::GetMenuItems(int & size)
+{
+	list<ObjectBuilder::overViewEntry * > labels;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * menu = _getLayer("menu");
+	if(menu == NULL)
+	{
+		log.elog("Couldn't get the menu");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	PyObject * menuview = _findByNameLayer(menu, "menuview");
+	if(menuview == NULL)
+	{
+		log.elog("Couldn't get menuview");
+		Py_DECREF(menu);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * entries = _findByNameLayer(menuview, "_entries");
+	if(entries == NULL)
+	{
+		log.elog("Couldn't get entries");
+		Py_DECREF(menu);
+		Py_DECREF(menuview);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject *entries_children = _getAttribute(entries, "children");
+	if(entries_children == NULL)
+	{
+		log.elog("Has no children");
+		Py_DECREF(menu);
+		Py_DECREF(menuview);
+		Py_DECREF(entries);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * pkey = NULL, * pvalue = NULL;
+	const char * fname;
+
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+	int csize = PyObject_Size(entries_children);
+	for(int i = 0; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(entries_children, pkey);
+		
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get entries_children values");
+			Py_DECREF(menu);
+			Py_DECREF(menuview);
+			Py_DECREF(entries);
+			Py_DECREF(entries_children);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+		
+		fname = PyEval_GetFuncName(pvalue);
+		if(fname == NULL)
+		{
+			log.elog("Couldn't get function name");
+			Py_DECREF(menu);
+			Py_DECREF(menuview);
+			Py_DECREF(entries);
+			Py_DECREF(entries_children);
+			Py_DECREF(pvalue);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		if(strcmp(fname, "MenuEntryView") == 0)
+		{
+			PyObject * text_child = _findByNameLayer(pvalue, "text");
+			if(text_child == NULL)
+			{
+				log.elog("Couldn't get text child");
+				Py_DECREF(menu);
+				Py_DECREF(menuview);
+				Py_DECREF(entries);
+				Py_DECREF(entries_children);
+				Py_DECREF(pvalue);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			PyObject * text = _getAttribute(text_child, "text");
+			if(text == NULL)
+			{
+				log.elog("couldn't get text");
+				Py_DECREF(menu);
+				Py_DECREF(menuview);
+				Py_DECREF(entries);
+				Py_DECREF(entries_children);
+				Py_DECREF(pvalue);
+				Py_DECREF(text_child);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			
+			char * ctext = PyString_AsString(text);
+			if(ctext == NULL)
+			{
+				log.elog("Couldn't convert into c string");
+				Py_DECREF(menu);
+				Py_DECREF(menuview);
+				Py_DECREF(entries);
+				Py_DECREF(entries_children);
+				Py_DECREF(pvalue);
+				Py_DECREF(text_child);
+				Py_DECREF(text);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+
+			bool ok = _populateAttributes(text_child, &width, &height, &absoluteTop, &absoluteLeft);
+			if(!ok)
+			{
+				log.elog("Couldn't populate attributes");
+				Py_DECREF(menu);
+				Py_DECREF(menuview);
+				Py_DECREF(entries);
+				Py_DECREF(entries_children);
+				Py_DECREF(pvalue);
+				Py_DECREF(text_child);
+				Py_DECREF(text);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+
+			ObjectBuilder::overViewEntry * entry = new ObjectBuilder::overViewEntry();
+			entry->text = ctext;
+			entry->height = PyInt_AsLong(height);
+			entry->width = PyInt_AsLong(width);
+			entry->topLeftX = PyInt_AsLong(absoluteLeft);
+			entry->topLeftY = PyInt_AsLong(absoluteTop);
+
+			labels.push_back(entry);
+			Py_DECREF(text);
+			Py_DECREF(text_child);
+		}
+
+		Py_DECREF(pvalue);
+	}
+
+	Py_DECREF(menu);
+	Py_DECREF(menuview);
+	Py_DECREF(entries);
+	PyGILState_Release(gstate);
+	char * output = builder.buildOverViewObject(labels, size);
+	for(list<ObjectBuilder::overViewEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
+	{
+		delete (*it);
+	}	
+	return output;
+}
 
 char * Interfaces::GetCargoList(int & size)
 {
