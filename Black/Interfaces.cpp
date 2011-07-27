@@ -238,6 +238,56 @@ char * Interfaces::isMenuOpen(int & size)
 	return output;
 }
 
+char * Interfaces::GetServerMessage(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * abovemain = _getLayer("abovemain");
+	if(abovemain == NULL)
+	{
+		log.elog("couldn't get abovemain");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * message = _findByNameLayer(abovemain, "message");
+	if(message == NULL)
+	{
+		log.elog("Couldn't get message");
+		Py_DECREF(abovemain);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * messageattr = _getAttribute(message, "message");
+	if(messageattr == NULL)
+	{
+		log.elog("couldn't get message attr");
+		Py_DECREF(abovemain);
+		Py_DECREF(message);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * text = _getAttribute(messageattr, "text");
+	if(text == NULL)
+	{
+		log.elog("couldn't get text");
+		Py_DECREF(abovemain);
+		Py_DECREF(message);
+		Py_DECREF(messageattr);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildStringObject(PyString_AsString(text), size);
+	Py_DECREF(abovemain);
+	Py_DECREF(message);
+	Py_DECREF(messageattr);
+	Py_DECREF(text);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetModalCancelButton(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
