@@ -13,6 +13,15 @@ char * ObjectBuilder::buildBooleanObject( bool value, int & size  )
 	return output;
 }
 
+char * ObjectBuilder::buildSolarSystemObject(string name, string other, int & size)
+{
+	eveobjects::systemObject eveobject;
+	eveobject.set_name(name);
+	eveobject.set_info(other);
+	char * output = putToByteArray(eveobject, size);
+	return output;
+}
+
 char * ObjectBuilder::buildStringObject( string value, int & size  )
 {
 	eveobjects::stringResponse eveobject;
