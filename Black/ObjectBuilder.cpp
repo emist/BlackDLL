@@ -4,6 +4,7 @@
 #include "Logger.h"
 
 using namespace std;
+
 char * ObjectBuilder::buildBooleanObject( bool value, int & size  )
 {
 	eveobjects::BooleanObject eveobject;

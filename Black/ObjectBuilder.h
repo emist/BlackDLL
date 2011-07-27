@@ -7,6 +7,7 @@
 
 using namespace std;
 
+
 class ObjectBuilder{
 		Logger log;
 		template<typename T>
@@ -59,4 +60,5 @@ public:
 		char * ObjectBuilder::buildTargetObject(list<targetEntry *> & labels, int & size);
 		char * ObjectBuilder::buildStringObject( string value, int & size  );
 };
+
 #endif

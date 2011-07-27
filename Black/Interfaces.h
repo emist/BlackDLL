@@ -6,6 +6,7 @@
 
 using namespace std; 
 
+
 class Interfaces{
 	
 	Login login;
@@ -70,4 +71,5 @@ public:
 	char * findByTextLogin(string text, int & size);
 	char * GetShipHangar(int & size);
 };
+
 #endif

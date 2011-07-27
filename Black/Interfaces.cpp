@@ -2662,5 +2662,3 @@ PyObject * Interfaces::_getAttribute(PyObject * result, string attr)
 	}
 	return attribute;
 }
-
-
