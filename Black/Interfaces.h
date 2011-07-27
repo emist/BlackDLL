@@ -44,10 +44,13 @@ class Interfaces{
 	char * _buildModule(PyObject * mod, string name, int & size);
 	char * _GetSlot(string name, string outputname, int & size);
 	char * _isModuleActive(string name, int & size);
-	char * _GetShipUIGauge(string name, int & size);
-
+	char * _GetShipUIGauge(string name, int & size);	
+	char * _getModalButton(string name, int & size);
 public:
-	char * Interfaces::GetMenuItems(int & size);
+	char * GetModalCancelButton(int & size);
+	char * GetModalOkButton(int & size);
+	char * IsSystemMenuOpen(int & size);
+	char * GetMenuItems(int & size);
 	char * GetShipCapacity(int & size);
 	char * GetShipArmor(int & size);
 	char * GetShipShield(int & size);

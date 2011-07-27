@@ -460,29 +460,47 @@ using namespace std;
 					output = interfaces.GetMenuItems(size);
 				}
 
+				if(func.name().compare("isSystemMenuOpen") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.IsSystemMenuOpen(size);
+				}
+				
+				if(func.name().compare("getModalCancelButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetModalCancelButton(size);
+				}
+
+				if(func.name().compare("getModalOkButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetModalOkButton(size);
+				}
+
 				//Sleep(300);
 
-				 if(output == NULL)
-				 {	 
-					 log.elog("Output is null");
-					 output = "\0";
-				 }
+				if(output == NULL)
+				{	 
+					log.elog("Output is null");
+					output = "\0";
+				}
 
-				 if( !WriteFile(npipe, (void*)output, size, &bsent, NULL) )
-				 {
+				if( !WriteFile(npipe, (void*)output, size, &bsent, NULL) )
+				{
 					 
-					 char * perr =(char*) malloc(100*sizeof(char));
-					 log.elog("Couldn't write to client");
-					 sprintf(perr, "%x", GetLastError());
-					 log.elog(perr);
-					 free(perr);
+					char * perr =(char*) malloc(100*sizeof(char));
+					log.elog("Couldn't write to client");
+					sprintf(perr, "%x", GetLastError());
+					log.elog(perr);
+					free(perr);
 					 //cerr<<"Error writing the named pipe\n";
-				 }
-				 else
-				 {
-					 if(output != NULL && strcmp(output, "\0") != 0)
+				}
+				else
+				{
+					if(output != NULL && strcmp(output, "\0") != 0)
 						delete output;
-				 }
+				}
 				 //NEEDS TO delete output
 				 //log.elog("Returning successfully");
 			  }

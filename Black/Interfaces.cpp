@@ -238,7 +238,86 @@ char * Interfaces::isMenuOpen(int & size)
 	return output;
 }
 
+char * Interfaces::GetModalCancelButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getModalButton("Cancel_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
 
+char * Interfaces::GetModalOkButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getModalButton("OK_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::_getModalButton(string name, int & size)
+{
+	PyObject * modal = _getLayer("modal");
+	if(modal == NULL)
+	{
+		log.elog("Couldn't get modal");
+		return NULL;
+	}
+
+	PyObject * button = _findByNameLayer(modal, name);
+
+	if(button == NULL)
+	{
+		log.elog("Doesn't have button");
+		Py_DECREF(modal);
+		return NULL;
+	}
+
+	PyObject * height = NULL, * width = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+	
+	bool ok = _populateAttributes(button, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		Py_DECREF(button);
+		Py_DECREF(modal);
+		return NULL;
+	}
+	
+	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(button);
+	Py_DECREF(modal);
+
+	return output;
+
+}
+char * Interfaces::IsSystemMenuOpen(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * modal = NULL;
+	char * output = NULL;
+	modal = _getLayer("modal");
+	if(modal == NULL)
+	{
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	PyObject * sysmenu = NULL;
+	sysmenu = _findByNameLayer(modal, "sysmenu");
+
+	if(sysmenu == NULL)
+	{
+		output = builder.buildBooleanObject(false, size);
+	}
+	else
+	{
+		output = builder.buildBooleanObject(true, size);
+		Py_DECREF(sysmenu);
+	}
+	
+	Py_DECREF(modal);
+	PyGILState_Release(gstate);
+	return output;
+
+}
 
 char * Interfaces::_findByTextGeneric(string layername, string label, int & size)
 {
