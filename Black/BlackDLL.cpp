@@ -478,6 +478,12 @@ using namespace std;
 					output = interfaces.GetModalOkButton(size);
 				}
 
+				if(func.name().compare("getSystemInformation") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetSystemInformation(size);
+				}
+
 				//Sleep(300);
 
 				if(output == NULL)

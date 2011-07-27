@@ -246,6 +246,52 @@ char * Interfaces::GetModalCancelButton(int & size)
 	return output;
 }
 
+char * Interfaces::GetSystemInformation(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * neocom = _getLayer("neocomLeftside");
+	if(neocom == NULL)
+	{
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * locationInfo = _findByNameLayer(neocom,  "locationInfo");
+	if(locationInfo == NULL)
+	{
+		Py_DECREF(neocom);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * caption = _findByNameLayer(locationInfo, "caption");
+	if(caption == NULL)
+	{
+		Py_DECREF(neocom);
+		Py_DECREF(locationInfo);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * locationText = _findByNameLayer(locationInfo, "locationText");
+	if(locationText == NULL)
+	{
+		Py_DECREF(neocom);
+		Py_DECREF(locationInfo);
+		Py_DECREF(caption);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildSolarSystemObject(PyString_AsString(caption), PyString_AsString(locationText), size);
+	Py_DECREF(neocom);
+	Py_DECREF(locationInfo);
+	Py_DECREF(caption);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
 char * Interfaces::GetModalOkButton(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

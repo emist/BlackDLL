@@ -47,6 +47,7 @@ class Interfaces{
 	char * _GetShipUIGauge(string name, int & size);	
 	char * _getModalButton(string name, int & size);
 public:
+	char * GetSystemInformation(int & size);
 	char * GetModalCancelButton(int & size);
 	char * GetModalOkButton(int & size);
 	char * IsSystemMenuOpen(int & size);
