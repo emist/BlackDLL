@@ -35,6 +35,7 @@ void protobuf_ShutdownFile_objects_2eproto();
 class infoObject;
 class BooleanObject;
 class functionCall;
+class systemObject;
 class stringResponse;
 class overview;
 class itemgroup;
@@ -322,6 +323,106 @@ class functionCall : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static functionCall* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class systemObject : public ::google::protobuf::Message {
+ public:
+  systemObject();
+  virtual ~systemObject();
+  
+  systemObject(const systemObject& from);
+  
+  inline systemObject& operator=(const systemObject& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const systemObject& default_instance();
+  
+  void Swap(systemObject* other);
+  
+  // implements Message ----------------------------------------------
+  
+  systemObject* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const systemObject& from);
+  void MergeFrom(const systemObject& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  
+  // required string info = 2;
+  inline bool has_info() const;
+  inline void clear_info();
+  static const int kInfoFieldNumber = 2;
+  inline const ::std::string& info() const;
+  inline void set_info(const ::std::string& value);
+  inline void set_info(const char* value);
+  inline void set_info(const char* value, size_t size);
+  inline ::std::string* mutable_info();
+  inline ::std::string* release_info();
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.systemObject)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_info();
+  inline void clear_has_info();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::std::string* name_;
+  ::std::string* info_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static systemObject* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1523,6 +1624,126 @@ inline ::std::string* functionCall::release_strparameter() {
   } else {
     ::std::string* temp = strparameter_;
     strparameter_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// -------------------------------------------------------------------
+
+// systemObject
+
+// required string name = 1;
+inline bool systemObject::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void systemObject::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void systemObject::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void systemObject::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& systemObject::name() const {
+  return *name_;
+}
+inline void systemObject::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void systemObject::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void systemObject::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* systemObject::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* systemObject::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// required string info = 2;
+inline bool systemObject::has_info() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void systemObject::set_has_info() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void systemObject::clear_has_info() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void systemObject::clear_info() {
+  if (info_ != &::google::protobuf::internal::kEmptyString) {
+    info_->clear();
+  }
+  clear_has_info();
+}
+inline const ::std::string& systemObject::info() const {
+  return *info_;
+}
+inline void systemObject::set_info(const ::std::string& value) {
+  set_has_info();
+  if (info_ == &::google::protobuf::internal::kEmptyString) {
+    info_ = new ::std::string;
+  }
+  info_->assign(value);
+}
+inline void systemObject::set_info(const char* value) {
+  set_has_info();
+  if (info_ == &::google::protobuf::internal::kEmptyString) {
+    info_ = new ::std::string;
+  }
+  info_->assign(value);
+}
+inline void systemObject::set_info(const char* value, size_t size) {
+  set_has_info();
+  if (info_ == &::google::protobuf::internal::kEmptyString) {
+    info_ = new ::std::string;
+  }
+  info_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* systemObject::mutable_info() {
+  set_has_info();
+  if (info_ == &::google::protobuf::internal::kEmptyString) {
+    info_ = new ::std::string;
+  }
+  return info_;
+}
+inline ::std::string* systemObject::release_info() {
+  clear_has_info();
+  if (info_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = info_;
+    info_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
