@@ -358,17 +358,29 @@ char * Interfaces::GetModalCancelButton(int & size)
 char * Interfaces::GetSystemInformation(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
-	PyObject * neocom = _getLayer("neocomLeftside");
+	PyObject * neocom = _getLayer("neocom");
 	if(neocom == NULL)
 	{
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 	
-	PyObject * locationInfo = _findByNameLayer(neocom,  "locationInfo");
+	PyObject * neocomLeftSide = _findByNameLayer(neocom, "neocomLeftside");
+	if(neocomLeftSide == NULL)
+	{
+		log.elog("Couldn't get the left side");
+		Py_DECREF(neocom);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	
+	PyObject * locationInfo = _findByNameLayer(neocomLeftSide,  "locationInfo");
 	if(locationInfo == NULL)
 	{
+		log.elog("locationInfo is null");
 		Py_DECREF(neocom);
+		Py_DECREF(neocomLeftSide);
 		PyGILState_Release(gstate);
 		return NULL;
 	}
@@ -376,26 +388,57 @@ char * Interfaces::GetSystemInformation(int & size)
 	PyObject * caption = _findByNameLayer(locationInfo, "caption");
 	if(caption == NULL)
 	{
+		log.elog("caption is null");
 		Py_DECREF(neocom);
 		Py_DECREF(locationInfo);
+		Py_DECREF(neocomLeftSide);
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
-	PyObject * locationText = _findByNameLayer(locationInfo, "locationText");
-	if(locationText == NULL)
+	PyObject * locationTextobj = _findByNameLayer(locationInfo, "locationText");
+	if(locationTextobj == NULL)
 	{
+		log.elog("locationText is null");
 		Py_DECREF(neocom);
 		Py_DECREF(locationInfo);
 		Py_DECREF(caption);
+		Py_DECREF(neocomLeftSide);
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
-	char * output = builder.buildSolarSystemObject(PyString_AsString(caption), PyString_AsString(locationText), size);
+	PyObject * locationText = _getAttribute(locationTextobj, "text");
+	if(locationText == NULL)
+	{
+		log.elog("Couldn't get the text");
+		Py_DECREF(neocom);
+		Py_DECREF(locationInfo);
+		Py_DECREF(caption);
+		Py_DECREF(neocomLeftSide);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * captionText = _getAttribute(caption, "text");
+	if(captionText == NULL)
+	{
+		log.elog("couldn't get the caption");
+		Py_DECREF(neocom);
+		Py_DECREF(locationInfo);
+		Py_DECREF(caption);
+		Py_DECREF(neocomLeftSide);
+		Py_DECREF(locationText);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildSolarSystemObject(PyString_AsString(captionText), PyString_AsString(locationText), size);
 	Py_DECREF(neocom);
 	Py_DECREF(locationInfo);
 	Py_DECREF(caption);
+	Py_DECREF(locationTextobj);
+	Py_DECREF(neocomLeftSide);
 	PyGILState_Release(gstate);
 	return output;
 
