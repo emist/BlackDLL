@@ -489,11 +489,16 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.IsLoading(size);
 				}
+				if(func.name().compare("getServerMessage") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetServerMessage(size);
+				}
 
 
 				//Sleep(300);
 
-				if(output == NULL)
+					if(output == NULL)
 				{	 
 					log.elog("Output is null");
 					output = "\0";
