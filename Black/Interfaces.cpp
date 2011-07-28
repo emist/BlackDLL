@@ -288,6 +288,65 @@ char * Interfaces::GetServerMessage(int & size)
 	return output;
 }
 
+
+char * Interfaces::IsLoading(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	bool isTrue = false;
+	PyObject * loading = _getLayer("loading");
+	if(loading == NULL)
+	{
+		log.elog("Can't get loading");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * progresswindow = _findByNameLayer(loading, "progresswindow");
+	if(progresswindow == NULL)
+	{
+		log.elog("can't get the window");
+		Py_DECREF(loading);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * sr = _getAttribute(progresswindow, "sr");
+	if(sr == NULL)
+	{
+		log.elog("can't get sr");
+		Py_DECREF(loading);
+		Py_DECREF(progresswindow);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * tickTimer = _getAttribute(sr, "tickTimer");
+	if(tickTimer == NULL)
+	{
+		log.elog("can't get the timer");
+		Py_DECREF(loading);
+		Py_DECREF(progresswindow);
+		Py_DECREF(sr);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	if(PyObject_IsTrue(tickTimer))
+	{
+		isTrue = true;
+	}
+	else
+		isTrue  = false;
+
+	char * output = builder.buildBooleanObject(isTrue, size);
+	Py_DECREF(loading);
+	Py_DECREF(progresswindow);
+	Py_DECREF(sr);
+	Py_DECREF(tickTimer);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetModalCancelButton(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

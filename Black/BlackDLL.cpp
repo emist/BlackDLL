@@ -484,6 +484,13 @@ using namespace std;
 					output = interfaces.GetSystemInformation(size);
 				}
 
+				if(func.name().compare("isLoading") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.IsLoading(size);
+				}
+
+
 				//Sleep(300);
 
 				if(output == NULL)
