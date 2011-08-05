@@ -917,6 +917,8 @@ char * Interfaces::_buildModule(PyObject * mod, string name, int & size)
 
 }
 
+
+
 PyObject * Interfaces::_GetInflightCargoView()
 {
 	PyObject * main = _getLayer("main");
@@ -1540,6 +1542,76 @@ char * Interfaces::GetShipCapacity(int & size)
 
 }
 
+char * Interfaces::GetInterfaceWindows(int & size)
+{
+	list<ObjectBuilder::overViewEntry * > labels;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("main is NULL");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	PyObject *children = _getAttribute(main, "children");
+	if(children == NULL)
+	{
+		log.elog("Has no children");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * pvalue = NULL, * pkey = NULL;
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+	int csize = PyObject_Size(children);
+	for(int i = 0; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+		
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get entries_children values");
+			Py_DECREF(main);
+			Py_DECREF(children);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		bool ok = _populateAttributes(pvalue, &width, &height, &absoluteTop, &absoluteLeft);
+		if(!ok)
+		{	
+			log.elog("Couldn't populate attributes");
+			Py_DECREF(main);
+			Py_DECREF(children);
+			Py_DECREF(pvalue);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+	
+		ObjectBuilder::overViewEntry * entry = new ObjectBuilder::overViewEntry();
+		entry->text = "window";
+		entry->height = PyInt_AsLong(height);
+		entry->width = PyInt_AsLong(width);
+		entry->topLeftX = PyInt_AsLong(absoluteLeft);
+		entry->topLeftY = PyInt_AsLong(absoluteTop);
+		
+		labels.push_back(entry);
+		Py_DECREF(pvalue);
+	}
+
+	char * output = builder.buildOverViewObject(labels, size);
+	Py_DECREF(main);
+	Py_DECREF(children);
+	PyGILState_Release(gstate);
+	for(list<ObjectBuilder::overViewEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
+	{
+		delete (*it);
+	}
+
+	return output;
+}
 char * Interfaces::GetMenuItems(int & size)
 {
 	list<ObjectBuilder::overViewEntry * > labels;

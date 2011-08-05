@@ -494,7 +494,11 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetServerMessage(size);
 				}
-
+				if(func.name().compare("getInterfaceWindows") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetInterfaceWindows(size);
+				}
 
 				//Sleep(300);
 

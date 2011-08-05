@@ -47,6 +47,7 @@ class Interfaces{
 	char * _GetShipUIGauge(string name, int & size);	
 	char * _getModalButton(string name, int & size);
 public:
+	char * GetInterfaceWindows(int & size);
 	char * IsLoading(int & size);
 	char * GetServerMessage(int & size);
 	char * GetSystemInformation(int & size);
