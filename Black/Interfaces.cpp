@@ -444,6 +444,47 @@ char * Interfaces::GetSystemInformation(int & size)
 
 }
 
+char * Interfaces::IsIncursion(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * neocom = _getLayer("neocom");
+	if(neocom == NULL)
+	{
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * neocomLeftSide = _findByNameLayer(neocom, "neocomLeftside");
+	if(neocomLeftSide == NULL)
+	{
+		log.elog("Couldn't get the left side");
+		Py_DECREF(neocom);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	
+	PyObject * locationInfo = _findByNameLayer(neocomLeftSide,  "IncursionInfoContainer");
+	if(locationInfo == NULL)
+	{
+		log.elog("IncursionInfoContainer is null");
+		Py_DECREF(neocom);
+		Py_DECREF(neocomLeftSide);
+		char * output = builder.buildBooleanObject(false, size);
+		PyGILState_Release(gstate);
+		return output;
+	}	
+
+	char * output = builder.buildBooleanObject(true, size);
+	Py_DECREF(neocom);
+	Py_DECREF(locationInfo);
+	Py_DECREF(neocomLeftSide);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+
 char * Interfaces::GetModalOkButton(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

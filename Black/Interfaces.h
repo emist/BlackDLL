@@ -48,6 +48,7 @@ class Interfaces{
 	char * _getModalButton(string name, int & size);
 	char * _getModuleTargetingRange(string name, int & size);
 public:
+	char * IsIncursion(int & size);
 	char * GetInterfaceWindows(int & size);
 	char * GetTargetingRange(int number, int & size);
 	char * IsLoading(int & size);

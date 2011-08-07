@@ -506,10 +506,15 @@ using namespace std;
 					log.elog(func.strparameter());
 					output = interfaces.GetTargetingRange(atoi(func.strparameter().c_str()), size);
 				}
+				if(func.name().compare("isIncursion") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.IsIncursion(size);
+				}
 
 				//Sleep(300);
 
-					if(output == NULL)
+				if(output == NULL)
 				{	 
 					log.elog("Output is null");
 					output = "\0";
