@@ -46,8 +46,10 @@ class Interfaces{
 	char * _isModuleActive(string name, int & size);
 	char * _GetShipUIGauge(string name, int & size);	
 	char * _getModalButton(string name, int & size);
+	char * _getModuleTargetingRange(string name, int & size);
 public:
 	char * GetInterfaceWindows(int & size);
+	char * GetTargetingRange(int number, int & size);
 	char * IsLoading(int & size);
 	char * GetServerMessage(int & size);
 	char * GetSystemInformation(int & size);

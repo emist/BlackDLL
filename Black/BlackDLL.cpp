@@ -500,6 +500,13 @@ using namespace std;
 					output = interfaces.GetInterfaceWindows(size);
 				}
 
+				if(func.name().compare("getTargetingRange") == 0)
+				{
+					log.elog(func.name());
+					log.elog(func.strparameter());
+					output = interfaces.GetTargetingRange(atoi(func.strparameter().c_str()), size);
+				}
+
 				//Sleep(300);
 
 					if(output == NULL)

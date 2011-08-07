@@ -2075,6 +2075,133 @@ char * Interfaces::IsHighSlotActive(int number, int & size)
 	return output;
 }
 
+char * Interfaces::GetTargetingRange(int number, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	switch(number)
+	{
+		case 1:
+		{
+			output = _getModuleTargetingRange("inFlightHighSlot1", size);
+			break;
+		}
+		case 2:
+		{
+			output = _getModuleTargetingRange("inFlightHighSlot2", size);
+			break;
+		}
+		case 3:
+		{
+			output = _getModuleTargetingRange("inFlightHighSlot3", size);
+			break;
+		}
+		case 4:
+		{
+			output = _getModuleTargetingRange("inFlightHighSlot4", size);
+			break;
+		}
+		case 5:
+		{
+			output = _getModuleTargetingRange("inFlightHighSlot5", size);
+			break;
+		}
+		case 6:
+		{
+			output = _getModuleTargetingRange("inFlightHighSlot6", size);
+			break;
+		}
+		case 7:
+		{
+			output = _getModuleTargetingRange("inFlightHighSlot7", size);
+			break;
+		}
+		case 8:
+		{
+			output = _getModuleTargetingRange("inFlightHighSlot8", size);
+			break;
+		}
+		case 9:
+		{
+			output = _getModuleTargetingRange("inFlightHighSlot9", size);
+			break;
+		}
+	}
+
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::_getModuleTargetingRange(string name, int & size)
+{
+	PyObject * module = _findModule(name);
+	bool isActive = false;
+	if(module == NULL)
+	{
+		log.elog("Couldn't find the module");
+		return NULL;
+	}
+
+	PyObject * sr = _getAttribute(module, "sr");
+	if(sr == NULL)
+	{
+		log.elog("Couldn't get sr");
+		Py_DECREF(module);
+		return NULL;
+	}
+	PyObject * srmodule = _getAttribute(sr, "module");
+	if(srmodule == NULL)
+	{
+		log.elog("Couldn't find srmodule");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		return NULL;
+	}
+
+	PyObject * sragain = _getAttribute(srmodule, "sr");
+	if(sragain == NULL)
+	{
+		log.elog("sragain is null");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		return NULL;
+	}
+
+	PyObject * moduleInfo = _getAttribute(sragain, "moduleInfo");
+	if(moduleInfo == NULL)
+	{
+		log.elog("Can't get the glow");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		return NULL;
+	}
+
+	PyObject * maxRange = _getAttribute(moduleInfo, "maxRange");
+	if(maxRange == NULL)
+	{
+		log.elog("Couldn't get state");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		Py_DECREF(moduleInfo);
+		return NULL;
+	}
+
+	char * output = builder.buildStringObject(PyString_AsString(maxRange), size);
+	Py_DECREF(module);
+	Py_DECREF(sr);
+	Py_DECREF(srmodule);
+	Py_DECREF(sragain);
+	Py_DECREF(moduleInfo);
+	Py_DECREF(maxRange);
+	return output;
+	
+}
+
 char * Interfaces::_isModuleActive(string name, int & size)
 {
 	PyObject * module = _findModule(name);
