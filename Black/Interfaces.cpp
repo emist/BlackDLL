@@ -2135,7 +2135,6 @@ char * Interfaces::GetTargetingRange(int number, int & size)
 char * Interfaces::_getModuleTargetingRange(string name, int & size)
 {
 	PyObject * module = _findModule(name);
-	bool isActive = false;
 	if(module == NULL)
 	{
 		log.elog("Couldn't find the module");
@@ -2171,7 +2170,7 @@ char * Interfaces::_getModuleTargetingRange(string name, int & size)
 	PyObject * moduleInfo = _getAttribute(sragain, "moduleInfo");
 	if(moduleInfo == NULL)
 	{
-		log.elog("Can't get the glow");
+		log.elog("Can't get the moduleInfo");
 		Py_DECREF(module);
 		Py_DECREF(sr);
 		Py_DECREF(srmodule);
@@ -2182,7 +2181,7 @@ char * Interfaces::_getModuleTargetingRange(string name, int & size)
 	PyObject * maxRange = _getAttribute(moduleInfo, "maxRange");
 	if(maxRange == NULL)
 	{
-		log.elog("Couldn't get state");
+		log.elog("Couldn't get maxRange");
 		Py_DECREF(module);
 		Py_DECREF(sr);
 		Py_DECREF(srmodule);
@@ -2191,13 +2190,40 @@ char * Interfaces::_getModuleTargetingRange(string name, int & size)
 		return NULL;
 	}
 
-	char * output = builder.buildStringObject(PyString_AsString(maxRange), size);
+	if(PyObject_Not(maxRange))
+	{
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		Py_DECREF(moduleInfo);
+		Py_DECREF(maxRange);
+		return NULL;
+	}
+
+	
+	PyFloatObject * range = (PyFloatObject*)PyFloat_FromDouble(PyFloat_AsDouble(maxRange));
+	if(range == NULL)
+	{
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		Py_DECREF(moduleInfo);
+		Py_DECREF(maxRange);
+		return NULL;
+	}
+	char buf[200];
+	PyFloat_AsString(buf, range);
+
+	char * output = builder.buildStringObject(buf, size);
 	Py_DECREF(module);
 	Py_DECREF(sr);
 	Py_DECREF(srmodule);
 	Py_DECREF(sragain);
 	Py_DECREF(moduleInfo);
 	Py_DECREF(maxRange);
+	Py_DECREF(range);
 	return output;
 	
 }
