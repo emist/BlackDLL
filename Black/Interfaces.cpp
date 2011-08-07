@@ -1853,6 +1853,15 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 			return;
 		}
 
+		if(PyObject_Not(node))
+		{
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(pvalue);
+			continue;
+		}
+			
+
 		name = _getAttribute(node, "name");
 		if(name == NULL)
 		{
