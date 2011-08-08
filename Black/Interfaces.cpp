@@ -444,6 +444,76 @@ char * Interfaces::GetSystemInformation(int & size)
 
 }
 
+char * Interfaces::_getDroneLabel(int type, int & size)
+{
+	char * droneType;
+	if(type == 0)
+		droneType = "droneOverviewDronesinbay";
+	else if(type == 1)
+		droneType = "droneOverviewDronesinlocalspace";
+	
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		return NULL;
+	}
+	PyObject * droneChildren = _findByNameLayer(main, droneType);
+	
+	if(droneChildren == NULL)
+	{
+		log.elog("Couldn't get children");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	PyObject * label = _findByNameLayer(droneChildren, "text");
+	if(label == NULL)
+	{
+		log.elog("Couldn't get label");
+		Py_DECREF(main);
+		Py_DECREF(droneChildren);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+	bool ok = _populateAttributes(label, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't populate attributes");
+		Py_DECREF(main);
+		Py_DECREF(droneChildren);
+		Py_DECREF(label);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject(droneType, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(droneChildren);
+	Py_DECREF(label);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+
+	return output;
+}
+
+char * Interfaces::DronesInFlight(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getDroneLabel(1, size);
+	PyGILState_Release(gstate);
+	return output;
+}
+char * Interfaces::DronesInBay(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getDroneLabel(0, size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::IsIncursion(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

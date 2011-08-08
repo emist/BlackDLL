@@ -511,6 +511,16 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.IsIncursion(size);
 				}
+				if(func.name().compare("dronesInSpace") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.DronesInFlight(size);
+				}
+				if(func.name().compare("dronesInBay") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.DronesInBay(size);
+				}
 
 				//Sleep(300);
 

@@ -47,7 +47,10 @@ class Interfaces{
 	char * _GetShipUIGauge(string name, int & size);	
 	char * _getModalButton(string name, int & size);
 	char * _getModuleTargetingRange(string name, int & size);
+	char * _getDroneLabel(int type, int & size);
 public:
+	char * DronesInFlight(int & size);
+	char * DronesInBay(int & size);
 	char * IsIncursion(int & size);
 	char * GetInterfaceWindows(int & size);
 	char * GetTargetingRange(int number, int & size);
