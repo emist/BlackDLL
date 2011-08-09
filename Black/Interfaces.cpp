@@ -476,6 +476,15 @@ char * Interfaces::_getDroneLabel(int type, int & size)
 		return NULL;
 	}
 
+	PyObject * text = _getAttribute(label,"text");
+	if(text == NULL)
+	{
+		Py_DECREF(main);
+		Py_DECREF(droneChildren);
+		Py_DECREF(label);
+		return NULL;
+	}
+
 	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
 	bool ok = _populateAttributes(label, &width, &height, &absoluteTop, &absoluteLeft);
 	if(!ok)
@@ -484,10 +493,12 @@ char * Interfaces::_getDroneLabel(int type, int & size)
 		Py_DECREF(main);
 		Py_DECREF(droneChildren);
 		Py_DECREF(label);
+		Py_DECREF(text);
 		return NULL;
 	}
 
-	char * output = builder.buildInterfaceObject(droneType, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	char * ctext = PyString_AsString(text);
+	char * output = builder.buildInterfaceObject(ctext, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
 	Py_DECREF(main);
 	Py_DECREF(droneChildren);
 	Py_DECREF(label);
@@ -495,6 +506,7 @@ char * Interfaces::_getDroneLabel(int type, int & size)
 	Py_DECREF(height);
 	Py_DECREF(absoluteTop);
 	Py_DECREF(absoluteLeft);
+	Py_DECREF(text);
 
 	return output;
 }
