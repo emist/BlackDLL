@@ -49,6 +49,7 @@ class Interfaces{
 	char * _getModuleTargetingRange(string name, int & size);
 	char * _getDroneLabel(int type, int & size);
 public:
+	char * CheckLocal(int & size);
 	char * DronesInFlight(int & size);
 	char * DronesInBay(int & size);
 	char * IsIncursion(int & size);

@@ -521,6 +521,11 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.DronesInBay(size);
 				}
+				if(func.name().compare("checkLocal") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.CheckLocal(size);
+				}
 
 				//Sleep(300);
 

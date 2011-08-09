@@ -514,6 +514,116 @@ char * Interfaces::DronesInBay(int & size)
 	return output;
 }
 
+char * Interfaces::CheckLocal(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * local = _findByNameLayer(main, "chatchannel_solarsystemid2");
+	if(local == NULL)
+	{
+		log.elog("couldn't get local");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * entry = _findByNameLayer(local, "entry_0");
+	stringstream os;
+	os << "entry_";
+
+	for(int i = 1; entry != NULL; i++)
+	{
+		os.str("");
+		os << "entry_" << i;
+		PyObject * flag = _findByNameLayer(entry, "flag");
+		if(flag == NULL)
+		{
+			log.elog("No flag");
+			Py_DECREF(main);
+			Py_DECREF(local);
+			Py_DECREF(entry);
+			PyGILState_Release(gstate);
+			return builder.buildBooleanObject(true, size);
+		}
+		
+		PyObject * fill = _findByNameLayer(flag, "fill");
+		if(fill == NULL)
+		{
+			log.elog("fill is null");
+			Py_DECREF(main);
+			Py_DECREF(local);
+			Py_DECREF(entry);
+			Py_DECREF(flag);
+			PyGILState_Release(gstate);
+			return builder.buildBooleanObject(true, size);
+		}
+
+		PyObject * color  = _getAttribute(fill, "color");
+		if(color == NULL)
+		{
+			log.elog("color is null");
+			Py_DECREF(main);
+			Py_DECREF(local);
+			Py_DECREF(entry);
+			Py_DECREF(fill);
+			Py_DECREF(flag);
+			PyGILState_Release(gstate);
+			return builder.buildBooleanObject(true, size);
+		}
+		
+		PyObject * g = _getAttribute(color, "g");
+		if(g == NULL)
+		{
+			log.elog("g is null");
+			Py_DECREF(main);
+			Py_DECREF(local);
+			Py_DECREF(entry);
+			Py_DECREF(fill);
+			Py_DECREF(color);
+			Py_DECREF(flag);
+			PyGILState_Release(gstate);
+			return builder.buildBooleanObject(true, size);
+		}
+
+		double c = PyFloat_AsDouble(g);
+		if(c == 0.7 || c == 0.0 || c == 0.35)
+		{
+			Py_DECREF(main);
+			Py_DECREF(local);
+			Py_DECREF(entry);
+			Py_DECREF(flag);
+			Py_DECREF(fill);
+			Py_DECREF(color);
+			Py_DECREF(g);
+			PyGILState_Release(gstate);
+			return builder.buildBooleanObject(true, size);
+		}
+	
+		Py_DECREF(flag);
+		Py_DECREF(fill);
+		Py_DECREF(color);
+		Py_DECREF(g);
+		Py_DECREF(entry);
+	
+		log.elog(os.str());
+		entry = _findByNameLayer(local, os.str());
+	}
+	
+	Py_DECREF(main);
+	Py_DECREF(local);
+	Py_DECREF(entry);
+	PyGILState_Release(gstate);
+	return builder.buildBooleanObject(false, size);
+}
+
 char * Interfaces::IsIncursion(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
