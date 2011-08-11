@@ -24,6 +24,7 @@ public:
 		struct overViewEntry
 		{
 			string text;
+			double color;
 			int topLeftX;
 			int topLeftY;
 			int width;
