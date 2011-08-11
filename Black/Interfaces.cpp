@@ -461,9 +461,22 @@ char * Interfaces::_getDroneStatus(int & size)
 		return NULL;
 	}
 
-	PyObject * entry = _findByNameLayer(droneChildren, "entry_2");
+	string entryTxt = "entry_1";
+	int i = 0;
+	stringstream os;
+
+entry_lab:
+	PyObject * entry = _findByNameLayer(droneChildren, entryTxt);
 	if(entry == NULL)
 	{
+		if(i < 10)
+		{
+			i++;
+			os << "entry_" << i;
+			entryTxt = os.str();
+			os.str("");
+			goto entry_lab;
+		}
 		log.elog("cOuldn't get the entry");
 		Py_DECREF(main);
 		Py_DECREF(droneChildren);
@@ -3355,6 +3368,7 @@ char * Interfaces::OverViewGetMembers(int & size)
 		}
 
 		PyObject * g = _getAttribute(color, "g");
+		if(g == NULL)
 		{
 			log.elog("Couldn't get color");
 			Py_DECREF(main);
