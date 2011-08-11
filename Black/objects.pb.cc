@@ -195,12 +195,13 @@ void protobuf_AssignDesc_objects_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(item));
   label_descriptor_ = file->message_type(8);
-  static const int label_offsets_[5] = {
+  static const int label_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, text_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, topleftx_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, toplefty_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, width_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, height_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(label, color_),
   };
   label_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -372,20 +373,20 @@ void protobuf_AddDesc_objects_2eproto() {
     "label\",\n\titemgroup\022\037\n\005items\030\001 \003(\0132\020.eveo"
     "bjects.item\"e\n\004item\022\014\n\004name\030\001 \002(\t\022\020\n\010qua"
     "ntity\030\002 \002(\005\022\014\n\004meta\030\003 \002(\t\022\016\n\006volume\030\004 \002("
-    "\t\022\037\n\004data\030\005 \002(\0132\021.eveobjects.label\"X\n\005la"
+    "\t\022\037\n\004data\030\005 \002(\0132\021.eveobjects.label\"g\n\005la"
     "bel\022\014\n\004text\030\001 \002(\t\022\020\n\010topLeftX\030\002 \002(\005\022\020\n\010t"
     "opLeftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005"
-    " \002(\005\"9\n\nTargetList\022+\n\nthistarget\030\001 \003(\0132\027"
-    ".eveobjects.targetentry\"Q\n\013targetentry\022\037"
-    "\n\004text\030\001 \001(\0132\021.eveobjects.label\022!\n\004jams\030"
-    "\002 \001(\0132\023.eveobjects.jammers\"\031\n\007jammers\022\016\n"
-    "\006jammer\030\001 \003(\t\"\361\001\n\tInterface\022\014\n\004name\030\001 \002("
-    "\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010topleftY\030\003 \002(\005\022\r\n"
-    "\005width\030\004 \002(\005\022\016\n\006height\030\005 \002(\005\022\026\n\016hasClose"
-    "Button\030\006 \001(\010\022\025\n\rcloseTopLeftX\030\007 \001(\005\022\025\n\rc"
-    "loseTopLeftY\030\010 \001(\005\022\031\n\021hasContinueButton\030"
-    "\t \001(\010\022\030\n\020continueTopLeftX\030\n \001(\005\022\030\n\020conti"
-    "nueTopLeftY\030\013 \001(\005", 937);
+    " \002(\005\022\r\n\005color\030\006 \001(\001\"9\n\nTargetList\022+\n\nthi"
+    "starget\030\001 \003(\0132\027.eveobjects.targetentry\"Q"
+    "\n\013targetentry\022\037\n\004text\030\001 \001(\0132\021.eveobjects"
+    ".label\022!\n\004jams\030\002 \001(\0132\023.eveobjects.jammer"
+    "s\"\031\n\007jammers\022\016\n\006jammer\030\001 \003(\t\"\361\001\n\tInterfa"
+    "ce\022\014\n\004name\030\001 \002(\t\022\020\n\010topleftX\030\002 \002(\005\022\020\n\010to"
+    "pleftY\030\003 \002(\005\022\r\n\005width\030\004 \002(\005\022\016\n\006height\030\005 "
+    "\002(\005\022\026\n\016hasCloseButton\030\006 \001(\010\022\025\n\rcloseTopL"
+    "eftX\030\007 \001(\005\022\025\n\rcloseTopLeftY\030\010 \001(\005\022\031\n\021has"
+    "ContinueButton\030\t \001(\010\022\030\n\020continueTopLeftX"
+    "\030\n \001(\005\022\030\n\020continueTopLeftY\030\013 \001(\005", 952);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "objects.proto", &protobuf_RegisterTypes);
   infoObject::default_instance_ = new infoObject();
@@ -2529,6 +2530,7 @@ const int label::kTopLeftXFieldNumber;
 const int label::kTopLeftYFieldNumber;
 const int label::kWidthFieldNumber;
 const int label::kHeightFieldNumber;
+const int label::kColorFieldNumber;
 #endif  // !_MSC_VER
 
 label::label()
@@ -2552,6 +2554,7 @@ void label::SharedCtor() {
   toplefty_ = 0;
   width_ = 0;
   height_ = 0;
+  color_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2598,6 +2601,7 @@ void label::Clear() {
     toplefty_ = 0;
     width_ = 0;
     height_ = 0;
+    color_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2685,6 +2689,22 @@ bool label::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(49)) goto parse_color;
+        break;
+      }
+      
+      // optional double color = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_color:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &color_)));
+          set_has_color();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2736,6 +2756,11 @@ void label::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->height(), output);
   }
   
+  // optional double color = 6;
+  if (has_color()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(6, this->color(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2772,6 +2797,11 @@ void label::SerializeWithCachedSizes(
   // required int32 height = 5;
   if (has_height()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->height(), target);
+  }
+  
+  // optional double color = 6;
+  if (has_color()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(6, this->color(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -2820,6 +2850,11 @@ int label::ByteSize() const {
           this->height());
     }
     
+    // optional double color = 6;
+    if (has_color()) {
+      total_size += 1 + 8;
+    }
+    
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -2862,6 +2897,9 @@ void label::MergeFrom(const label& from) {
     if (from.has_height()) {
       set_height(from.height());
     }
+    if (from.has_color()) {
+      set_color(from.color());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2891,6 +2929,7 @@ void label::Swap(label* other) {
     std::swap(toplefty_, other->toplefty_);
     std::swap(width_, other->width_);
     std::swap(height_, other->height_);
+    std::swap(color_, other->color_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

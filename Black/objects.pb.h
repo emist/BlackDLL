@@ -910,6 +910,13 @@ class label : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 height() const;
   inline void set_height(::google::protobuf::int32 value);
   
+  // optional double color = 6;
+  inline bool has_color() const;
+  inline void clear_color();
+  static const int kColorFieldNumber = 6;
+  inline double color() const;
+  inline void set_color(double value);
+  
   // @@protoc_insertion_point(class_scope:eveobjects.label)
  private:
   inline void set_has_text();
@@ -922,6 +929,8 @@ class label : public ::google::protobuf::Message {
   inline void clear_has_width();
   inline void set_has_height();
   inline void clear_has_height();
+  inline void set_has_color();
+  inline void clear_has_color();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -930,9 +939,10 @@ class label : public ::google::protobuf::Message {
   ::google::protobuf::int32 toplefty_;
   ::google::protobuf::int32 width_;
   ::google::protobuf::int32 height_;
+  double color_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
   
   friend void  protobuf_AddDesc_objects_2eproto();
   friend void protobuf_AssignDesc_objects_2eproto();
@@ -2245,6 +2255,28 @@ inline ::google::protobuf::int32 label::height() const {
 inline void label::set_height(::google::protobuf::int32 value) {
   set_has_height();
   height_ = value;
+}
+
+// optional double color = 6;
+inline bool label::has_color() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void label::set_has_color() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void label::clear_has_color() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void label::clear_color() {
+  color_ = 0;
+  clear_has_color();
+}
+inline double label::color() const {
+  return color_;
+}
+inline void label::set_color(double value) {
+  set_has_color();
+  color_ = value;
 }
 
 // -------------------------------------------------------------------

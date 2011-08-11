@@ -70,6 +70,7 @@ char * ObjectBuilder::buildOverViewObject(list<overViewEntry *> & labels, int & 
 		overviewLabel->set_width((*it)->width);
 		overviewLabel->set_topleftx((*it)->topLeftX);
 		overviewLabel->set_toplefty((*it)->topLeftY);
+		overviewLabel->set_color((*it)->color);
 		
 	}
 
