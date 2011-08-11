@@ -526,6 +526,23 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.CheckLocal(size);
 				}
+				if(func.name().compare("checkDroneStatus") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.CheckDroneStatus(size);
+				}
+				if(func.name().compare("getMiningAmount") == 0)
+				{
+					log.elog(func.name());
+					log.elog(func.strparameter());
+					output = interfaces.GetMiningAmount(atoi(func.strparameter().c_str()), size);
+				}
+				if(func.name().compare("getDuration") == 0)
+				{
+					log.elog(func.name());
+					log.elog(func.strparameter());
+					output = interfaces.GetDuration(atoi(func.strparameter().c_str()), size);
+				}
 
 				//Sleep(300);
 

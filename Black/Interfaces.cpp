@@ -444,6 +444,88 @@ char * Interfaces::GetSystemInformation(int & size)
 
 }
 
+char * Interfaces::_getDroneStatus(int & size)
+{
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		return NULL;
+	}
+	PyObject * droneChildren = _findByNameLayer(main, "droneview");
+	
+	if(droneChildren == NULL)
+	{
+		log.elog("Couldn't get children");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	PyObject * entry = _findByNameLayer(droneChildren, "entry_2");
+	if(entry == NULL)
+	{
+		log.elog("cOuldn't get the entry");
+		Py_DECREF(main);
+		Py_DECREF(droneChildren);
+		return NULL;
+	}
+
+	PyObject * label = _findByNameLayer(entry, "text");
+	if(label == NULL)
+	{
+		log.elog("Couldn't get label");
+		Py_DECREF(main);
+		Py_DECREF(droneChildren);
+		Py_DECREF(entry);
+		return NULL;
+	}
+
+	PyObject * text = _getAttribute(label,"text");
+	if(text == NULL)
+	{
+		Py_DECREF(main);
+		Py_DECREF(droneChildren);
+		Py_DECREF(label);
+		Py_DECREF(entry);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+	bool ok = _populateAttributes(label, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't populate attributes");
+		Py_DECREF(main);
+		Py_DECREF(droneChildren);
+		Py_DECREF(label);
+		Py_DECREF(text);
+		Py_DECREF(entry);
+		return NULL;
+	}
+
+	char * ctext = PyString_AsString(text);
+	char * output = builder.buildInterfaceObject(ctext, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(droneChildren);
+	Py_DECREF(label);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(text);
+	Py_DECREF(entry);
+
+	return output;
+}
+
+char * Interfaces::CheckDroneStatus(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getDroneStatus(size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::_getDroneLabel(int type, int & size)
 {
 	char * droneType;
@@ -2308,6 +2390,120 @@ char * Interfaces::IsHighSlotActive(int number, int & size)
 	return output;
 }
 
+char * Interfaces::GetMiningAmount(int number, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	switch(number)
+	{
+		case 1:
+		{
+			output = _getMiningAmount("inFlightHighSlot1", size);
+			break;
+		}
+		case 2:
+		{
+			output = _getMiningAmount("inFlightHighSlot2", size);
+			break;
+		}
+		case 3:
+		{
+			output = _getMiningAmount("inFlightHighSlot3", size);
+			break;
+		}
+		case 4:
+		{
+			output = _getMiningAmount("inFlightHighSlot4", size);
+			break;
+		}
+		case 5:
+		{
+			output = _getMiningAmount("inFlightHighSlot5", size);
+			break;
+		}
+		case 6:
+		{
+			output = _getMiningAmount("inFlightHighSlot6", size);
+			break;
+		}
+		case 7:
+		{
+			output = _getMiningAmount("inFlightHighSlot7", size);
+			break;
+		}
+		case 8:
+		{
+			output = _getMiningAmount("inFlightHighSlot8", size);
+			break;
+		}
+		case 9:
+		{
+			output = _getMiningAmount("inFlightHighSlot9", size);
+			break;
+		}
+	}
+
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetDuration(int number, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	switch(number)
+	{
+		case 1:
+		{
+			output = _getModuleDuration("inFlightHighSlot1", size);
+			break;
+		}
+		case 2:
+		{
+			output = _getModuleDuration("inFlightHighSlot2", size);
+			break;
+		}
+		case 3:
+		{
+			output = _getModuleDuration("inFlightHighSlot3", size);
+			break;
+		}
+		case 4:
+		{
+			output = _getModuleDuration("inFlightHighSlot4", size);
+			break;
+		}
+		case 5:
+		{
+			output = _getModuleDuration("inFlightHighSlot5", size);
+			break;
+		}
+		case 6:
+		{
+			output = _getModuleDuration("inFlightHighSlot6", size);
+			break;
+		}
+		case 7:
+		{
+			output = _getModuleDuration("inFlightHighSlot7", size);
+			break;
+		}
+		case 8:
+		{
+			output = _getModuleDuration("inFlightHighSlot8", size);
+			break;
+		}
+		case 9:
+		{
+			output = _getModuleDuration("inFlightHighSlot9", size);
+			break;
+		}
+	}
+
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetTargetingRange(int number, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -2367,6 +2563,21 @@ char * Interfaces::GetTargetingRange(int number, int & size)
 
 char * Interfaces::_getModuleTargetingRange(string name, int & size)
 {
+	return _getModuleAttribute(name, "maxRange", size);
+}
+
+char * Interfaces::_getMiningAmount(string name, int & size)
+{
+	return _getModuleAttribute(name, "miningAmount", size);
+}
+
+char * Interfaces::_getModuleDuration(string name, int & size)
+{
+	return _getModuleAttribute(name, "duration", size);
+}
+
+char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
+{
 	PyObject * module = _findModule(name);
 	if(module == NULL)
 	{
@@ -2411,8 +2622,8 @@ char * Interfaces::_getModuleTargetingRange(string name, int & size)
 		return NULL;
 	}
 
-	PyObject * maxRange = _getAttribute(moduleInfo, "maxRange");
-	if(maxRange == NULL)
+	PyObject * attribute = _getAttribute(moduleInfo, attr);
+	if(attribute == NULL)
 	{
 		log.elog("Couldn't get maxRange");
 		Py_DECREF(module);
@@ -2423,31 +2634,31 @@ char * Interfaces::_getModuleTargetingRange(string name, int & size)
 		return NULL;
 	}
 
-	if(PyObject_Not(maxRange))
+	if(PyObject_Not(attribute))
 	{
 		Py_DECREF(module);
 		Py_DECREF(sr);
 		Py_DECREF(srmodule);
 		Py_DECREF(sragain);
 		Py_DECREF(moduleInfo);
-		Py_DECREF(maxRange);
+		Py_DECREF(attribute);
 		return NULL;
 	}
 
 	
-	PyFloatObject * range = (PyFloatObject*)PyFloat_FromDouble(PyFloat_AsDouble(maxRange));
-	if(range == NULL)
+	PyFloatObject * value = (PyFloatObject*)PyFloat_FromDouble(PyFloat_AsDouble(attribute));
+	if(value == NULL)
 	{
 		Py_DECREF(module);
 		Py_DECREF(sr);
 		Py_DECREF(srmodule);
 		Py_DECREF(sragain);
 		Py_DECREF(moduleInfo);
-		Py_DECREF(maxRange);
+		Py_DECREF(attribute);
 		return NULL;
 	}
 	char buf[200];
-	PyFloat_AsString(buf, range);
+	PyFloat_AsString(buf, value);
 
 	char * output = builder.buildStringObject(buf, size);
 	Py_DECREF(module);
@@ -2455,8 +2666,8 @@ char * Interfaces::_getModuleTargetingRange(string name, int & size)
 	Py_DECREF(srmodule);
 	Py_DECREF(sragain);
 	Py_DECREF(moduleInfo);
-	Py_DECREF(maxRange);
-	Py_DECREF(range);
+	Py_DECREF(attribute);
+	Py_DECREF(value);
 	return output;
 	
 }
@@ -3000,7 +3211,7 @@ char * Interfaces::OverViewGetMembers(int & size)
 			PyGILState_Release(gstate);
 			return NULL;
 		}
-
+	
 
 		PyObject * label = _findByNameLayer(pvalue, "text");
 		if(label == NULL)
@@ -3102,12 +3313,76 @@ char * Interfaces::OverViewGetMembers(int & size)
 			return NULL;
 		}
 
+		PyObject * icon = _findByNameLayer(pvalue, "typeicon");
+		if(icon == NULL)
+		{
+			log.elog("Icon was null");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			Py_DECREF(text);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(width);
+			Py_DECREF(height);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		PyObject * color = _getAttribute(icon, "color");
+		if(color == NULL)
+		{
+			log.elog("Couldn't get color");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			Py_DECREF(text);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(width);
+			Py_DECREF(height);
+			Py_DECREF(icon);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		PyObject * g = _getAttribute(color, "g");
+		{
+			log.elog("Couldn't get color");
+			Py_DECREF(main);
+			Py_DECREF(maincontainer);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(overview);
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			Py_DECREF(text);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(width);
+			Py_DECREF(height);
+			Py_DECREF(icon);
+			Py_DECREF(color);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
 		ObjectBuilder::overViewEntry * over = new ObjectBuilder::overViewEntry();
 		over->text = PyString_AsString(text);
 		over->topLeftX = PyInt_AsLong(absoluteLeft);
 		over->topLeftY = PyInt_AsLong(absoluteTop);
 		over->width = PyInt_AsLong(width);
 		over->height = PyInt_AsLong(height);
+		over->color = PyFloat_AsDouble(g);
+
 		labels.push_back(over);
 		Py_DECREF(pvalue);
 		Py_DECREF(label);
@@ -3115,6 +3390,9 @@ char * Interfaces::OverViewGetMembers(int & size)
 		Py_DECREF(absoluteLeft);
 		Py_DECREF(absoluteTop);
 		Py_DECREF(width);
+		Py_DECREF(icon);
+		Py_DECREF(color);
+		Py_DECREF(g);
 
 	}
 	log.elog("Building overview object");

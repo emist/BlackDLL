@@ -48,7 +48,14 @@ class Interfaces{
 	char * _getModalButton(string name, int & size);
 	char * _getModuleTargetingRange(string name, int & size);
 	char * _getDroneLabel(int type, int & size);
+	char * _getDroneStatus(int & size);
+	char * _getMiningAmount(string name, int & size);
+	char * _getModuleDuration(string name, int & size);
+	char * _getModuleAttribute(string name, string attr, int & size);
 public:
+	char * GetMiningAmount(int number, int & size);
+	char * GetDuration(int type, int & size);
+	char * CheckDroneStatus(int & size);
 	char * CheckLocal(int & size);
 	char * DronesInFlight(int & size);
 	char * DronesInBay(int & size);
