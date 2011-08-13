@@ -9,20 +9,24 @@
 #include <iostream>
 #include "Login.h"
 #include "Interfaces.h"
+#include <iostream>
+#include <sstream>
 
 
 using namespace std;
 
 
 
+
 	extern "C"
 	{
 
+	LPWSTR name = NULL;
 		
 
 	typedef struct _INIT_STRUCT {
 		LPCWSTR Title;
-		LPCWSTR Message;
+		LPCWSTR cap;
 	} INIT_STRUCT, *PINIT_STRUCT;
 
 
@@ -279,18 +283,22 @@ using namespace std;
 
 		}
 
-		void namedPipeServer()
+		extern "C" __declspec(dllexport) void namedPipeServer()
 		{
+		   
 			
-
 //		   Login login;
+
+		   
 		   Interfaces interfaces;
 		   Logger log;
 
 		   HANDLE npipe;
-			
+		   log.elog("Inside namedpipe");
+		   log.elog(name);
 		   
-		   npipe = CreateNamedPipe(TEXT("\\\\.\\pipe\\TestChannel"),
+
+		   npipe = CreateNamedPipe(name,
 								   PIPE_ACCESS_DUPLEX,
 								   PIPE_TYPE_MESSAGE | PIPE_WAIT,  
 								   PIPE_UNLIMITED_INSTANCES ,
@@ -299,7 +307,7 @@ using namespace std;
 								   5000,
 								   NULL);
 		   if( npipe == NULL ){
-			  //cerr<<"Error: cannot create named pipe\n";
+			  log.elog("pipe creation error");
 			  return ;
 		   }
 		   #ifdef TRACE_ON
@@ -544,6 +552,7 @@ using namespace std;
 					output = interfaces.GetDuration(atoi(func.strparameter().c_str()), size);
 				}
 
+				log.elog(func.name());
 				//Sleep(300);
 
 				if(output == NULL)
@@ -576,18 +585,30 @@ using namespace std;
 			  #endif
 		   }
 
+		   
 		   return ;
+		   
 		
 		}
 
 
 
 
-		__declspec(dllexport) void dropServer()
+		extern "C" __declspec(dllexport) void dropServer( LPVOID message)
 		{
 			HANDLE threadHandler;
 			DWORD threadId;
-			threadHandler = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&namedPipeServer, NULL, 0, &threadId);
+		
+			PINIT_STRUCT messageStruct = reinterpret_cast<PINIT_STRUCT>(message);	  
+
+			Logger log;
+			name = (LPWSTR)malloc(300);	
+
+			wcscpy(name, messageStruct->Title);
+
+			log.elog(name);
+		
+			threadHandler = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&namedPipeServer, 0, 0, &threadId);
 		}
 
 	}
