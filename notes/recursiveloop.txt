@@ -1,0 +1,13 @@
+void recursivePrint(Child & child)
+{
+	if(child.getchildren().empty())
+		return;
+
+
+	for(list<Child>::iterator it = child.getchildren().begin(); it != child.getchildren().end(); it++)
+	{
+		cout << it->name.c_str() << endl;
+		recursivePrint(child.getchildren().front());
+	}
+	
+}

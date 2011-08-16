@@ -1,0 +1,14 @@
+Activate
+Deactivate
+Toggle
+__doc__
+__getattr__
+__guid__
+__init__
+__module__
+__setattr__
+__setitem__
+dbrow
+defaultEffectName
+header
+statemanager
