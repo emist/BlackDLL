@@ -3352,10 +3352,12 @@ char * Interfaces::OverViewGetMembers(int & size)
 			return NULL;
 		}
 
-		PyObject * absoluteTop = _getAbsoluteTop(label);
-		if(absoluteTop == NULL)
+		PyObject * absoluteTop = NULL, * absoluteLeft = NULL, * width = NULL, * height = NULL;
+
+		bool ok = _populateAttributes(pvalue, &width, &height, &absoluteTop, &absoluteLeft);
+		if(!ok)
 		{
-			log.elog("No absoluteTop");
+			log.elog("couldn't populate");
 			Py_DECREF(main);
 			Py_DECREF(maincontainer);
 			Py_DECREF(content);
@@ -3368,59 +3370,6 @@ char * Interfaces::OverViewGetMembers(int & size)
 			return NULL;
 		}
 
-		PyObject * absoluteLeft = _getAbsoluteLeft(label);
-		if(absoluteLeft == NULL)
-		{
-			log.elog("No absoluteLeft");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
-			Py_DECREF(text);
-			Py_DECREF(absoluteTop);
-			PyGILState_Release(gstate);
-			return NULL;
-		}
-		
-		PyObject * width = _getWidth(label);
-		if(width == NULL)
-		{
-			log.elog("No width");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
-			Py_DECREF(text);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(absoluteTop);
-			PyGILState_Release(gstate);
-			return NULL;
-		}
-
-		PyObject * height = _getHeight(label);
-		if(height == NULL)
-		{
-			log.elog("No height");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
-			Py_DECREF(text);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(width);
-			PyGILState_Release(gstate);
-			return NULL;
-		}
 
 		PyObject * icon = _findByNameLayer(pvalue, "typeicon");
 		if(icon == NULL)
