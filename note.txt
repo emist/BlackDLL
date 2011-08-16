@@ -1,0 +1,103 @@
+//Active item label
+
+uicore.layer.main.FindChild("selecteditemview").FindChild("__maincontainer").FindChild("main").FindChild("toparea").FindChild("text")
+
+
+//Neocom stuff
+
+uicore.layer.neocom.FindChild("neocom").FindChild("maincontainer") //charactersheet, clock, btnparent->all the buttons
+"undock", "ships" find children type Icon <- get attributes
+
+uicore.layer.neocom.FindChild("neocomLeftside") <- Location information 
+
+
+// ShipUI stuff
+
+uicore.layer.inflight <- overlayContainer (slow button, max button, open, close)
+
+uicore.layer.shipui.FindChild("overlayContainer")
+FindChild("expandBtnRight")
+
+//overview stuff
+
+uicore.layer.main.FindChild("overview").FindChild("maincontainer").FindChild("__content").FindChild("typeicon").color.g
+
+
+mainContainer -< powercore
+
+underMain <- text = speed label, hi_miniGauge -< hi mod damage gauge, med_miniGauge, low_miniGauge,
+slotsContainer <- the mods, uicore.layer.shipui.FindChild("slotsContainer")
+
+slot <- the mods, state = 2 when hidden, inFlightHightSlot1-9, highs, 
+
+uicore.layer.shipui.FindChild("slotsContainer").FindChild("inFlightHighSlot1") 
+
+//is mod active
+
+uicore.layer.shipui.FindChild("slotsContainer").FindChild("inFlightHighSlot1").sr.module.sr.glow.state == 1
+
+//Cargo stuff
+
+uicore.layer.main <- find children of type InflifghtCargoView.FindChild("entry_0").iterate through children,
+take the sr.node.name children of InvItem 
+take attributes from the child directly
+
+
+//Isdocked
+uicore.layer.main.FindChild("lobby")
+
+//Station hangar
+uicore.layer.main.FindChild("hangarFloor")
+
+//shiphangar
+uicore.layer.main.FindChild("shipHangar")
+
+//Capacity
+
+uicore.layer.main...Cargoview...FindChild("capacityText")
+
+//
+uicore.layer.menu.FindChild("menuview").FindChild("_entries").iterate through children of type entry
+
+
+//Set quantity window
+
+uicore.layer.modal.FindChild("Set Quantity").FindChild("Cancel_Btn");
+
+//System name 
+
+uicore.layer.neocom.FindChild("neocomLeftside").FindChild("locationInfo").FindChild("caption")
+
+//Everything else
+uicore.layer.neocom.FindChild("neocomLeftside").FindChild("locationInfo").FindChild("locationText")
+
+
+//Last server message
+
+uicore.layer.abovemain.FindChild("message").message.text
+
+
+//Loading status thing(finally!)
+uicore.layer.loading.FindChild("progresswindow").sr.tickTimer is None (if None not loading, else is loading)
+
+///incursion
+
+uicore.layer.neocom.FindChild("neocomLeftside").FindChild("IncursionInfoContainer")
+
+//drone stuff
+
+uicore.layer.main.FindChild("droneOverviewDronesinbay").FindChild("text")
+uicore.layer.main.FindChild("droneOverviewDronesinlocalspace").FindChild("text")
+
+uicore.layer.main.FindChild("droneview").FindChild("entry_2").FindChild("text").text (No item or Idle, Engaged)
+
+//LocalChannel
+uicore.layer.main.FindChild("chatchannel_solarsystemid2")
+
+//Localcount 
+uicore.layer.main.FindChild("chatchannel_solarsystemid2).memberCount
+
+//Neuts vs. others
+uicore.layer.main.FindChannel("chatchannel_solarsystemid2").userlist.FindChild("__content").FindChild("entry_1....").FindChild("flag") <--- iterate through the children, those who have flag are non-neuts, others are neuts
+
+FindChild("flag").FindChild("fill").color.g // Colors 0.7 neutral, 0.0 red, 0.35 orange, 0.6 green, 0.5 light blue, 0.15 hard blue
