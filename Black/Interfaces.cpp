@@ -7,8 +7,15 @@
 
 ///_functions should never aquire the GIL, its the caller's responsibility to do so.
 
-using namespace std;
+//NOtes
 
+/*
+scrollHeaders container has the name, ic, distance etc of the overview
+
+*/
+
+
+using namespace std;
 
 char * Interfaces::atLogin(int & size)
 {
@@ -3137,6 +3144,95 @@ char * Interfaces::GetTargetList(int & size)
 
 }
 
+PyObject * Interfaces::_getScrollHandle(PyObject * layer)
+{
+	PyObject * scrollControls = _findByNameLayer(layer, "__scrollcontrols");
+	if(scrollControls == NULL)
+	{
+		log.elog("scrollControls is null");
+		return NULL;
+	}
+
+	PyObject * sr = _getAttribute(scrollControls, "sr");
+	if(sr == NULL)
+	{
+		log.elog("Couldn't get sr");
+		Py_DECREF(scrollControls);
+		return NULL;
+	}
+
+	PyObject * scrollHandle = _getAttribute(sr, "scrollhandle");
+	if(scrollHandle == NULL)
+	{
+		log.elog("Couldn't get scrollHandle");
+		Py_DECREF(scrollControls);
+		Py_DECREF(sr);
+		return NULL;
+	}
+	
+	Py_DECREF(scrollControls);
+	Py_DECREF(sr);
+	return scrollHandle;
+}
+
+char * Interfaces::OverviewGetScrollBar(int & size)
+{
+	
+	list<ObjectBuilder::overViewEntry *> labels;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * overview = _findByNameLayer(main, "overview");
+	if(overview == NULL)
+	{
+		log.elog("Couldn't get overview child");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * scrollHandle = _getScrollHandle(overview);
+	if(scrollHandle == NULL)
+	{
+		log.elog("Couldn't get the scrollHandle");
+		Py_DECREF(main);
+		Py_DECREF(overview);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * height = NULL, * width = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+	bool ok = _populateAttributes(scrollHandle, &width, &height, & absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't populate");
+		Py_DECREF(main);
+		Py_DECREF(overview);
+		Py_DECREF(scrollHandle);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("overviewScrollBar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(overview);
+	Py_DECREF(scrollHandle);
+	Py_DECREF(height);
+	Py_DECREF(width);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(absoluteTop);
+	PyGILState_Release(gstate);
+	return output;
+	
+}
+
 char * Interfaces::OverViewGetMembers(int & size)
 {
 	
@@ -3660,15 +3756,7 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 					return;
 				}
 			}
-			//PyObject * firstChild = PyDict_GetItemString(children, "0");
-			/*
-			if(firstChild == NULL)
-			{
-				log.elog("Couldn't get first child");
-				Py_DECREF(children);
-				return;
-			}
-			*/
+
 		}
 		_findByText(pvalue, text, result); 
 		//log.elog("Function ran");

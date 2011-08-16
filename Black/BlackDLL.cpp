@@ -1,4 +1,4 @@
-#include <stdafx.h>
+//#include <stdafx.h>
 #include <stdio.h>
 #include <windows.h>
 #include <tlhelp32.h>
@@ -11,7 +11,7 @@
 #include "Interfaces.h"
 #include <iostream>
 #include <sstream>
-
+#include "objects.pb.h"
 
 using namespace std;
 
@@ -206,8 +206,7 @@ using namespace std;
 			PyGILState_STATE gstate = PyGILState_Ensure();
 			
 			
-			PySys_SetPath("C:\\Users\\emist\\Documents;"
-			"C:\\Windows\\system32\\python27.zip;"
+			PySys_SetPath("C:\\Windows\\system32\\python27.zip;"
 			"C:\\Python27\\DLLs;"
 			"C:\\Python27\\lib;"
 			"C:\\Python27\\lib\\plat-win;"
@@ -552,6 +551,12 @@ using namespace std;
 					output = interfaces.GetDuration(atoi(func.strparameter().c_str()), size);
 				}
 
+				if(func.name().compare("overviewGetScrollBar") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.OverviewGetScrollBar(size);
+				}
+
 				log.elog(func.name());
 				//Sleep(300);
 
@@ -608,6 +613,8 @@ using namespace std;
 
 			log.elog(name);
 		
+			
+			//MessageBox(NULL, L"testing", L"testing", 0);
 			threadHandler = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&namedPipeServer, 0, 0, &threadId);
 		}
 
@@ -618,7 +625,7 @@ using namespace std;
 		{
 			// Get rid of compiler warnings since we do not use this parameter
 
-			UNREFERENCED_PARAMETER(lpReserved);
+			//UNREFERENCED_PARAMETER(lpReserved);
 
 			// If we are attaching to a process
 
@@ -626,7 +633,7 @@ using namespace std;
 			{
 				// Do not need the thread based attach/detach messages in this DLL
 
-				DisableThreadLibraryCalls(hModule);
+				//DisableThreadLibraryCalls(hModule);
 			}
 
 			// Signal for Loading/Unloading
@@ -688,12 +695,4 @@ using namespace std;
 			PyGILState_Release( gstate );
 
 		}
-
-	
-
-
-	  
-
-
-
 

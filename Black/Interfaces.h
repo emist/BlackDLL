@@ -52,7 +52,10 @@ class Interfaces{
 	char * _getMiningAmount(string name, int & size);
 	char * _getModuleDuration(string name, int & size);
 	char * _getModuleAttribute(string name, string attr, int & size);
+	PyObject * _getScrollHandle(PyObject * layer);
+
 public:
+	char * OverviewGetScrollBar(int & size);
 	char * GetMiningAmount(int number, int & size);
 	char * GetDuration(int type, int & size);
 	char * CheckDroneStatus(int & size);
