@@ -301,8 +301,8 @@ using namespace std;
 								   PIPE_ACCESS_DUPLEX,
 								   PIPE_TYPE_MESSAGE | PIPE_WAIT,  
 								   PIPE_UNLIMITED_INSTANCES ,
-								   1024,
-								   1024,
+								   20024,
+								   20024,
 								   5000,
 								   NULL);
 		   if( npipe == NULL ){
@@ -319,12 +319,12 @@ using namespace std;
 		   while( ConnectNamedPipe(npipe, NULL) )
 		   {
 			  char * output = NULL;
-			  char  buf[1024];
+			  char  buf[20024];
 			  char  * conf = "UNKNOWN FUNCTION";
 			  int size = 0;
 			  DWORD bread;
 			  DWORD bsent;
-			  while( ReadFile(npipe, (void*)buf, 1023, &bread, NULL) )
+			  while( ReadFile(npipe, (void*)buf, 20023, &bread, NULL) )
 			  {
 				 char * output = NULL;
 				 buf[bread] = 0; 
@@ -555,6 +555,18 @@ using namespace std;
 				{
 					log.elog(func.name());
 					output = interfaces.OverviewGetScrollBar(size);
+				}
+
+				if(func.name().compare("getOverviewHeight") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetOverviewHeight(size);
+				}
+
+				if(func.name().compare("getOverviewBottom") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetOverviewBottom(size);
 				}
 
 				log.elog(func.name());

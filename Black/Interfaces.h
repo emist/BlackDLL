@@ -53,8 +53,12 @@ class Interfaces{
 	char * _getModuleDuration(string name, int & size);
 	char * _getModuleAttribute(string name, string attr, int & size);
 	PyObject * _getScrollHandle(PyObject * layer);
+	int _getSize(PyObject * layer);
+	PyObject * _getOverviewScroll();
 
 public:
+	char * GetOverviewBottom(int & size);
+	char * GetOverviewHeight(int & size);
 	char * OverviewGetScrollBar(int & size);
 	char * GetMiningAmount(int number, int & size);
 	char * GetDuration(int type, int & size);

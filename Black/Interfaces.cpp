@@ -3144,6 +3144,115 @@ char * Interfaces::GetTargetList(int & size)
 
 }
 
+int Interfaces::_getSize(PyObject * layer)
+{
+	PyObject * top = _getAttribute(layer, "absoluteTop");
+	if(top == NULL)
+	{
+		log.elog("couldn't get top");
+		return -1;
+	}
+
+	PyObject * bottom = _getAttribute(layer, "absoluteBottom");
+	if(bottom == NULL)
+	{
+		log.elog("couldn't get bottom");
+		Py_DECREF(top);
+		return -1;
+	}
+
+	int size = PyInt_AsLong(bottom) - PyInt_AsLong(top);
+	Py_DECREF(bottom);
+	Py_DECREF(top);
+	return size;
+}
+
+char * Interfaces::GetOverviewBottom(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * overviewScroll = _getOverviewScroll();
+	
+	if(overviewScroll == NULL)
+	{
+		log.elog("couldn't get the overview scroll");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	PyObject * bottom = _getAttribute(overviewScroll, "absoluteBottom");
+	if(bottom == NULL)
+	{
+		log.elog("couldn't get bottom");
+		Py_DECREF(overviewScroll);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	stringstream os;
+	os << PyInt_AsLong(bottom);
+
+	char * output = builder.buildStringObject(os.str(), size);
+	Py_DECREF(overviewScroll);
+	Py_DECREF(bottom);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+PyObject * Interfaces::_getOverviewScroll()
+{
+	PyObject * main = _getLayer("main");
+
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		return NULL;
+	}
+
+	PyObject * overview = _findByNameLayer(main, "overview");
+	if(overview == NULL)
+	{
+		log.elog("Couldn't get overview child");
+		Py_DECREF(main);
+		return NULL;
+	}
+	
+	PyObject * overviewScroll = _findByNameLayer(overview, "overviewscroll2");
+	if(overviewScroll == NULL)
+	{
+		log.elog("Couldn't get the scrollarea");
+		Py_DECREF(main);
+		Py_DECREF(overview);
+		return NULL;
+	}
+
+	Py_DECREF(main);
+	Py_DECREF(overview);
+
+	return overviewScroll;
+
+}
+
+char * Interfaces::GetOverviewHeight(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * overviewScroll = _getOverviewScroll();
+	
+	if(overviewScroll == NULL)
+	{
+		log.elog("couldn't get the overview scroll");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	int ssize = _getSize(overviewScroll);
+	stringstream os;
+	os << ssize;
+	char * output = builder.buildStringObject(os.str(), size);
+	Py_DECREF(overviewScroll);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
 PyObject * Interfaces::_getScrollHandle(PyObject * layer)
 {
 	PyObject * scrollControls = _findByNameLayer(layer, "__scrollcontrols");
@@ -3209,7 +3318,7 @@ char * Interfaces::OverviewGetScrollBar(int & size)
 	}
 
 	PyObject * height = NULL, * width = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
-	bool ok = _populateAttributes(scrollHandle, &width, &height, & absoluteTop, &absoluteLeft);
+	bool ok = _populateAttributes(scrollHandle, &width, &height, &absoluteTop, &absoluteLeft);
 	if(!ok)
 	{
 		log.elog("Couldn't populate");
