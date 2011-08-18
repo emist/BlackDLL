@@ -4,6 +4,7 @@
 #include "ObjectBuilder.h"
 #include <sstream>
 #include <iostream>
+#include <string>
 
 ///_functions should never aquire the GIL, its the caller's responsibility to do so.
 
@@ -3179,6 +3180,152 @@ char * Interfaces::GetOverviewBottom(int & size)
 		return NULL;
 	}
 	PyObject * bottom = _getAttribute(overviewScroll, "absoluteBottom");
+	if(bottom == NULL)
+	{
+		log.elog("couldn't get bottom");
+		Py_DECREF(overviewScroll);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	stringstream os;
+	os << PyInt_AsLong(bottom);
+
+	char * output = builder.buildStringObject(os.str(), size);
+	Py_DECREF(overviewScroll);
+	Py_DECREF(bottom);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+bool Interfaces::isLoginOpen()
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * login = _getLayer("login");
+	if(login == NULL)
+	{
+		log.elog("Couldn't get login");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	PyObject * isopen = _getAttribute(login, "isopen");
+	
+	if(isopen == NULL)
+	{
+		log.elog("Couldn't check open");
+		Py_DECREF(login);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	bool open = PyObject_IsTrue(isopen);
+	Py_DECREF(login);
+	Py_DECREF(isopen);
+	PyGILState_Release(gstate);
+	return open;
+}
+
+string Interfaces::Internal_getVersion()
+{
+	bool open = isLoginOpen();
+	if(!open)
+	{
+		log.elog("login is not open");
+		return "";
+	}
+
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * login = _getLayer("login");
+	if(login == NULL)
+	{
+		log.elog("Couldn't get login");
+		PyGILState_Release(gstate);
+		return "";
+	}
+
+	PyObject * version = _findByNameLayer(login, "text");
+	if(version == NULL)
+	{
+		log.elog("Couldn't get version");
+		Py_DECREF(login);
+		PyGILState_Release(gstate);
+		return "";
+	}
+
+	PyObject *version_text = _getAttribute(version, "text");
+	if(version_text == NULL)
+	{
+		log.elog("Couldn't get version text");
+		Py_DECREF(login);
+		Py_DECREF(version);
+		PyGILState_Release(gstate);
+		return "";
+	}
+
+	string output(PyString_AsString(version_text));
+	Py_DECREF(login);
+	Py_DECREF(version);
+	Py_DECREF(version_text);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+char * Interfaces::GetVersion(int & size)
+{
+	bool open = isLoginOpen();
+	if(!open)
+		return NULL;
+
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * login = _getLayer("login");
+	if(login == NULL)
+	{
+		log.elog("Couldn't get login");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * version = _findByNameLayer(login, "text");
+	if(version == NULL)
+	{
+		log.elog("Couldn't get version");
+		Py_DECREF(login);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject *version_text = _getAttribute(version, "text");
+	if(version_text == NULL)
+	{
+		log.elog("Couldn't get version text");
+		Py_DECREF(login);
+		Py_DECREF(version);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildStringObject(PyString_AsString(version_text), size);
+	Py_DECREF(login);
+	Py_DECREF(version);
+	Py_DECREF(version_text);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+char * Interfaces::GetOverviewTop(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * overviewScroll = _getOverviewScroll();
+	
+	if(overviewScroll == NULL)
+	{
+		log.elog("couldn't get the overview scroll");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	PyObject * bottom = _getAttribute(overviewScroll, "absoluteTop");
 	if(bottom == NULL)
 	{
 		log.elog("couldn't get bottom");

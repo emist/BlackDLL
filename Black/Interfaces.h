@@ -57,6 +57,10 @@ class Interfaces{
 	PyObject * _getOverviewScroll();
 
 public:
+	string Internal_getVersion();
+	bool isLoginOpen();
+	char * GetVersion(int & size);
+	char * GetOverviewTop(int & size);
 	char * GetOverviewBottom(int & size);
 	char * GetOverviewHeight(int & size);
 	char * OverviewGetScrollBar(int & size);

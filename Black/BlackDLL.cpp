@@ -285,12 +285,30 @@ using namespace std;
 		extern "C" __declspec(dllexport) void namedPipeServer()
 		{
 		   
-			
+		   	
 //		   Login login;
-
+			
+		   
 		   
 		   Interfaces interfaces;
 		   Logger log;
+
+
+		   if(interfaces.Internal_getVersion() != "")
+		   {  
+			   if(interfaces.Internal_getVersion().compare("Version: 7.10.281738 (273475)") != 0)
+			   {
+				   log.elog("Didn't match version");
+				   MessageBox(NULL, L"ERYAN IS OUTDATED", L"OUTDATED", 0);
+				   return;
+			   }
+		   }
+		   else
+		   {
+			   MessageBox(NULL, L"NO VERSION INFO AVAILABLE", L"ERROR", 0);
+			   log.elog("No version available");
+			   return;
+		   }
 
 		   HANDLE npipe;
 		   log.elog("Inside namedpipe");
@@ -567,6 +585,18 @@ using namespace std;
 				{
 					log.elog(func.name());
 					output = interfaces.GetOverviewBottom(size);
+				}
+
+				if(func.name().compare("getOverviewTop") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetOverviewTop(size);
+				}
+
+				if(func.name().compare("getVersion") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetVersion(size);
 				}
 
 				log.elog(func.name());
