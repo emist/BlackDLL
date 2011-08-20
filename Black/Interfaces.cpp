@@ -788,6 +788,58 @@ char * Interfaces::GetModalOkButton(int & size)
 	return output;
 }
 
+char * Interfaces::GetBookMarkFieldName(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * modal = _getLayer("modal");
+	if(modal == NULL)
+	{
+		log.elog("Couldn't get modal");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * newbm = _findByNameLayer(modal, "l_modal_New Bookmark");
+	if(newbm == NULL)
+	{
+		log.elog("Couldn't get new bm");
+		Py_DECREF(modal);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * editcap = _findByNameLayer(newbm, "edit_caption");
+	if(editcap == NULL)
+	{
+		log.elog("Couldn't get caption");
+		Py_DECREF(modal);
+		Py_DECREF(newbm);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * text = _getAttribute(editcap, "text");
+	if(text == NULL)
+	{
+		log.elog("Couldn't get the text");
+		Py_DECREF(modal);
+		Py_DECREF(newbm);
+		Py_DECREF(editcap);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildStringObject(PyString_AsString(text), size);
+	Py_DECREF(modal);
+	Py_DECREF(newbm);
+	Py_DECREF(editcap);
+	Py_DECREF(text);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+
 char * Interfaces::_getModalButton(string name, int & size)
 {
 	PyObject * modal = _getLayer("modal");

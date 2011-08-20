@@ -58,6 +58,7 @@ class Interfaces{
 
 public:
 	string Internal_getVersion();
+	char * GetBookMarkFieldName(int & size);
 	bool isLoginOpen();
 	char * GetVersion(int & size);
 	char * GetOverviewTop(int & size);

@@ -293,7 +293,7 @@ using namespace std;
 		   Interfaces interfaces;
 		   Logger log;
 
-
+/*
 		   if(interfaces.Internal_getVersion() != "")
 		   {  
 			   if(interfaces.Internal_getVersion().compare("Version: 7.10.281738 (273475)") != 0)
@@ -309,7 +309,7 @@ using namespace std;
 			   log.elog("No version available");
 			   return;
 		   }
-
+*/
 		   HANDLE npipe;
 		   log.elog("Inside namedpipe");
 		   log.elog(name);
@@ -597,6 +597,12 @@ using namespace std;
 				{
 					log.elog(func.name());
 					output = interfaces.GetVersion(size);
+				}
+
+				if(func.name().compare("getBookMarkFieldName") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetBookMarkFieldName(size);
 				}
 
 				log.elog(func.name());
