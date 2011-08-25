@@ -249,6 +249,89 @@ char * Interfaces::getPasswordBox(int & size)
 	return output;
 }
 
+char * Interfaces::getEnterButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * charsel = _getLayer("charsel");
+	if(charsel == NULL)
+	{
+		log.elog("char selection is null");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * enterButton = _findByNameLayer(charsel, "enterBtn");
+	if(enterButton == NULL)
+	{
+		log.elog("couldn't find the enter");
+		Py_DECREF(charsel);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+
+	bool ok = _populateAttributes(enterButton, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't populate correctly");
+		Py_DECREF(charsel);
+		Py_DECREF(enterButton);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("EnterButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(charsel);
+	Py_DECREF(enterButton);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+
+char * Interfaces::isAtCharSel(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	PyObject * charsel = _getLayer("charsel");
+	if(charsel == NULL)
+	{
+		log.elog("char selection is null");
+		output = builder.buildBooleanObject(false, size);
+		PyGILState_Release(gstate);
+		return output;
+	}
+	
+	PyObject * isopen = _getAttribute(charsel, "isopen");
+	if(isopen == NULL)
+	{
+		log.elog("isopen is null");
+		output = builder.buildBooleanObject(false, size);
+		Py_DECREF(charsel);
+		PyGILState_Release(gstate);
+		return output;
+	}
+	
+	bool open = false;
+
+	if(PyObject_IsTrue(isopen))
+	{
+		open = true;
+	}
+	
+	output = builder.buildBooleanObject(open, size);
+	Py_DECREF(charsel);
+	Py_DECREF(isopen);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
 char * Interfaces::getConnectButton(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

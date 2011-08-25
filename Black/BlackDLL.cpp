@@ -663,6 +663,17 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.getConnectButton(size);
 				}
+				if(func.name().compare("isAtCharSel") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.isAtCharSel(size);
+				}
+				if(func.name().compare("getEnterButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.getEnterButton(size);
+				}
+
 
 				log.elog(func.name());
 				//Sleep(300);

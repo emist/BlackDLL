@@ -62,6 +62,8 @@ class Interfaces{
 	char * _getLoginBoxesWithText(string name, int & size);
 
 public:
+	char * getEnterButton(int & size);
+	char * isAtCharSel(int & size);
 	char * getConnectButton(int & size);
 	char * getUserNameBox(int & size);
 	char * getPasswordBox(int & size);
