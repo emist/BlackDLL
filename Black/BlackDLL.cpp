@@ -646,6 +646,23 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.IsFleeted(size);
 				}
+				if(func.name().compare("getPasswordBox") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.getPasswordBox(size);
+				}
+
+				if(func.name().compare("getUserNameBox") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.getUserNameBox(size);
+				}
+
+				if(func.name().compare("getConnectButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.getConnectButton(size);
+				}
 
 				log.elog(func.name());
 				//Sleep(300);

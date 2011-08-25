@@ -174,6 +174,88 @@ char * Interfaces::findByTextLogin(string text, int & size)
 	return output;
 }
 
+PyObject * Interfaces::_getLoginItem(string name)
+{
+	PyObject * login = _getLayer("login");
+	if(login == NULL)
+	{
+		log.elog("Couldn't get login");
+		return NULL;
+	}
+
+	PyObject * item = _findByNameLayer(login, name);
+	if(item == NULL)
+	{
+		log.elog("Couldn't get item");
+		Py_DECREF(login);
+		return NULL;
+	}
+
+	Py_DECREF(login);
+	return item;
+}
+
+char * Interfaces::_getLoginBoxesWithText(string name, int & size)
+{
+	PyObject * item = _getLoginItem(name);
+	if(item == NULL)
+	{
+		log.elog("Couldn't get username");
+		return NULL;
+	}
+	
+	PyObject * text = _getAttribute(item, "text");
+	if(text == NULL)
+	{
+		log.elog("couldn't get text");
+		Py_DECREF(item);
+		return NULL;
+	}
+	
+	PyObject * height = NULL, * width = NULL, *absoluteTop = NULL, *absoluteLeft=NULL;
+
+	bool ok = _populateAttributes(item, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("couldn't populate");
+		Py_DECREF(item);
+		Py_DECREF(text);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject(PyString_AsString(text), PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(item);
+	Py_DECREF(text);
+	Py_DECREF(height);
+	Py_DECREF(width);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(absoluteTop);
+	return output;
+}
+
+char * Interfaces::getUserNameBox(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getLoginBoxesWithText("username", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::getPasswordBox(int & size)
+{	
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getLoginBoxesWithText("password", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::getConnectButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getLoginBoxesWithText("button", size);
+	PyGILState_Release(gstate);
+	return output;
+}
 
 char * Interfaces::findByNameLogin(string name, int & size)
 {

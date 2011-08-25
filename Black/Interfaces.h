@@ -58,8 +58,13 @@ class Interfaces{
 	PyObject * _getSysMenuButtonByText(string text);
 	PyObject * _getLocalChatScroll();
 	char * _getLocalChatScrollAttribute(string attr, int & size);
+	PyObject * _getLoginItem(string name);
+	char * _getLoginBoxesWithText(string name, int & size);
 
 public:
+	char * getConnectButton(int & size);
+	char * getUserNameBox(int & size);
+	char * getPasswordBox(int & size);
 	char * IsFleeted(int & size);
 	string Internal_getVersion();
 	char * GetLocalChatScrollbar(int & size);
