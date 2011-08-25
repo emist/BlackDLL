@@ -629,6 +629,31 @@ char * Interfaces::DronesInBay(int & size)
 	return output;
 }
 
+char * Interfaces::IsFleeted(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	bool fleeted = false;
+	PyObject * fleetwindow = _findByNameLayer(main, "fleetwindow");
+	if(fleetwindow != NULL)
+	{
+		fleeted = true;
+	}
+	char * output = builder.buildBooleanObject(fleeted, size);
+	Py_DECREF(main);
+	if(fleetwindow != NULL)
+		Py_DECREF(fleetwindow);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::FindPlayerInLocal(string name, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -654,12 +679,26 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 	stringstream os;
 	os << "entry_";
 
-	for(int i = 1; entry != NULL; i++)
+	for(int i = 1; i<20; i++)
 	{
+		
+		if(entry == NULL)
+		{
+			os.str("");
+			os << "entry_";
+			os << i;
+			entry = _findByNameLayer(local, os.str());
+			continue;
+		}
+
 		log.elog(PyEval_GetFuncName(entry));
-		if(strcmp(PyEval_GetFuncName(entry), "listentry.ChatUser") != 0)
+
+		if(strcmp(PyEval_GetFuncName(entry), "SE_EditTextlineCore") == 0)
 		{
 			Py_DECREF(entry);
+			os.str("");
+			os << "entry_";
+			os << i;
 			entry = _findByNameLayer(local, os.str());
 			continue;
 		}
@@ -702,11 +741,12 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 			return NULL;
 		}
 
+		log.elog(PyString_AsString(label));
 		if(strcmp(PyString_AsString(label), name.c_str()) == 0)
 		{
 			log.elog("Found ");
 			log.elog(name);
-			PyObject * state = _getAttribute(entry, "sate");
+			PyObject * state = _getAttribute(entry, "state");
 			if(state == NULL)
 			{
 				log.elog("Couldn't get the state");

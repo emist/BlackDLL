@@ -60,6 +60,7 @@ class Interfaces{
 	char * _getLocalChatScrollAttribute(string attr, int & size);
 
 public:
+	char * IsFleeted(int & size);
 	string Internal_getVersion();
 	char * GetLocalChatScrollbar(int & size);
 	char * GetLocalChatTop(int & size);

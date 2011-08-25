@@ -641,7 +641,11 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetLocalChatScrollbar(size);
 				}
-
+				if(func.name().compare("isFleeted") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.IsFleeted(size);
+				}
 
 				log.elog(func.name());
 				//Sleep(300);
