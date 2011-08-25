@@ -55,9 +55,19 @@ class Interfaces{
 	PyObject * _getScrollHandle(PyObject * layer);
 	int _getSize(PyObject * layer);
 	PyObject * _getOverviewScroll();
+	PyObject * _getSysMenuButtonByText(string text);
+	PyObject * _getLocalChatScroll();
+	char * _getLocalChatScrollAttribute(string attr, int & size);
 
 public:
 	string Internal_getVersion();
+	char * GetLocalChatScrollbar(int & size);
+	char * GetLocalChatTop(int & size);
+	char * GetLocalChatBottom(int & size);
+	char * FindPlayerInLocal(string name, int & size);
+	char * GetModalYesButton(int & size);
+	char * GetModalNoButton(int & size);
+	char * GetLogOffButton(int & size);
 	char * GetBookMarkFieldName(int & size);
 	bool isLoginOpen();
 	char * GetVersion(int & size);

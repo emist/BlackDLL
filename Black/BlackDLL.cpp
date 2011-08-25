@@ -605,6 +605,44 @@ using namespace std;
 					output = interfaces.GetBookMarkFieldName(size);
 				}
 
+				if(func.name().compare("getModalNoButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetModalNoButton(size);
+				}
+				if(func.name().compare("getModalYesButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetModalYesButton(size);
+				}
+				if(func.name().compare("getLogOffButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetLogOffButton(size);
+				}
+				if(func.name().compare("findPlayerInLocal") == 0)
+				{
+					log.elog(func.name());
+					log.elog(func.strparameter());
+					output = interfaces.FindPlayerInLocal(func.strparameter(), size);
+				}
+				if(func.name().compare("getLocalChatTop") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetLocalChatTop(size);
+				}
+				if(func.name().compare("getLocalChatBottom") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetLocalChatBottom(size);
+				}
+				if(func.name().compare("getLocalChatScrollbar") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetLocalChatScrollbar(size);
+				}
+
+
 				log.elog(func.name());
 				//Sleep(300);
 

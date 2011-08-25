@@ -629,6 +629,152 @@ char * Interfaces::DronesInBay(int & size)
 	return output;
 }
 
+char * Interfaces::FindPlayerInLocal(string name, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * local = _findByNameLayer(main, "chatchannel_solarsystemid2");
+	if(local == NULL)
+	{
+		log.elog("couldn't get local");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * entry = _findByNameLayer(local, "entry_0");
+	stringstream os;
+	os << "entry_";
+
+	for(int i = 1; entry != NULL; i++)
+	{
+		log.elog(PyEval_GetFuncName(entry));
+		if(strcmp(PyEval_GetFuncName(entry), "listentry.ChatUser") != 0)
+		{
+			Py_DECREF(entry);
+			entry = _findByNameLayer(local, os.str());
+			continue;
+		}
+
+		os.str("");
+		os << "entry_" << i;
+		PyObject * sr = _getAttribute(entry, "sr");
+		if(sr == NULL)
+		{
+			log.elog("No sr");
+			Py_DECREF(main);
+			Py_DECREF(local);
+			Py_DECREF(entry);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		PyObject * node = _getAttribute(sr, "node");
+		if(node == NULL)
+		{
+			log.elog("no node");
+			Py_DECREF(main);
+			Py_DECREF(local);
+			Py_DECREF(entry);
+			Py_DECREF(sr);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		PyObject * label = _getAttribute(node, "label");
+		if(label == NULL)
+		{
+			log.elog("no label");
+			Py_DECREF(main);
+			Py_DECREF(local);
+			Py_DECREF(entry);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		if(strcmp(PyString_AsString(label), name.c_str()) == 0)
+		{
+			log.elog("Found ");
+			log.elog(name);
+			PyObject * state = _getAttribute(entry, "sate");
+			if(state == NULL)
+			{
+				log.elog("Couldn't get the state");
+				Py_DECREF(main);
+				Py_DECREF(local);
+				Py_DECREF(entry);
+				Py_DECREF(sr);
+				Py_DECREF(node);
+				Py_DECREF(label);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			
+			PyObject * width = NULL, * height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+			bool ok = _populateAttributes(entry, &width, &height, &absoluteTop, &absoluteLeft);
+			if(!ok)
+			{
+				log.elog("issue populating");
+				Py_DECREF(main);
+				Py_DECREF(local);
+				Py_DECREF(entry);
+				Py_DECREF(sr);
+				Py_DECREF(node);
+				Py_DECREF(label);
+				Py_DECREF(state);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			
+			int x = 0, y = 0;
+
+			if(PyInt_AsLong(state) == 0)
+			{
+				x = PyInt_AsLong(absoluteLeft);
+				y = PyInt_AsLong(absoluteTop);
+			}
+
+			char * output = builder.buildInterfaceObject(PyString_AsString(label), x, y, PyInt_AsLong(width), PyInt_AsLong(height), size);
+			Py_DECREF(main);
+			Py_DECREF(local);
+			Py_DECREF(entry);
+			Py_DECREF(sr);
+			Py_DECREF(node);
+			Py_DECREF(label);
+			Py_DECREF(state);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(width);
+			Py_DECREF(height);
+			PyGILState_Release(gstate);
+			return output;
+		}
+		
+		Py_DECREF(entry);
+		Py_DECREF(sr);
+		Py_DECREF(node);
+		Py_DECREF(label);
+
+		log.elog(os.str());
+		entry = _findByNameLayer(local, os.str());
+	}
+	
+	Py_DECREF(main);
+	Py_DECREF(local);
+	PyGILState_Release(gstate);
+	return NULL;
+}
+
 char * Interfaces::CheckLocal(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -734,7 +880,6 @@ char * Interfaces::CheckLocal(int & size)
 	
 	Py_DECREF(main);
 	Py_DECREF(local);
-	Py_DECREF(entry);
 	PyGILState_Release(gstate);
 	return builder.buildBooleanObject(false, size);
 }
@@ -780,10 +925,137 @@ char * Interfaces::IsIncursion(int & size)
 }
 
 
+
 char * Interfaces::GetModalOkButton(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	char * output = _getModalButton("OK_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetModalYesButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getModalButton("Yes_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetModalNoButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getModalButton("No_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+
+PyObject * Interfaces::_getSysMenuButtonByText(string ctext)
+{
+	PyObject * modal = _getLayer("modal");
+	if(modal == NULL)
+	{
+		log.elog("Couldn't get modal");
+		return NULL;
+	}
+
+	PyObject * system_menu = _findByNameLayer(modal, "l_systemmenu");
+	if(system_menu == NULL)
+	{
+		log.elog("Couldn't get system menu");
+		Py_DECREF(modal);
+		return NULL;
+	}
+	
+	PyObject * btnPar = _findByNameLayer(system_menu, "btnPar");
+	if(btnPar == NULL)
+	{
+		log.elog("Couldn't get buttons");
+		Py_DECREF(modal);
+		Py_DECREF(system_menu);
+		return NULL;
+	}
+	
+	PyObject * children = _getAttribute(btnPar, "children");
+
+	int csize = PyObject_Size(children);
+
+	PyObject * pvalue = NULL;
+	PyObject * pkey = NULL;
+	
+	for(int i = 0; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+		
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get the value");
+			Py_DECREF(modal);
+			Py_DECREF(system_menu);
+			Py_DECREF(children);
+			return NULL;
+		}
+		
+		PyObject * text = _getAttribute(pvalue, "text");
+		if(text == NULL)
+		{
+			Py_DECREF(modal);
+			Py_DECREF(system_menu);
+			Py_DECREF(children);
+			Py_DECREF(pvalue);
+			return NULL;
+		}
+
+		//log.elog(PyEval_GetFuncName(pvalue));
+		if(strcmp(PyString_AsString(text), ctext.c_str()) == 0)
+		{
+			log.elog("Found button");
+			Py_DECREF(modal);
+			Py_DECREF(system_menu);
+			Py_DECREF(children);
+			Py_DECREF(text);
+			return pvalue;
+		}
+
+		Py_DECREF(pvalue);
+	}
+
+	return NULL;
+
+}
+
+char * Interfaces::GetLogOffButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * button = _getSysMenuButtonByText("Log off");
+
+	if(button == NULL)
+	{
+		log.elog("Couldn't get the button");
+		Py_DECREF(button);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+
+	bool ok = _populateAttributes(button, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("something went wrong in populating");
+		Py_DECREF(button);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+		
+	char * output = builder.buildInterfaceObject("logoffButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(button);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -3220,6 +3492,60 @@ int Interfaces::_getSize(PyObject * layer)
 	return size;
 }
 
+
+char * Interfaces::_getLocalChatScrollAttribute(string attr, int & size)
+{
+	PyObject * chatScroll = _getLocalChatScroll();
+	if(chatScroll == NULL)
+	{
+		log.elog("couldn't get chatscroll");
+		return NULL;
+	}
+
+	PyObject * parent = _getAttribute(chatScroll, "parent");
+	if(parent == NULL)
+	{
+		log.elog("Couldn't get parent");
+		Py_DECREF(chatScroll);
+		return NULL;
+	}
+
+	PyObject * bottom = _getAttribute(parent, attr);
+	if(bottom == NULL)
+	{
+		log.elog("couldn't get attribute");
+		Py_DECREF(chatScroll);
+		Py_DECREF(parent);
+		return NULL;
+	}
+
+	stringstream os;
+	os << PyInt_AsLong(bottom);
+
+	char * output = builder.buildStringObject(os.str(), size);
+	Py_DECREF(chatScroll);
+	Py_DECREF(parent);
+	Py_DECREF(bottom);
+	return output;
+
+}
+
+char * Interfaces::GetLocalChatTop(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getLocalChatScrollAttribute("absoluteTop", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetLocalChatBottom(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getLocalChatScrollAttribute("absoluteBottom", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetOverviewBottom(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -3394,6 +3720,83 @@ char * Interfaces::GetOverviewTop(int & size)
 	Py_DECREF(bottom);
 	PyGILState_Release(gstate);
 	return output;
+}
+
+char * Interfaces::GetLocalChatScrollbar(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * scroll = _getLocalChatScroll();
+	if(scroll == NULL)
+	{
+		log.elog("couldn't get scroll");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributes(scroll, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("couldn't populate attributes");
+		Py_DECREF(scroll);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("localScroll", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(scroll);
+	Py_DECREF(height);
+	Py_DECREF(width);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+PyObject * Interfaces::_getLocalChatScroll()
+{
+	PyObject * main = _getLayer("main");
+
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		return NULL;
+	}
+
+	PyObject * local = _findByNameLayer(main, "chatchannel_solarsystemid2");
+	if(local == NULL)
+	{
+		log.elog("Couldn't get local");
+		Py_DECREF(main);
+		return NULL;
+	}
+	
+	PyObject * userlist = _findByNameLayer(local, "userlist");
+	if(userlist == NULL)
+	{
+		log.elog("Couldn't get userlist");
+		Py_DECREF(main);
+		Py_DECREF(local);
+		return NULL;
+	}
+
+
+	PyObject * scroll = _findByNameLayer(userlist, "__scrollhandle");
+	if(scroll == NULL)
+	{
+		log.elog("Couldn't get the scroll");
+		Py_DECREF(main);
+		Py_DECREF(local);
+		Py_DECREF(userlist);
+		return NULL;
+	}
+
+	Py_DECREF(main);
+	Py_DECREF(local);
+	Py_DECREF(userlist);
+
+	return scroll;
+
 }
 
 PyObject * Interfaces::_getOverviewScroll()
