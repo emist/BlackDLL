@@ -1034,7 +1034,6 @@ char * Interfaces::GetLogOffButton(int & size)
 	if(button == NULL)
 	{
 		log.elog("Couldn't get the button");
-		Py_DECREF(button);
 		PyGILState_Release(gstate);
 		return NULL;
 	}
