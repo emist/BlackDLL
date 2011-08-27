@@ -1,4 +1,4 @@
-//#include <stdafx.h>
+#include <stdafx.h>
 #include <stdio.h>
 #include <windows.h>
 #include <tlhelp32.h>
@@ -282,6 +282,7 @@ using namespace std;
 
 		}
 
+
 		extern "C" __declspec(dllexport) void namedPipeServer()
 		{
 		   
@@ -350,11 +351,12 @@ using namespace std;
 
 				 eveobjects::functionCall func;
 				 func.ParseFromArray(buf, bread);
-				 
-				 
+
+				 __try
+				 {
 				 if(func.name().compare("atLogin") == 0)
 				 {
-					 output = interfaces.atLogin(size);
+					output = interfaces.atLogin(size);
 				 }
 				 if(func.name().compare("findByNameLogin") == 0)
 				 {
@@ -367,13 +369,13 @@ using namespace std;
 					 log.elog(func.strparameter());
 					 output = interfaces.findByTextLogin(func.strparameter(), size);
 				 }
-					
+						
 				 if(func.name().compare("findByTextMenu") == 0)
 				 {
 					 log.elog(func.strparameter());
 					 output = interfaces.findByTextMenu(func.strparameter(), size);
 				 }
-				 
+					 
 				 if(func.name().compare("getInflightInterface") == 0)
 				 {
 					 log.elog(func.strparameter());
@@ -386,7 +388,7 @@ using namespace std;
 					 output = interfaces.isMenuOpen(size);
 				 }
 
-				 
+					 
 				 if(func.name().compare("getOverViewItems") == 0)
 				 {
 					 log.elog(func.name());
@@ -466,19 +468,18 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetShipStructure(size);
 				}
-			
+				
 				if(func.name().compare("getShipSpeed") == 0)
 				{
 					log.elog(func.name());
 					output = interfaces.GetShipSpeed(size);
 				}
-
 				if(func.name().compare("getShipCapacity") == 0)
 				{
 					log.elog(func.name());
 					output = interfaces.GetShipCapacity(size);
 				}
-			
+				
 				if(func.name().compare("getMenuItems") == 0)
 				{
 					log.elog(func.name());
@@ -490,7 +491,7 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.IsSystemMenuOpen(size);
 				}
-				
+					
 				if(func.name().compare("getModalCancelButton") == 0)
 				{
 					log.elog(func.name());
@@ -508,7 +509,6 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetSystemInformation(size);
 				}
-
 				if(func.name().compare("isLoading") == 0)
 				{
 					log.elog(func.name());
@@ -673,7 +673,12 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.getEnterButton(size);
 				}
+				}
 
+				__except( EXCEPTION_EXECUTE_HANDLER)
+				{
+					output = NULL;
+				}
 
 				log.elog(func.name());
 				//Sleep(300);
