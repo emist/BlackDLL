@@ -2131,6 +2131,31 @@ char * Interfaces::GetShipSpeed(int & size)
 char * Interfaces::GetShipHangar(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * cargoWindow = _GetInflightCargoView();
+	if(cargoWindow == NULL)
+	{
+		log.elog("Couldn't get cargo window");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributesDisplay(cargoWindow, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't populate");
+		Py_DECREF(cargoWindow);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("shipHangar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(cargoWindow);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(absoluteTop);
+/*
 	PyObject * main = _getLayer("main");
 	if(main == NULL)
 	{
@@ -2166,6 +2191,8 @@ char * Interfaces::GetShipHangar(int & size)
 	Py_DECREF(height);
 	Py_DECREF(absoluteLeft);
 	Py_DECREF(absoluteTop);
+
+*/
 
 	PyGILState_Release(gstate);
 	return output;
