@@ -2886,55 +2886,80 @@ char * Interfaces::IsHighSlotActive(int number, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	char * output = NULL;
-	switch(number)
+	stringstream os;
+	os << "inFlightHighSlot";
+	os << number;
+
+	output = _isModuleActive(os.str(), size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::getHangar(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * layer = _getLayer("main");
+	
+	if(layer == NULL)
 	{
-		case 1:
-		{
-			output = _isModuleActive("inFlightHighSlot1", size);
-			break;
-		}
-		case 2:
-		{
-			output = _isModuleActive("inFlightHighSlot2", size);
-			break;
-		}
-		case 3:
-		{
-			output = _isModuleActive("inFlightHighSlot3", size);
-			break;
-		}
-		case 4:
-		{
-			output = _isModuleActive("inFlightHighSlot4", size);
-			break;
-		}
-		case 5:
-		{
-			output = _isModuleActive("inFlightHighSlot5", size);
-			break;
-		}
-		case 6:
-		{
-			output = _isModuleActive("inFlightHighSlot6", size);
-			break;
-		}
-		case 7:
-		{
-			output = _isModuleActive("inFlightHighSlot7", size);
-			break;
-		}
-		case 8:
-		{
-			output = _isModuleActive("inFlightHighSlot8", size);
-			break;
-		}
-		case 9:
-		{
-			output = _isModuleActive("inFlightHighSlot9", size);
-			break;
-		}
+		log.elog("Couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
 	}
 
+	PyObject * hangar = _findByNameLayer(layer, "hangarFloor");
+	if(hangar == NULL)
+	{
+		log.elog("couldn't get hangar");
+		Py_DECREF(layer);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributes(hangar, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("couldn't populate");
+		Py_DECREF(layer);
+		Py_DECREF(hangar);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("hangar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(layer);
+	Py_DECREF(hangar);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+char * Interfaces::IsMedSlotActive(int number, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	stringstream os;
+	os << "inFlightMediumSlot";
+	os << number;
+	output = _isModuleActive(os.str(), size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::IsLowSlotActive(int number, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	stringstream os;
+	os << "inFlightLowSlot";
+	os << number;
+
+	output = _isModuleActive(os.str(), size);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -2943,55 +2968,10 @@ char * Interfaces::GetMiningAmount(int number, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	char * output = NULL;
-	switch(number)
-	{
-		case 1:
-		{
-			output = _getMiningAmount("inFlightHighSlot1", size);
-			break;
-		}
-		case 2:
-		{
-			output = _getMiningAmount("inFlightHighSlot2", size);
-			break;
-		}
-		case 3:
-		{
-			output = _getMiningAmount("inFlightHighSlot3", size);
-			break;
-		}
-		case 4:
-		{
-			output = _getMiningAmount("inFlightHighSlot4", size);
-			break;
-		}
-		case 5:
-		{
-			output = _getMiningAmount("inFlightHighSlot5", size);
-			break;
-		}
-		case 6:
-		{
-			output = _getMiningAmount("inFlightHighSlot6", size);
-			break;
-		}
-		case 7:
-		{
-			output = _getMiningAmount("inFlightHighSlot7", size);
-			break;
-		}
-		case 8:
-		{
-			output = _getMiningAmount("inFlightHighSlot8", size);
-			break;
-		}
-		case 9:
-		{
-			output = _getMiningAmount("inFlightHighSlot9", size);
-			break;
-		}
-	}
-
+	stringstream os;
+	os << "inFlightHighSlot";
+	os << number;
+	output = _getMiningAmount(os.str(), size);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -3000,55 +2980,10 @@ char * Interfaces::GetDuration(int number, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	char * output = NULL;
-	switch(number)
-	{
-		case 1:
-		{
-			output = _getModuleDuration("inFlightHighSlot1", size);
-			break;
-		}
-		case 2:
-		{
-			output = _getModuleDuration("inFlightHighSlot2", size);
-			break;
-		}
-		case 3:
-		{
-			output = _getModuleDuration("inFlightHighSlot3", size);
-			break;
-		}
-		case 4:
-		{
-			output = _getModuleDuration("inFlightHighSlot4", size);
-			break;
-		}
-		case 5:
-		{
-			output = _getModuleDuration("inFlightHighSlot5", size);
-			break;
-		}
-		case 6:
-		{
-			output = _getModuleDuration("inFlightHighSlot6", size);
-			break;
-		}
-		case 7:
-		{
-			output = _getModuleDuration("inFlightHighSlot7", size);
-			break;
-		}
-		case 8:
-		{
-			output = _getModuleDuration("inFlightHighSlot8", size);
-			break;
-		}
-		case 9:
-		{
-			output = _getModuleDuration("inFlightHighSlot9", size);
-			break;
-		}
-	}
-
+	stringstream os;
+	os << "inFlightHighSlot";
+	os << number;
+	output = _getModuleDuration(os.str(), size);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -3057,55 +2992,10 @@ char * Interfaces::GetTargetingRange(int number, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	char * output = NULL;
-	switch(number)
-	{
-		case 1:
-		{
-			output = _getModuleTargetingRange("inFlightHighSlot1", size);
-			break;
-		}
-		case 2:
-		{
-			output = _getModuleTargetingRange("inFlightHighSlot2", size);
-			break;
-		}
-		case 3:
-		{
-			output = _getModuleTargetingRange("inFlightHighSlot3", size);
-			break;
-		}
-		case 4:
-		{
-			output = _getModuleTargetingRange("inFlightHighSlot4", size);
-			break;
-		}
-		case 5:
-		{
-			output = _getModuleTargetingRange("inFlightHighSlot5", size);
-			break;
-		}
-		case 6:
-		{
-			output = _getModuleTargetingRange("inFlightHighSlot6", size);
-			break;
-		}
-		case 7:
-		{
-			output = _getModuleTargetingRange("inFlightHighSlot7", size);
-			break;
-		}
-		case 8:
-		{
-			output = _getModuleTargetingRange("inFlightHighSlot8", size);
-			break;
-		}
-		case 9:
-		{
-			output = _getModuleTargetingRange("inFlightHighSlot9", size);
-			break;
-		}
-	}
-
+	stringstream os;
+	os << "inFlightHighSlot";
+	os << number;
+	output = _getModuleTargetingRange(os.str(), size);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -3312,58 +3202,45 @@ char * Interfaces::_GetSlot(string name, string  outputname, int & size)
 	return output;
 }
 
+char * Interfaces::GetLowSlot(int number, int & size)
+{
+	char * output = NULL;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	stringstream os;
+
+	os << "inFlightLowSlot";
+	os << number;
+
+	output = _GetSlot(os.str(), os.str(), size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+
+char * Interfaces::GetMidSlot(int number, int & size)
+{
+	char * output = NULL;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	stringstream os;
+
+	os << "inFlightMediumSlot";
+	os << number;
+
+	output = _GetSlot(os.str(), os.str(), size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetHighSlot(int number, int & size)
 {
 	char * output = NULL;
 	PyGILState_STATE gstate = PyGILState_Ensure();
-	switch(number)
-	{
-		case 1:
-		{
-			output = _GetSlot("inFlightHighSlot1", "FirstHighSlot", size);
-			break;
-		}
-		case 2:
-		{
-			output = _GetSlot("inFlightHighSlot2", "SecondHighSlot", size);
-			break;
-		}
-		case 3:
-		{
-			output = _GetSlot("inFlightHighSlot3", "ThirdHighSlot", size);
-			break;
-		}
-		case 4:
-		{
-			output = _GetSlot("inFlightHighSlot4", "FourthHighSlot", size);
-			break;
-		}
-		case 5:
-		{
-			output = _GetSlot("inFlightHighSlot5", "FifthHighSlot", size);
-			break;
-		}
-		case 6:
-		{
-			output = _GetSlot("inFlightHighSlot6", "SixthHighSlot", size);
-			break;
-		}
-		case 7:
-		{
-			output = _GetSlot("inFlightHighSlot7", "SeventhHighSlot", size);
-			break;
-		}
-		case 8:
-		{
-			output = _GetSlot("inFlightHighSlot8", "EigthHighSlot", size);
-			break;
-		}
-		case 9:
-		{
-			output = _GetSlot("inFlightHighSlot9", "NinenthHighSlot", size);
-			break;
-		}
-	}
+	stringstream os;
+
+	os << "inFlightHighSlot";
+	os << number;
+
+	output = _GetSlot(os.str(), os.str(), size);
 	PyGILState_Release(gstate);
 	return output;
 }

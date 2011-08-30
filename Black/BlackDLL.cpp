@@ -1,4 +1,4 @@
-#include <stdafx.h>
+#include "stdafx.h"
 #include <stdio.h>
 #include <windows.h>
 #include <tlhelp32.h>
@@ -354,6 +354,7 @@ using namespace std;
 
 				 __try
 				 {
+
 				 if(func.name().compare("atLogin") == 0)
 				 {
 					output = interfaces.atLogin(size);
@@ -361,7 +362,6 @@ using namespace std;
 				 if(func.name().compare("findByNameLogin") == 0)
 				 {
 					 log.elog(func.strparameter());
-					 output = interfaces.findByNameLogin(func.strparameter(), size);
 				 }
 
 				 if(func.name().compare("findByTextLogin") == 0)
@@ -407,11 +407,41 @@ using namespace std;
 					 output = interfaces.GetTargetList(size);
 				 }
 
+				 
+				 if(func.name().compare("getLowSlot") == 0)
+				 {
+					 log.elog(func.name());
+					 log.elog(func.strparameter());
+					 output = interfaces.GetLowSlot(atoi(func.strparameter().c_str()), size);
+				 }
+
+
+				 if(func.name().compare("getMidSlot") == 0)
+				 {
+					 log.elog(func.name());
+					 log.elog(func.strparameter());
+					 output = interfaces.GetMidSlot(atoi(func.strparameter().c_str()), size);
+				 }
+
 				 if(func.name().compare("getHighSlot") == 0)
 				 {
 					 log.elog(func.name());
 					 log.elog(func.strparameter());
 					 output = interfaces.GetHighSlot(atoi(func.strparameter().c_str()), size);
+				 }
+
+				 if(func.name().compare("isMedSlotActive") == 0)
+				 {
+					 log.elog(func.name());
+					 log.elog(func.strparameter());
+					 output = interfaces.IsMedSlotActive(atoi(func.strparameter().c_str()), size);
+				 }
+				 
+				 if(func.name().compare("isLowSlotActive") == 0)
+				 {
+					 log.elog(func.name());
+					 log.elog(func.strparameter());
+					 output = interfaces.IsLowSlotActive(atoi(func.strparameter().c_str()), size);
 				 }
 
 				 if(func.name().compare("isHighSlotActive") == 0)
@@ -673,6 +703,13 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.getEnterButton(size);
 				}
+
+				if(func.name().compare("getHangar") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.getHangar(size);
+				}
+				
 				}
 
 				__except( EXCEPTION_EXECUTE_HANDLER)

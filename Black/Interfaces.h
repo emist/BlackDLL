@@ -62,6 +62,10 @@ class Interfaces{
 	char * _getLoginBoxesWithText(string name, int & size);
 
 public:
+	char * getHangar(int & size);
+	char * IsMedSlotActive(int number, int & size);
+	char * IsLowSlotActive(int number, int & size);
+	char * GetLowSlot(int number, int & size);
 	char * getEnterButton(int & size);
 	char * isAtCharSel(int & size);
 	char * getConnectButton(int & size);
@@ -110,6 +114,7 @@ public:
 	char * GetUndockButton(int & size);
 	char * IsHighSlotActive(int number, int & size);
 	char * GetHighSlot(int number, int & size);
+	char * GetMidSlot(int number, int & size);
 	char * GetTargetList(int & size);
 	char * GetSelectedItem(int & size);
 	char * isMenuOpen(int & size);
