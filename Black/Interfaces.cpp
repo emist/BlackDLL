@@ -2700,6 +2700,218 @@ char * Interfaces::_getNeoComItem(string name, int & size)
 	return output;
 }
 
+PyObject * Interfaces::_getAddressBookWindow()
+{
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		return NULL;
+	}
+	
+	PyObject * addressbook = _findByNameLayer(main, "addressbook");
+	if(addressbook == NULL)
+	{
+		log.elog("Couldn't get addressbook");
+		Py_DECREF(main);
+		return NULL;
+	}
+	
+	return addressbook;
+
+}
+
+char * Interfaces::_getPeopleAndPlacesButton(string name, int & size)
+{
+	PyObject * addressbookWindow = _getAddressBookWindow();
+	if(addressbookWindow == NULL)
+	{
+		log.elog("couldn't get addressbook window");
+		return NULL;
+	}
+
+	PyObject * button = _findByNameLayer(addressbookWindow, name);
+	if(button == NULL)
+	{
+		log.elog("Couldn't get button");
+		Py_DECREF(addressbookWindow);
+		return NULL;
+	}
+	
+	PyObject * width = NULL, * height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributes(button, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't populate");
+		Py_DECREF(addressbookWindow);
+		Py_DECREF(button);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(addressbookWindow);
+	Py_DECREF(button);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(absoluteTop);
+	return output;
+
+}
+
+char * Interfaces::GetAddressBookWindow(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * window = _getAddressBookWindow();
+	if(window == NULL)
+	{
+		log.elog("Couldn't get the window");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * height = NULL, * width = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributes(window, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Trouble populating");
+		Py_DECREF(window);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("Addressbook", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(window);
+	Py_DECREF(height);
+	Py_DECREF(width);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetAddressBookBMButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getPeopleAndPlacesButton("Add Bookmark_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetAddressBookPlacesTab(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * addressbookWindow = _getAddressBookWindow();
+	if(addressbookWindow == NULL)
+	{
+		log.elog("Couldn't get the address book window");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * tabparent = _findByNameLayer(addressbookWindow, "tabparent");
+	if(tabparent == NULL)
+	{
+		log.elog("Couldn't get the tabs");
+		Py_DECREF(addressbookWindow);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * children = _getAttribute(tabparent, "children");
+
+	if(children == NULL)
+	{
+		log.elog("Couldn't get children");
+		Py_DECREF(addressbookWindow);
+		Py_DECREF(children);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * pkey = NULL, *pvalue = NULL;
+	int csize = PyObject_Size(children);
+	for(int i = 0; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+		if(pvalue == NULL)
+		{
+			log.elog("pvalue is null");
+			Py_DECREF(addressbookWindow);
+			Py_DECREF(children);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		log.elog(PyEval_GetFuncName(pvalue));
+		if(strcmp(PyEval_GetFuncName(pvalue), "Tab"))
+		{
+			PyObject * tabLabel = _findByNameLayer(pvalue, "tabLabel");
+			if(tabLabel == NULL)
+			{
+				log.elog("couldn't get label");
+				Py_DECREF(addressbookWindow);
+				Py_DECREF(children);
+				Py_DECREF(pvalue);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+
+			PyObject * ptext = _getAttribute(tabLabel, "text");
+			if(ptext == NULL)
+			{
+				log.elog("Couldn't get text");
+				Py_DECREF(addressbookWindow);
+				Py_DECREF(children);
+				Py_DECREF(pvalue);
+				Py_DECREF(tabLabel);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+
+			if(strcmp(PyString_AsString(ptext), "Places") == 0)
+			{
+				PyObject * width = NULL, * height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+				bool ok = _populateAttributes(tabLabel, &width, &height, &absoluteTop, &absoluteLeft);
+				if(!ok)
+				{
+					log.elog("Couldn't populate");
+					Py_DECREF(addressbookWindow);
+					Py_DECREF(children);
+					Py_DECREF(pvalue);
+					Py_DECREF(tabLabel);
+					Py_DECREF(ptext);
+					PyGILState_Release(gstate);
+					return NULL;
+				}
+
+				char * output = builder.buildInterfaceObject(PyString_AsString(ptext), PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+				Py_DECREF(addressbookWindow);
+				Py_DECREF(children);
+				Py_DECREF(pvalue);
+				Py_DECREF(tabLabel);
+				Py_DECREF(ptext);
+				PyGILState_Release(gstate);
+				return output;
+
+			}
+			Py_DECREF(tabLabel);
+			Py_DECREF(ptext);
+
+		}
+
+		Py_DECREF(pvalue);
+
+	}
+
+	Py_DECREF(addressbookWindow);
+	Py_DECREF(children);
+	PyGILState_Release(gstate);
+	return NULL;
+
+}
+
 char * Interfaces::GetPeopleAndPlaces(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

@@ -61,8 +61,13 @@ class Interfaces{
 	PyObject * _getLoginItem(string name);
 	char * _getLoginBoxesWithText(string name, int & size);
 	char * _getNeoComItem(string name, int & size);
+	PyObject * _getAddressBookWindow();
+	char * _getPeopleAndPlacesButton(string name, int & size);
 
 public:
+	char * GetAddressBookWindow(int & size);
+	char * GetAddressBookBMButton(int & size);
+	char * GetAddressBookPlacesTab(int & size);
 	char * GetPeopleAndPlaces(int & size);
 	char * GetHangarItems(int & size);
 	char * getInventoryWindow(int & size);

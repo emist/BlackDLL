@@ -722,7 +722,26 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetPeopleAndPlaces(size);
 				}
-/*
+
+				if(func.name().compare("getAddressBookPlacesTab") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetAddressBookPlacesTab(size);
+				}
+
+				if(func.name().compare("getAddressBookBMButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetAddressBookBMButton(size);
+				}
+
+				if(func.name().compare("getAddressBookWindow") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetAddressBookWindow(size);
+				}
+				
+				/*
 				}
 
 				__except( EXCEPTION_EXECUTE_HANDLER)
