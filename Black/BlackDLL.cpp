@@ -351,9 +351,10 @@ using namespace std;
 
 				 eveobjects::functionCall func;
 				 func.ParseFromArray(buf, bread);
-
+/*
 				 __try
 				 {
+*/
 
 				 if(func.name().compare("atLogin") == 0)
 				 {
@@ -710,12 +711,26 @@ using namespace std;
 					output = interfaces.getHangar(size);
 				}
 				
+				if(func.name().compare("getHangarItems") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetHangarItems(size);
+				}
+
+				if(func.name().compare("getPeopleAndPlaces") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetPeopleAndPlaces(size);
+				}
+/*
 				}
 
 				__except( EXCEPTION_EXECUTE_HANDLER)
 				{
 					output = NULL;
 				}
+
+*/
 
 				log.elog(func.name());
 				//Sleep(300);

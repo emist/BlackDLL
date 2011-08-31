@@ -60,8 +60,12 @@ class Interfaces{
 	char * _getLocalChatScrollAttribute(string attr, int & size);
 	PyObject * _getLoginItem(string name);
 	char * _getLoginBoxesWithText(string name, int & size);
+	char * _getNeoComItem(string name, int & size);
 
 public:
+	char * GetPeopleAndPlaces(int & size);
+	char * GetHangarItems(int & size);
+	char * getInventoryWindow(int & size);
 	char * getHangar(int & size);
 	char * IsMedSlotActive(int number, int & size);
 	char * IsLowSlotActive(int number, int & size);

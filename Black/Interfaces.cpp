@@ -2663,6 +2663,97 @@ char * Interfaces::GetMenuItems(int & size)
 	return output;
 }
 
+char * Interfaces::_getNeoComItem(string name, int & size)
+{
+	PyObject * neocom = _getLayer("neocom");
+	if(neocom == NULL)
+	{
+		log.elog("Couldn't get neocom");
+		return NULL;
+	}
+
+	PyObject * neocomitem = _findByNameLayer(neocom, name);
+	if(neocomitem == NULL)
+	{
+		log.elog("couldn't find neocom item");
+		Py_DECREF(neocom);
+		return NULL;
+	}
+
+	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributes(neocomitem, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("error populating");
+		Py_DECREF(neocom);
+		Py_DECREF(neocomitem);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(neocom);
+	Py_DECREF(neocomitem);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	return output;
+}
+
+char * Interfaces::GetPeopleAndPlaces(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getNeoComItem("addressbook", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetHangarItems(int & size)
+{
+	list<ObjectBuilder::itemEntry *> labels;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * hangarView = _findByNameLayer(main, "hangarFloor");
+	if(hangarView == NULL)
+	{
+		log.elog("Couldn't get hangar");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;;
+	}
+
+
+	PyObject * entry = _findByNameLayer(hangarView, "entry_0");
+	stringstream os;
+	os << "entry_";
+
+
+	for(int i = 1; entry != NULL; i++)
+	{
+		_IterateThroughEntryAndBuild(entry, labels);
+		os.str("");
+		os << "entry_" << i;
+
+		log.elog(os.str());
+		entry = _findByNameLayer(hangarView, os.str());
+	}
+
+	PyGILState_Release(gstate);
+	char * output = builder.buildItemObject(labels, size);
+	for(list<ObjectBuilder::itemEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
+	{
+		delete (*it);
+	}
+	return output;
+}
+
 char * Interfaces::GetCargoList(int & size)
 {
 	list<ObjectBuilder::itemEntry *> labels;
