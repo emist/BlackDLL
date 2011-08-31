@@ -2680,13 +2680,23 @@ char * Interfaces::_getNeoComItem(string name, int & size)
 		return NULL;
 	}
 
+	PyObject * text = _findByNameLayer(neocomitem, "text");
+	if(text == NULL)
+	{
+		log.elog("Couldn't get text");
+		Py_DECREF(neocom);
+		Py_DECREF(neocomitem);
+		return NULL;
+	}
+
 	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
-	bool ok = _populateAttributes(neocomitem, &width, &height, &absoluteTop, &absoluteLeft);
+	bool ok = _populateAttributes(text, &width, &height, &absoluteTop, &absoluteLeft);
 	if(!ok)
 	{
 		log.elog("error populating");
 		Py_DECREF(neocom);
 		Py_DECREF(neocomitem);
+		Py_DECREF(text);
 		return NULL;
 	}
 
@@ -2697,6 +2707,7 @@ char * Interfaces::_getNeoComItem(string name, int & size)
 	Py_DECREF(height);
 	Py_DECREF(absoluteTop);
 	Py_DECREF(absoluteLeft);
+	Py_DECREF(text);
 	return output;
 }
 
@@ -2845,7 +2856,7 @@ char * Interfaces::GetAddressBookPlacesTab(int & size)
 		}
 
 		log.elog(PyEval_GetFuncName(pvalue));
-		if(strcmp(PyEval_GetFuncName(pvalue), "Tab"))
+		if(strcmp(PyEval_GetFuncName(pvalue), "Tab") == 0)
 		{
 			PyObject * tabLabel = _findByNameLayer(pvalue, "tabLabel");
 			if(tabLabel == NULL)
