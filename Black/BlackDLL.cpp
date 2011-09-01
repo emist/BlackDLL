@@ -351,10 +351,10 @@ using namespace std;
 
 				 eveobjects::functionCall func;
 				 func.ParseFromArray(buf, bread);
-/*
+
 				 __try
 				 {
-*/
+
 
 				 if(func.name().compare("atLogin") == 0)
 				 {
@@ -741,7 +741,12 @@ using namespace std;
 					output = interfaces.GetAddressBookWindow(size);
 				}
 				
-				/*
+				if(func.name().compare("getLocalCount") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetLocalCount(size);
+				}
+				
 				}
 
 				__except( EXCEPTION_EXECUTE_HANDLER)
@@ -749,7 +754,7 @@ using namespace std;
 					output = NULL;
 				}
 
-*/
+
 
 				log.elog(func.name());
 				//Sleep(300);

@@ -4175,6 +4175,72 @@ char * Interfaces::GetLocalChatScrollbar(int & size)
 	return output;
 }
 
+char * Interfaces::GetLocalCount(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+
+	if(main == NULL)
+	{
+		log.elog("main is null");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * local = _findByNameLayer(main, "chatchannel_solarsystemid2");
+	if(local == NULL)
+	{
+		log.elog("Couldn't get local");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * captionParent = _findByNameLayer(local, "captionParent");
+	if(captionParent == NULL)
+	{
+		log.elog("Couldn't get parent");
+		Py_DECREF(main);
+		Py_DECREF(local);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * label = _findByNameLayer(captionParent, "text");
+	if(label == NULL)
+	{
+		log.elog("Couldn't get text");
+		Py_DECREF(main);
+		Py_DECREF(local);
+		Py_DECREF(captionParent);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * text = _getAttribute(label, "text");
+	if(text == NULL)
+	{
+		log.elog("Couldn't get parent");
+		Py_DECREF(main);
+		Py_DECREF(local);
+		Py_DECREF(captionParent);
+		Py_DECREF(label);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildStringObject(PyString_AsString(text), size);
+	Py_DECREF(main);
+	Py_DECREF(local);
+	Py_DECREF(captionParent);
+	Py_DECREF(label);
+	Py_DECREF(text);
+	PyGILState_Release(gstate);
+	return output;
+
+
+}
+
 PyObject * Interfaces::_getLocalChatScroll()
 {
 	PyObject * main = _getLayer("main");
