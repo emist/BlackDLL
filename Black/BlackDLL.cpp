@@ -746,8 +746,15 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetLocalCount(size);
 				}
-				
+				if(func.name().compare("getNeoComItems") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetNeoComItems(size);
 				}
+
+
+				}
+
 
 				__except( EXCEPTION_EXECUTE_HANDLER)
 				{

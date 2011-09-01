@@ -1005,6 +1005,8 @@ char * Interfaces::CheckLocal(int & size)
 	stringstream os;
 	os << "entry_";
 
+	bool onealloted = false;
+
 	for(int i = 1; entry != NULL; i++)
 	{
 		os.str("");
@@ -1023,6 +1025,13 @@ char * Interfaces::CheckLocal(int & size)
 		PyObject * fill = _findByNameLayer(flag, "fill");
 		if(fill == NULL)
 		{
+			if(!onealloted)
+			{
+				onealloted = true;
+				Py_DECREF(flag);
+				Py_DECREF(entry);
+				continue;
+			}
 			log.elog("fill is null");
 			Py_DECREF(main);
 			Py_DECREF(local);
@@ -2660,6 +2669,14 @@ char * Interfaces::GetMenuItems(int & size)
 	{
 		delete (*it);
 	}	
+	return output;
+}
+
+char * Interfaces::GetNeoComItems(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getNeoComItem("items", size);
+	PyGILState_Release(gstate);
 	return output;
 }
 
