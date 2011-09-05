@@ -352,8 +352,8 @@ using namespace std;
 				 eveobjects::functionCall func;
 				 func.ParseFromArray(buf, bread);
 
-				 __try
-				 {
+		//		 __try
+		//		 {
 
 
 				 if(func.name().compare("atLogin") == 0)
@@ -751,15 +751,24 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetNeoComItems(size);
 				}
-
-
-				}
-
-
-				__except( EXCEPTION_EXECUTE_HANDLER)
+				if(func.name().compare("getOverViewSelectIcon") == 0)
 				{
-					output = NULL;
+					log.elog(func.name());
+					output = interfaces.GetOverViewSelectIcon(size);
 				}
+				if(func.name().compare("getOverviewSelectText") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetOverviewSelectText(size);
+				}
+
+		//		}
+
+
+		//		__except( EXCEPTION_EXECUTE_HANDLER)
+		//		{
+		//			output = NULL;
+		//		}
 
 
 

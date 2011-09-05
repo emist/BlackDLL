@@ -980,6 +980,113 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 	return NULL;
 }
 
+char * Interfaces::GetOverViewSelectIcon(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * headerIcon = _findByNameLayer(main, "overviewHeaderIcon");
+	if(headerIcon == NULL)
+	{
+		log.elog("couldn't get the icon");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteLeft = NULL, *absoluteTop = NULL;
+	bool ok = _populateAttributes(headerIcon,&width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("error populating");
+		Py_DECREF(main);
+		Py_DECREF(headerIcon);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("overvIcon", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(headerIcon);
+	Py_DECREF(height);
+	Py_DECREF(width);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+
+char * Interfaces::GetOverviewSelectText(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * overview = _findByNameLayer(main, "overview");
+	if(overview == NULL)
+	{
+		log.elog("Couldn't get overview");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * captionP = _findByNameLayer(overview, "captionParent");
+	if(captionP == NULL)
+	{
+		log.elog("Couldn't get caption");
+		Py_DECREF(main);
+		Py_DECREF(overview);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * label = _findByNameLayer(captionP, "text");
+	if(label == NULL)
+	{
+		log.elog("couldn't get the label");
+		Py_DECREF(main);
+		Py_DECREF(overview);
+		Py_DECREF(captionP);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * text = _getAttribute(label, "text");
+	if(text == NULL)
+	{
+		log.elog("Couldn't get the text");
+		Py_DECREF(main);
+		Py_DECREF(overview);
+		Py_DECREF(captionP);
+		Py_DECREF(label);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	char * output = builder.buildStringObject(PyString_AsString(text), size);
+	Py_DECREF(main);
+	Py_DECREF(overview);
+	Py_DECREF(captionP);
+	Py_DECREF(label);
+	Py_DECREF(text);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::CheckLocal(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

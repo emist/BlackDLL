@@ -65,6 +65,8 @@ class Interfaces{
 	char * _getPeopleAndPlacesButton(string name, int & size);
 
 public:
+	char * GetOverViewSelectIcon(int & size);
+	char * GetOverviewSelectText(int & size);
 	char * GetNeoComItems(int & size);
 	char * GetLocalCount(int & size);
 	char * GetAddressBookWindow(int & size);
