@@ -29,6 +29,27 @@ char * ObjectBuilder::buildStringObject( string value, int & size  )
 	return putToByteArray(eveobject, size);
 }
 
+char * ObjectBuilder::buildStringListObject(list<string *> & labels, int & size)
+{
+	eveobjects::stringgroup stringListObject;
+	int temps = stringListObject.ByteSize();
+
+	for(list<string *>::iterator it = labels.begin(); it != labels.end(); it++)
+	{
+		
+		//log.elog("Iterating through the targetEntry list in objectbuilder");
+		eveobjects::stringResponse * responseEntry = stringListObject.add_data();
+		responseEntry->set_data((*it)->c_str());	
+	}
+
+	
+	if(stringListObject.ByteSize() > temps)
+	{
+		//log.elog("overviewObject increased in size");
+	}
+	return putToByteArray(stringListObject, size);
+}
+
 char * ObjectBuilder::buildTargetObject(list<targetEntry *> & labels, int & size)
 {
 	eveobjects::TargetList targetObject;
