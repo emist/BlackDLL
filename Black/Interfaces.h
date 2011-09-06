@@ -65,6 +65,7 @@ class Interfaces{
 	char * _getPeopleAndPlacesButton(string name, int & size);
 
 public:
+	char * GetCurrentSolarsystemid(int & size);
 	char * GetLocalChatText(int sysid, int & size);
 	char * GetOverViewSelectIcon(int & size);
 	char * GetOverviewSelectText(int & size);

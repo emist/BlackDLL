@@ -1411,6 +1411,75 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 
 }
 
+char * Interfaces::GetCurrentSolarsystemid(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+		
+	PyObject * main = PyImport_AddModule("__builtin__");
+	if(main == NULL)
+	{
+		log.elog("Main failed to load");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * maindic = PyModule_GetDict(main);
+	
+	if(maindic == NULL)
+	{
+		log.elog("Couldn't load main dictionary");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * eve = PyDict_GetItemString(maindic, "eve");
+	if(eve == NULL)
+	{
+		log.elog("Couldn't get eve");
+		Py_DECREF(main);
+		Py_DECREF(maindic);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * session = _getAttribute(eve, "session");
+	if(session == NULL)
+	{
+		log.elog("Couldn't get session");
+		Py_DECREF(main);
+		Py_DECREF(maindic);
+		Py_DECREF(eve);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * solarsystemid2 = _getAttribute(session, "solarsystemid2");
+	if(solarsystemid2 == NULL)
+	{
+		log.elog("couldn't get the id");
+		Py_DECREF(main);
+		Py_DECREF(maindic);
+		Py_DECREF(eve);
+		Py_DECREF(session);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	stringstream os;
+	os << PyInt_AsLong(solarsystemid2);
+
+	char * output = builder.buildStringObject(os.str(), size);
+	Py_DECREF(main);
+	Py_DECREF(maindic);
+	Py_DECREF(eve);
+	Py_DECREF(session);
+	Py_DECREF(solarsystemid2);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
 PyObject * Interfaces::_getSysMenuButtonByText(string ctext)
 {
 	PyObject * modal = _getLayer("modal");

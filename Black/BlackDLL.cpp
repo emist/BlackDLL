@@ -768,6 +768,12 @@ using namespace std;
 					log.elog(func.strparameter());
 					output = interfaces.GetLocalChatText(atoi(func.strparameter().c_str()), size);
 				}
+				
+				if(func.name().compare("getCurrentSolarsystemid") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetCurrentSolarsystemid(size);
+				}
 
 		//		}
 
