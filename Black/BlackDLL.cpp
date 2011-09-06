@@ -762,6 +762,13 @@ using namespace std;
 					output = interfaces.GetOverviewSelectText(size);
 				}
 
+				if(func.name().compare("getLocalChatText") == 0)
+				{
+					log.elog(func.name());
+					log.elog(func.strparameter());
+					output = interfaces.GetLocalChatText(atoi(func.strparameter().c_str()), size);
+				}
+
 		//		}
 
 

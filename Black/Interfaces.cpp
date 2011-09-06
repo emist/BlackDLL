@@ -1271,6 +1271,145 @@ char * Interfaces::GetModalNoButton(int & size)
 	return output;
 }
 
+char * Interfaces::GetLocalChatText(int sysid, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	list<string *> chatlist;
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * chatchannel = _findByNameLayer(main, "chatchannel_solarsystemid2");
+	if(chatchannel == NULL)
+	{
+		log.elog("Couldn't get the channel");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	stringstream os;
+	os.str("chatoutput_('solarsystemid2', ");
+	os << sysid;
+	os << ")";
+
+	PyObject * channelparent = _findByNameLayer(chatchannel, os.str());
+	if(channelparent == NULL)
+	{
+		log.elog("Couldn't get the channel parent");
+		Py_DECREF(main);
+		Py_DECREF(chatchannel);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * content = _findByNameLayer(channelparent, "__content");
+	if(content == NULL)
+	{
+		log.elog("couldn't get the container");
+		Py_DECREF(main);
+		Py_DECREF(chatchannel);
+		Py_DECREF(channelparent);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * children = _getAttribute(content, "children");
+	if(children == NULL)
+	{
+		log.elog("Couldn't get the children");
+		Py_DECREF(main);
+		Py_DECREF(chatchannel);
+		Py_DECREF(channelparent);
+		Py_DECREF(content);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	int csize = PyObject_Size(children);
+
+	PyObject * pvalue = NULL;
+	PyObject * pkey = NULL;
+	
+	int start = 0;
+
+	if(csize > 15)
+		start = csize - 15;
+		
+
+	for(int i = start; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+		
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get the value");
+			Py_DECREF(main);
+			Py_DECREF(chatchannel);
+			Py_DECREF(channelparent);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+		
+		PyObject * label = _findByNameLayer(pvalue, "text");
+		if(label == NULL)
+		{
+			log.elog("Couldn't get the label");
+			Py_DECREF(main);
+			Py_DECREF(chatchannel);
+			Py_DECREF(channelparent);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(pvalue);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		PyObject * text = _getAttribute(label, "text");
+		if(text == NULL)
+		{
+			log.elog("Couldn't get the text");
+			Py_DECREF(main);
+			Py_DECREF(chatchannel);
+			Py_DECREF(channelparent);
+			Py_DECREF(content);
+			Py_DECREF(children);
+			Py_DECREF(pvalue);
+			Py_DECREF(label);
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		chatlist.push_back(new string(PyString_AsString(text)));
+		Py_DECREF(pvalue);
+		Py_DECREF(label);
+		Py_DECREF(text);
+
+	}
+
+	char * output = builder.buildStringListObject(chatlist, size);
+	for(list<string *>::iterator it = chatlist.begin(); it != chatlist.end(); it++)
+	{
+		delete (*it);		
+	}
+
+	Py_DECREF(main);
+	Py_DECREF(chatchannel);
+	Py_DECREF(channelparent);
+	Py_DECREF(content);
+	Py_DECREF(children);
+	PyGILState_Release(gstate);
+
+	return output;
+
+}
 
 PyObject * Interfaces::_getSysMenuButtonByText(string ctext)
 {
