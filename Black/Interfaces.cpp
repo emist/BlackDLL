@@ -1271,6 +1271,60 @@ char * Interfaces::GetModalNoButton(int & size)
 	return output;
 }
 
+char * Interfaces::GetLocalWritingArea(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * chatchannel = _findByNameLayer(main, "chatchannel_solarsystemid2");
+	if(chatchannel == NULL)
+	{
+		log.elog("cant get the channel");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * input = _findByNameLayer(chatchannel, "chatchannel_solarsystemid2");
+	if(input == NULL)
+	{
+		log.elog("cant get the input row");
+		Py_DECREF(main);
+		Py_DECREF(chatchannel);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributesDisplay(input, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Error populating");
+		Py_DECREF(main);
+		Py_DECREF(chatchannel);
+		Py_DECREF(input);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("localinput", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(chatchannel);
+	Py_DECREF(input);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetLocalChatText(int sysid, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -1293,10 +1347,8 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 	}
 
 	stringstream os;
-	os.str("chatoutput_('solarsystemid2', ");
-	os << sysid;
-	os << ")";
-
+	os << "chatoutput_(\'solarsystemid2\', " << sysid << ")";
+	 
 	PyObject * channelparent = _findByNameLayer(chatchannel, os.str());
 	if(channelparent == NULL)
 	{
@@ -2608,7 +2660,6 @@ bool Interfaces::_populateAttributesDisplay(PyObject * item, PyObject ** width, 
 
 			return true;
 }
-
 
 
 bool Interfaces::_populateAttributes(PyObject * item, PyObject ** width, PyObject ** height, PyObject ** absoluteTop, PyObject ** absoluteLeft)

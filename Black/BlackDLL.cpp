@@ -775,6 +775,12 @@ using namespace std;
 					output = interfaces.GetCurrentSolarsystemid(size);
 				}
 
+				if(func.name().compare("getLocalWritingArea") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetLocalWritingArea(size);
+				}
+
 		//		}
 
 
