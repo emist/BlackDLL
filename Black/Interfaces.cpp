@@ -1291,7 +1291,7 @@ char * Interfaces::GetLocalWritingArea(int & size)
 		return NULL;
 	}
 
-	PyObject * input = _findByNameLayer(chatchannel, "chatchannel_solarsystemid2");
+	PyObject * input = _findByNameLayer(chatchannel, "inputchatchannel_solarsystemid2");
 	if(input == NULL)
 	{
 		log.elog("cant get the input row");
