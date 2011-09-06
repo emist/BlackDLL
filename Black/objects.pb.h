@@ -4,6 +4,7 @@
 #ifndef PROTOBUF_objects_2eproto__INCLUDED
 #define PROTOBUF_objects_2eproto__INCLUDED
 
+#include "stdafx.h"
 #include <string>
 
 #include <google/protobuf/stubs/common.h>
@@ -33,6 +34,7 @@ void protobuf_AssignDesc_objects_2eproto();
 void protobuf_ShutdownFile_objects_2eproto();
 
 class infoObject;
+class stringgroup;
 class BooleanObject;
 class functionCall;
 class systemObject;
@@ -141,6 +143,91 @@ class infoObject : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static infoObject* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class stringgroup : public ::google::protobuf::Message {
+ public:
+  stringgroup();
+  virtual ~stringgroup();
+  
+  stringgroup(const stringgroup& from);
+  
+  inline stringgroup& operator=(const stringgroup& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const stringgroup& default_instance();
+  
+  void Swap(stringgroup* other);
+  
+  // implements Message ----------------------------------------------
+  
+  stringgroup* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const stringgroup& from);
+  void MergeFrom(const stringgroup& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // repeated .eveobjects.stringResponse data = 1;
+  inline int data_size() const;
+  inline void clear_data();
+  static const int kDataFieldNumber = 1;
+  inline const ::eveobjects::stringResponse& data(int index) const;
+  inline ::eveobjects::stringResponse* mutable_data(int index);
+  inline ::eveobjects::stringResponse* add_data();
+  inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::stringResponse >&
+      data() const;
+  inline ::google::protobuf::RepeatedPtrField< ::eveobjects::stringResponse >*
+      mutable_data();
+  
+  // @@protoc_insertion_point(class_scope:eveobjects.stringgroup)
+ private:
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::RepeatedPtrField< ::eveobjects::stringResponse > data_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_objects_2eproto();
+  friend void protobuf_AssignDesc_objects_2eproto();
+  friend void protobuf_ShutdownFile_objects_2eproto();
+  
+  void InitAsDefaultInstance();
+  static stringgroup* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1490,6 +1577,35 @@ inline ::google::protobuf::int32 infoObject::value() const {
 inline void infoObject::set_value(::google::protobuf::int32 value) {
   set_has_value();
   value_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// stringgroup
+
+// repeated .eveobjects.stringResponse data = 1;
+inline int stringgroup::data_size() const {
+  return data_.size();
+}
+inline void stringgroup::clear_data() {
+  data_.Clear();
+}
+inline const ::eveobjects::stringResponse& stringgroup::data(int index) const {
+  return data_.Get(index);
+}
+inline ::eveobjects::stringResponse* stringgroup::mutable_data(int index) {
+  return data_.Mutable(index);
+}
+inline ::eveobjects::stringResponse* stringgroup::add_data() {
+  return data_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::eveobjects::stringResponse >&
+stringgroup::data() const {
+  return data_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::eveobjects::stringResponse >*
+stringgroup::mutable_data() {
+  return &data_;
 }
 
 // -------------------------------------------------------------------
