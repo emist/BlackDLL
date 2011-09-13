@@ -2401,6 +2401,44 @@ char * Interfaces::GetShipShield(int & size)
 	return output;
 }
 
+char * Interfaces::GetShipCapacitor(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * shipui = _getLayer("shipui");
+	if(shipui == NULL)
+	{
+		log.elog("couldn't get layer");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * powercore = _findByNameLayer(shipui, "powercore");
+	if(powercore == NULL)
+	{
+		log.elog("Couldn't get the cap");
+		Py_DECREF(shipui);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * hint = _getAttribute(powercore, "hint");
+	if(hint == NULL)
+	{
+		log.elog("Couldn't get the cap text");
+		Py_DECREF(shipui);
+		Py_DECREF(powercore);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildStringObject(PyString_AsString(hint), size);
+	Py_DECREF(shipui);
+	Py_DECREF(powercore);
+	Py_DECREF(hint);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetShipStructure(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

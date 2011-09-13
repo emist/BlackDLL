@@ -66,6 +66,7 @@ class Interfaces{
 	
 
 public:
+	char * GetShipCapacitor(int & size);
 	char * GetLocalWritingArea(int & size);
 	char * GetCurrentSolarsystemid(int & size);
 	char * GetLocalChatText(int sysid, int & size);

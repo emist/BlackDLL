@@ -780,6 +780,11 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetLocalWritingArea(size);
 				}
+				if(func.name().compare("getShipCapacitor") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetShipCapacitor(size);
+				}
 
 		//		}
 
