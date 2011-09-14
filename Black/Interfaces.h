@@ -63,9 +63,10 @@ class Interfaces{
 	char * _getNeoComItem(string name, int & size);
 	PyObject * _getAddressBookWindow();
 	char * _getPeopleAndPlacesButton(string name, int & size);
-	
+	char * _getOverViewHeaders(string name, int & size);
 
 public:
+	char * GetOverviewDistanceHeader(int & size);
 	char * GetShipCapacitor(int & size);
 	char * GetLocalWritingArea(int & size);
 	char * GetCurrentSolarsystemid(int & size);

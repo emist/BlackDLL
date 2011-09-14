@@ -2393,6 +2393,64 @@ char * Interfaces::GetShipArmor(int & size)
 	return output;
 }
 
+char * Interfaces::GetOverviewDistanceHeader(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getOverViewHeaders("Distance", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::_getOverViewHeaders(string name, int & size)
+{
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		return NULL;
+	}
+
+	PyObject * overview = _findByNameLayer(main, "overview");
+	if(overview == NULL)
+	{
+		log.elog("couldn't get overview");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	PyObject * header = _findByNameLayer(overview, name);
+	if(header == NULL)
+	{
+		log.elog("couldn't get header");
+		Py_DECREF(main);
+		Py_DECREF(overview);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+
+	bool ok = _populateAttributesDisplay(header, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("couldn't populate");
+		Py_DECREF(main);
+		Py_DECREF(overview);
+		Py_DECREF(header);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(overview);
+	Py_DECREF(header);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	return output;
+
+}
+
 char * Interfaces::GetShipShield(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();

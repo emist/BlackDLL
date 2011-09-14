@@ -786,6 +786,12 @@ using namespace std;
 					output = interfaces.GetShipCapacitor(size);
 				}
 
+				if(func.name().compare("getOverviewDistanceHeader") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetOverviewDistanceHeader(size);
+				}
+
 		//		}
 
 
