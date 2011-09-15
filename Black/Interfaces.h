@@ -66,8 +66,11 @@ class Interfaces{
 	char * _getOverViewHeaders(string name, int & size);
 	PyObject * _getStationLobbyBottom(int & size);
 	char * _getLobbyTab(string name, int & size);
+	void _strToLower(string & str);
+
 
 public:
+	char * GetAgent(string name, int & size);
 	char * GetStationAgentTab(int & size);
 	char * GetOverviewDistanceHeader(int & size);
 	char * GetShipCapacitor(int & size);

@@ -819,6 +819,110 @@ char * Interfaces::IsFleeted(int & size)
 	return output;
 }
 
+void Interfaces::_strToLower(string & str)
+{
+	for(int i = 0; i < str.length(); i++)
+		str[i] = tolower(str[i]);
+}
+
+char * Interfaces::GetAgent(string agentname, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	
+	PyObject * bottom = _getStationLobbyBottom(size);
+	if(bottom == NULL)
+	{
+		log.elog("Couldn't get the lobby");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	
+	PyObject * entry = _findByNameLayer(bottom, "entry_0");
+	stringstream os;
+	os << "entry_";
+
+	for(int i = 1; entry != NULL; i++)
+	{
+		log.elog(PyEval_GetFuncName(entry));
+
+		if(strcmp(PyEval_GetFuncName(entry), "Header") == 0)
+		{
+			Py_DECREF(entry);
+			os.str("");
+			os << "entry_";
+			os << i;
+			entry = _findByNameLayer(bottom, os.str());
+			continue;
+		}
+
+		if(strcmp(PyEval_GetFuncName(entry), "User") == 0)
+		{
+			PyObject * data = _getAttribute(entry, "data");
+			if(data == NULL)
+			{
+				log.elog("couldn't get the data");
+				Py_DECREF(bottom);
+				Py_DECREF(entry);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+
+			PyObject * name = PyDict_GetItemString(data, "Name");
+			if(name == NULL)
+			{
+				log.elog("couldn't find agent's name");
+				Py_DECREF(bottom);
+				Py_DECREF(entry);
+				Py_DECREF(data);
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			string cAgentName(PyString_AsString(name));
+			_strToLower(cAgentName);
+			if(cAgentName.compare(agentname) == 0)
+			{
+				PyObject * width = NULL, * height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+				bool ok = _populateAttributes(entry, &width, &height, &absoluteTop, &absoluteLeft);
+				if(!ok)
+				{
+					log.elog("couldn't populate");
+					Py_DECREF(bottom);
+					Py_DECREF(entry);
+					Py_DECREF(data);
+					Py_DECREF(name);
+					PyGILState_Release(gstate);
+					return NULL;
+				}
+
+				char * output = builder.buildInterfaceObject(PyString_AsString(name), PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+				Py_DECREF(bottom);
+				Py_DECREF(entry);
+				Py_DECREF(data);
+				Py_DECREF(name);
+				Py_DECREF(width);
+				Py_DECREF(height);
+				Py_DECREF(absoluteTop);
+				Py_DECREF(absoluteLeft);
+				PyGILState_Release(gstate);
+				return output;
+
+			}
+		
+		}
+
+		os.str("");
+		os << "entry_" << i;
+		Py_DECREF(entry);
+		entry = _findByNameLayer(bottom, os.str());
+	}
+
+	Py_DECREF(bottom);
+	PyGILState_Release(gstate);
+	return NULL;
+
+}
+
 char * Interfaces::FindPlayerInLocal(string name, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -2156,6 +2260,8 @@ char * Interfaces::_buildModule(PyObject * mod, string name, int & size)
 	return output;
 
 }
+
+
 
 char * Interfaces::GetStationAgentTab(int & size)
 {

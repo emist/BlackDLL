@@ -798,6 +798,13 @@ using namespace std;
 					output = interfaces.GetStationAgentTab(size);
 				}
 
+				if(func.name().compare("getAgent") == 0)
+				{
+					log.elog(func.name());
+					log.elog(func.strparameter());
+					output = interfaces.GetAgent(func.strparameter(), size);
+				}
+
 				//}
 
 
