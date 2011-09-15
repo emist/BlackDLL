@@ -804,6 +804,12 @@ using namespace std;
 					log.elog(func.strparameter());
 					output = interfaces.GetAgent(func.strparameter(), size);
 				}
+				if(func.name().compare("getAgentReqMissionBtn") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetAgentReqMissionBtn(size);
+				}
+
 
 				//}
 

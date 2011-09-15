@@ -825,11 +825,98 @@ void Interfaces::_strToLower(string & str)
 		str[i] = tolower(str[i]);
 }
 
+char * Interfaces::_getAgentButton(string name, int & size)
+{
+	PyObject * agentWindow = _getAgentWindow();
+	if(agentWindow == NULL)
+	{
+		log.elog("Couldn't get agent window");
+		return NULL;
+	}
+
+	PyObject * agentButton = _findByNameLayer(agentWindow, name);
+	if(agentButton == NULL)
+	{
+		log.elog("Couldn't get button");
+		Py_DECREF(agentWindow);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributes(agentButton, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't populate");
+		Py_DECREF(agentWindow);
+		Py_DECREF(agentButton);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("AgentButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(agentWindow);
+	Py_DECREF(agentButton);
+	Py_DECREF(width);
+	Py_DECREF(height);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	return output;
+}
+
+char * Interfaces::GetAgentReqMissionBtn(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getAgentButton("Request Mission_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+
+PyObject * Interfaces::_getAgentWindow()
+{
+	PyObject * main = _getLayer("main");
+	
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		return NULL;
+	}
+
+	PyObject * children = _getAttribute(main, "children");
+	if(children == NULL)
+	{
+		log.elog("no children");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	PyObject * pkey = NULL, *pvalue = NULL;
+	for(int i = 0; i < PyObject_Size(children); i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(children, pkey);
+
+		log.elog(PyEval_GetFuncName(pvalue));
+
+		if(strcmp(PyEval_GetFuncName(pvalue), "AgentDialogueWindow") == 0)
+		{
+			Py_DECREF(main);
+			Py_DECREF(children);
+			return pvalue;
+		}
+
+		Py_DECREF(pvalue);
+	}
+
+	Py_DECREF(main);
+	Py_DECREF(children);
+	return NULL;
+}
+
 char * Interfaces::GetAgent(string agentname, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	
-	PyObject * bottom = _getStationLobbyBottom(size);
+	PyObject * bottom = _getStationLobbyBottom();
 	if(bottom == NULL)
 	{
 		log.elog("Couldn't get the lobby");
@@ -2309,7 +2396,7 @@ char * Interfaces::_getLobbyTab(string name, int & size)
 }
 
 
-PyObject * Interfaces::_getStationLobbyBottom(int & size)
+PyObject * Interfaces::_getStationLobbyBottom()
 {
 	PyObject * main = _getLayer("main");
 	if(main == NULL)

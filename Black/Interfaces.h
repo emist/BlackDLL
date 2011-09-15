@@ -64,12 +64,14 @@ class Interfaces{
 	PyObject * _getAddressBookWindow();
 	char * _getPeopleAndPlacesButton(string name, int & size);
 	char * _getOverViewHeaders(string name, int & size);
-	PyObject * _getStationLobbyBottom(int & size);
+	PyObject * _getStationLobbyBottom();
 	char * _getLobbyTab(string name, int & size);
 	void _strToLower(string & str);
-
+	PyObject * _getAgentWindow();
+	char * _getAgentButton(string name, int & size);
 
 public:
+	char * GetAgentReqMissionBtn(int & size);
 	char * GetAgent(string name, int & size);
 	char * GetStationAgentTab(int & size);
 	char * GetOverviewDistanceHeader(int & size);
