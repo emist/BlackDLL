@@ -825,6 +825,7 @@ void Interfaces::_strToLower(string & str)
 		str[i] = tolower(str[i]);
 }
 
+
 char * Interfaces::_getAgentButton(string name, int & size)
 {
 	PyObject * agentWindow = _getAgentWindow();
@@ -870,6 +871,29 @@ char * Interfaces::GetAgentReqMissionBtn(int & size)
 	return output;
 }
 
+char * Interfaces::GetAgentMissionAcceptBtn(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getAgentButton("Accept_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetAgentMissionDeclineBtn(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getAgentButton("Decline_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetAgentMissionDelayBtn(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getAgentButton("Delay_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
 
 PyObject * Interfaces::_getAgentWindow()
 {

@@ -71,6 +71,9 @@ class Interfaces{
 	char * _getAgentButton(string name, int & size);
 
 public:
+	char * GetAgentMissionDelayBtn(int & size);
+	char * GetAgentMissionDeclineBtn(int & size);
+	char * GetAgentMissionAcceptBtn(int & size);
 	char * GetAgentReqMissionBtn(int & size);
 	char * GetAgent(string name, int & size);
 	char * GetStationAgentTab(int & size);

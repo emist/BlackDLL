@@ -810,6 +810,23 @@ using namespace std;
 					output = interfaces.GetAgentReqMissionBtn(size);
 				}
 
+				if(func.name().compare("getAgentMissionAcceptBtn") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetAgentMissionAcceptBtn(size);
+				}
+
+				if(func.name().compare("getAgentMissionDeclineBtn") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetAgentMissionDeclineBtn(size);
+				}
+
+				if(func.name().compare("getAgentMissionDelayBtn") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetAgentMissionDelayBtn(size);
+				}
 
 				//}
 
