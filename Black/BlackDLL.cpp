@@ -352,8 +352,8 @@ using namespace std;
 				 eveobjects::functionCall func;
 				 func.ParseFromArray(buf, bread);
 
-		//		 __try
-		//		 {
+				 //__try
+				 //{
 
 
 				 if(func.name().compare("atLogin") == 0)
@@ -792,13 +792,19 @@ using namespace std;
 					output = interfaces.GetOverviewDistanceHeader(size);
 				}
 
-		//		}
+				if(func.name().compare("getStationAgentTab") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetStationAgentTab(size);
+				}
+
+				//}
 
 
-		//		__except( EXCEPTION_EXECUTE_HANDLER)
-		//		{
-		//			output = NULL;
-		//		}
+				//__except( EXCEPTION_EXECUTE_HANDLER)
+				//{
+				//	output = NULL;
+				//}
 
 
 

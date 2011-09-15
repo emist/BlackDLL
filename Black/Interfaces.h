@@ -64,8 +64,11 @@ class Interfaces{
 	PyObject * _getAddressBookWindow();
 	char * _getPeopleAndPlacesButton(string name, int & size);
 	char * _getOverViewHeaders(string name, int & size);
+	PyObject * _getStationLobbyBottom(int & size);
+	char * _getLobbyTab(string name, int & size);
 
 public:
+	char * GetStationAgentTab(int & size);
 	char * GetOverviewDistanceHeader(int & size);
 	char * GetShipCapacitor(int & size);
 	char * GetLocalWritingArea(int & size);

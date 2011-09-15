@@ -2157,6 +2157,93 @@ char * Interfaces::_buildModule(PyObject * mod, string name, int & size)
 
 }
 
+char * Interfaces::GetStationAgentTab(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getLobbyTab("stationInformationTabAgents", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::_getLobbyTab(string name, int & size)
+{
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("can't get main");
+		return NULL;
+	}
+
+	PyObject * tab = _findByNameLayer(main, name);
+	if(tab == NULL)
+	{
+		log.elog("couldn't get tab");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributes(tab, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("couldn't populate");
+		Py_DECREF(main);
+		Py_DECREF(tab);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("LobbyTab", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(tab);
+	Py_DECREF(height);
+	Py_DECREF(width);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	return output;
+}
+
+
+PyObject * Interfaces::_getStationLobbyBottom(int & size)
+{
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		return NULL;
+	}
+
+	PyObject * lobby = _findByNameLayer(main, "lobby");
+	if(lobby == NULL)
+	{
+		log.elog("Couldn't get the lobby");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	PyObject * lmain = _findByNameLayer(lobby, "main");
+	if(lmain == NULL)
+	{
+		log.elog("lmain error");
+		Py_DECREF(main);
+		Py_DECREF(lobby);
+		return NULL;
+	}
+
+	PyObject * bottomparent = _findByNameLayer(lmain, "bottomparent");
+	if(bottomparent == NULL)
+	{
+		log.elog("Couldn't get the bottom");
+		Py_DECREF(main);
+		Py_DECREF(lobby);
+		Py_DECREF(lmain);
+		return NULL;
+	}
+
+	Py_DECREF(main);
+	Py_DECREF(lobby);
+	Py_DECREF(lmain);
+	return bottomparent;
+}
 
 
 PyObject * Interfaces::_GetInflightCargoView()
@@ -2198,18 +2285,22 @@ PyObject * Interfaces::_GetInflightCargoView()
 		if(strcmp(PyEval_GetFuncName(pvalue), "InflightCargoView") == 0)
 		{
 			log.elog("Found cargoview");
-			Py_DECREF(pvalue);
+			Py_DECREF(main);
+			Py_DECREF(children);
 			return pvalue;
 		}
 		if(strcmp(PyEval_GetFuncName(pvalue), "DockedCargoView") == 0)
 		{
 			log.elog("Found docked cargoview");
-			Py_DECREF(pvalue);
+			Py_DECREF(main);
+			Py_DECREF(children);
 			return pvalue;
 		}
 		Py_DECREF(pvalue);
 	}
 
+	Py_DECREF(main);
+	Py_DECREF(children);
 	return NULL;
 }
 
@@ -2627,44 +2718,6 @@ char * Interfaces::GetShipHangar(int & size)
 	Py_DECREF(height);
 	Py_DECREF(absoluteLeft);
 	Py_DECREF(absoluteTop);
-/*
-	PyObject * main = _getLayer("main");
-	if(main == NULL)
-	{
-		log.elog("main is null");
-		PyGILState_Release(gstate);
-		return NULL;
-	}
-
-	PyObject * shipHangar = _findByNameLayer(main, "shipHangar");
-	if(shipHangar == NULL)
-	{
-		log.elog("shipHangar is null");
-		Py_DECREF(main);
-		PyGILState_Release(gstate);
-		return NULL;
-	}
-
-	PyObject * width = NULL, *height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
-
-	bool ok = _populateAttributesDisplay(shipHangar, &width, &height, &absoluteTop, &absoluteLeft);
-	if(!ok)
-	{
-		Py_DECREF(main);
-		Py_DECREF(shipHangar);
-		PyGILState_Release(gstate);
-		return NULL;
-	}
-
-	char * output = builder.buildInterfaceObject("shipHangar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(shipHangar);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(absoluteTop);
-
-*/
 
 	PyGILState_Release(gstate);
 	return output;
