@@ -887,6 +887,99 @@ char * Interfaces::GetAgentMissionDeclineBtn(int & size)
 	return output;
 }
 
+char * Interfaces::GetAgentMissionQuitBtn(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getAgentButton("Quit Mission_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetAgentMissionText(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * agentWindow = _getAgentWindow();
+	if(agentWindow == NULL)
+	{
+		log.elog("Couldn't get the agent window");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * rightSide = _findByNameLayer(agentWindow, "rightPane");
+	if(rightSide == NULL)
+	{
+		log.elog("Couldn't get the right side");
+		Py_DECREF(agentWindow);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * lines = _findByNameLayer(rightSide, "edit_multiline");
+	if(lines == NULL)
+	{
+		log.elog("Couldn't get the lines");
+		Py_DECREF(agentWindow);
+		Py_DECREF(rightSide);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * sr = _getAttribute(lines, "sr");
+	if(sr == NULL)
+	{
+		log.elog("Couldn't get the rows");
+		Py_DECREF(agentWindow);
+		Py_DECREF(rightSide);
+		Py_DECREF(lines);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * currentTXT = _getAttribute(sr, "currentTXT");
+	if(currentTXT == NULL)
+	{
+		log.elog("Couldn't get the text");
+		Py_DECREF(agentWindow);
+		Py_DECREF(rightSide);
+		Py_DECREF(lines);
+		Py_DECREF(sr);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * str = PyObject_Str(currentTXT);
+	if(str == NULL)
+	{
+		log.elog("couldn't turn into text");
+		Py_DECREF(agentWindow);
+		Py_DECREF(rightSide);
+		Py_DECREF(lines);
+		Py_DECREF(sr);
+		Py_DECREF(currentTXT);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	//log.elog(PyString_AsString(str));
+	char * output = builder.buildStringObject(PyString_AsString(currentTXT), size);
+	Py_DECREF(agentWindow);
+	Py_DECREF(rightSide);
+	Py_DECREF(lines);
+	Py_DECREF(sr);
+	Py_DECREF(currentTXT);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetAgentMissionCompleteBtn(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getAgentButton("Complete Mission_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetAgentMissionDelayBtn(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
