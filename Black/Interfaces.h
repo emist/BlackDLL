@@ -71,6 +71,7 @@ class Interfaces{
 	char * _getAgentButton(string name, int & size);
 
 public:
+	char * GetAgentMissionCloseBtn(int & size);
 	char * GetAgentMissionText(int & size);
 	char * GetAgentMissionQuitBtn(int & size);
 	char * GetAgentMissionCompleteBtn(int & size);

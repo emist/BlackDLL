@@ -844,6 +844,13 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetAgentMissionText(size);
 				}
+
+				if(func.name().compare("getAgentMissionCloseBtn") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetAgentMissionCloseBtn(size);
+				}
+
 				//}
 
 

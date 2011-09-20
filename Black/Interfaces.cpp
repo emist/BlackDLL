@@ -871,6 +871,14 @@ char * Interfaces::GetAgentReqMissionBtn(int & size)
 	return output;
 }
 
+char * Interfaces::GetAgentMissionCloseBtn(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getAgentButton("Close_Btn", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::GetAgentMissionAcceptBtn(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -1041,89 +1049,34 @@ char * Interfaces::GetAgent(string agentname, int & size)
 		return NULL;
 	}
 
-	
-	PyObject * entry = _findByNameLayer(bottom, "entry_0");
-	stringstream os;
-	os << "entry_";
-
-	for(int i = 1; entry != NULL; i++)
+	PyObject * agent = _findByNameLayer(bottom, agentname);
+	if(agent == NULL)
 	{
-		log.elog(PyEval_GetFuncName(entry));
+		log.elog("Couldn't find agent");
+		Py_DECREF(bottom);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * width = NULL, * height = NULL, *absoluteLeft = NULL, *absoluteTop = NULL;
 
-		if(strcmp(PyEval_GetFuncName(entry), "Header") == 0)
-		{
-			Py_DECREF(entry);
-			os.str("");
-			os << "entry_";
-			os << i;
-			entry = _findByNameLayer(bottom, os.str());
-			continue;
-		}
+	bool ok = _populateAttributes(agent, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("couldn't populate");
+		Py_DECREF(bottom);
+		Py_DECREF(agent);
+		PyGILState_Release(gstate);
+		return NULL;
 
-		if(strcmp(PyEval_GetFuncName(entry), "User") == 0)
-		{
-			PyObject * data = _getAttribute(entry, "data");
-			if(data == NULL)
-			{
-				log.elog("couldn't get the data");
-				Py_DECREF(bottom);
-				Py_DECREF(entry);
-				PyGILState_Release(gstate);
-				return NULL;
-			}
-
-			PyObject * name = PyDict_GetItemString(data, "Name");
-			if(name == NULL)
-			{
-				log.elog("couldn't find agent's name");
-				Py_DECREF(bottom);
-				Py_DECREF(entry);
-				Py_DECREF(data);
-				PyGILState_Release(gstate);
-				return NULL;
-			}
-			string cAgentName(PyString_AsString(name));
-			_strToLower(cAgentName);
-			if(cAgentName.compare(agentname) == 0)
-			{
-				PyObject * width = NULL, * height = NULL, *absoluteTop = NULL, *absoluteLeft = NULL;
-				bool ok = _populateAttributes(entry, &width, &height, &absoluteTop, &absoluteLeft);
-				if(!ok)
-				{
-					log.elog("couldn't populate");
-					Py_DECREF(bottom);
-					Py_DECREF(entry);
-					Py_DECREF(data);
-					Py_DECREF(name);
-					PyGILState_Release(gstate);
-					return NULL;
-				}
-
-				char * output = builder.buildInterfaceObject(PyString_AsString(name), PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-				Py_DECREF(bottom);
-				Py_DECREF(entry);
-				Py_DECREF(data);
-				Py_DECREF(name);
-				Py_DECREF(width);
-				Py_DECREF(height);
-				Py_DECREF(absoluteTop);
-				Py_DECREF(absoluteLeft);
-				PyGILState_Release(gstate);
-				return output;
-
-			}
-		
-		}
-
-		os.str("");
-		os << "entry_" << i;
-		Py_DECREF(entry);
-		entry = _findByNameLayer(bottom, os.str());
 	}
 
+	char * output = builder.buildInterfaceObject(agentname, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	
 	Py_DECREF(bottom);
+	Py_DECREF(agent);
 	PyGILState_Release(gstate);
-	return NULL;
+	return output;
 
 }
 
