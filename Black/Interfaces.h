@@ -69,8 +69,14 @@ class Interfaces{
 	void _strToLower(string & str);
 	PyObject * _getAgentWindow();
 	char * _getAgentButton(string name, int & size);
-
+	char * _getProbeButton(string name, int & size);
+	char * _findColumnEntryProbeWindow(string name, PyObject * layer, int & size);
+	
 public:
+	char * GetProbeResult(string name, int & size);
+	char * GetProbe(string name, int & size);
+	char * GetAnalyzeProbesButton(int & size);
+	char * GetRecoverProbesButton(int & size);
 	char * GetAgentMissionCloseBtn(int & size);
 	char * GetAgentMissionText(int & size);
 	char * GetAgentMissionQuitBtn(int & size);

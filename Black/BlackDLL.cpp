@@ -352,8 +352,8 @@ using namespace std;
 				 eveobjects::functionCall func;
 				 func.ParseFromArray(buf, bread);
 
-				 //__try
-				 //{
+				 __try
+				 {
 
 
 				 if(func.name().compare("atLogin") == 0)
@@ -850,14 +850,40 @@ using namespace std;
 					log.elog(func.name());
 					output = interfaces.GetAgentMissionCloseBtn(size);
 				}
+				
+				if(func.name().compare("getRecoverProbesButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetRecoverProbesButton(size);
+				}
 
-				//}
+				if(func.name().compare("getAnalyzeProbesButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetAnalyzeProbesButton(size);
+				}
+
+				if(func.name().compare("getProbe") == 0)
+				{
+					log.elog(func.name());
+					log.elog(func.strparameter());
+					output = interfaces.GetProbe(func.strparameter(), size);
+				}
+
+				if(func.name().compare("getProbeResult") == 0)
+				{
+					log.elog(func.name());
+					log.elog(func.strparameter());
+					output = interfaces.GetProbeResult(func.strparameter(), size);
+				}
+
+				}
 
 
-				//__except( EXCEPTION_EXECUTE_HANDLER)
-				//{
-				//	output = NULL;
-				//}
+				__except( EXCEPTION_EXECUTE_HANDLER)
+				{
+					output = NULL;
+				}
 
 
 

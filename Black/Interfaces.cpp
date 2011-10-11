@@ -1080,6 +1080,272 @@ char * Interfaces::GetAgent(string agentname, int & size)
 
 }
 
+char * Interfaces::_getProbeButton(string name, int & size)
+{
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		return NULL;
+	}
+
+	PyObject * settings = _findByNameLayer(main, "systemSettings");
+	if(settings == NULL)
+	{
+		log.elog("no settings");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	PyObject * children = _getAttribute(settings, "children");
+	if(children == NULL)
+	{
+		log.elog("no children");
+		Py_DECREF(main);
+		Py_DECREF(settings);
+		return NULL;
+	}
+
+	
+	int csize = PyObject_Size(children);
+
+	PyObject * pkey = NULL;
+	
+	int pos = -1;
+
+	if(name.compare("analyze") == 0)
+	{
+		pos = 0;
+	}
+	else if(name.compare("recover") == 0)
+	{
+		pos = 1;
+	}
+
+	if(csize <= pos || pos == -1)
+	{
+		log.elog("children too small");
+		Py_DECREF(main);
+		Py_DECREF(settings);
+		Py_DECREF(children);
+		return NULL;
+	}
+		
+	pkey = PyInt_FromLong(pos);
+	
+	PyObject * button = PyObject_GetItem(children, pkey);
+	if(button == NULL)
+	{
+		log.elog("couldn't get the button");
+		Py_DECREF(main);
+		Py_DECREF(settings);
+		Py_DECREF(children);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteLeft = NULL, * absoluteTop = NULL;
+	bool ok = _populateAttributes(button, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("error populating");
+		Py_DECREF(main);
+		Py_DECREF(settings);
+		Py_DECREF(children);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+
+	Py_DECREF(main);
+	Py_DECREF(settings);
+	Py_DECREF(children);
+	Py_DECREF(absoluteTop);
+	Py_DECREF(absoluteLeft);
+	Py_DECREF(height);
+	Py_DECREF(width);
+	return output;
+}
+
+char * Interfaces::GetAnalyzeProbesButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getProbeButton("analyze", size);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+char * Interfaces::GetRecoverProbesButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getProbeButton("recover", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetProbe(string name, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * scanner = _findByNameLayer(main, "scanner");
+	if(scanner == NULL)
+	{
+		log.elog("couldn't get scanner");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * system = _findByNameLayer(scanner, "system");
+	if(system == NULL)
+	{
+		log.elog("couldn't get probe window");
+		Py_DECREF(main);
+		Py_DECREF(scanner);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = _findColumnEntryProbeWindow(name, system, size);
+	Py_DECREF(main);
+	Py_DECREF(scanner);
+	Py_DECREF(system);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+char * Interfaces::GetProbeResult(string name, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * scanner = _findByNameLayer(main, "scanner");
+	if(scanner == NULL)
+	{
+		log.elog("couldn't get scanner");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * resultscroll = _findByNameLayer(scanner, "resultscroll");
+	if(resultscroll == NULL)
+	{
+		log.elog("couldn't get probe window");
+		Py_DECREF(main);
+		Py_DECREF(scanner);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = _findColumnEntryProbeWindow(name, resultscroll, size);
+	Py_DECREF(main);
+	Py_DECREF(scanner);
+	Py_DECREF(resultscroll);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+char * Interfaces::_findColumnEntryProbeWindow(string name, PyObject * layer, int & size)
+{
+	PyObject * clipper = _findByNameLayer(layer, "__clipper");
+	if(clipper == NULL)
+	{
+		log.elog("couldn't get the area");
+		return NULL;
+	}
+
+	PyObject * entry = _findByNameLayer(clipper, "entry_0");
+	stringstream os;
+	os << "entry_";
+
+	for(int i = 1; entry != NULL; i++)
+	{
+		PyObject * column = _findByNameLayer(entry, "column_3");
+		if(column == NULL)
+		{
+			log.elog("no column");
+			Py_DECREF(entry);
+			Py_DECREF(clipper);
+			return NULL;
+		}
+		
+		PyObject * ptext = _findByNameLayer(column, "text");
+		if(ptext == NULL)
+		{
+			log.elog("couldn't get ptext");
+			Py_DECREF(entry);
+			Py_DECREF(clipper);
+			Py_DECREF(column);
+			return NULL;
+		}
+
+		PyObject * text = _getAttribute(ptext, "text");
+		if(text == NULL)
+		{
+			log.elog("couldn't get text");
+			Py_DECREF(entry);
+			Py_DECREF(clipper);
+			Py_DECREF(column);
+			Py_DECREF(ptext);
+			return NULL;
+		}
+
+		if(strcmp(PyString_AsString(text), name.c_str()) == 0)
+		{
+			PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+			bool ok = _populateAttributes(entry, &width, &height, &absoluteTop, &absoluteLeft);
+			if(!ok)
+			{
+				log.elog("couldn't populate");
+				Py_DECREF(entry);
+				Py_DECREF(clipper);
+				Py_DECREF(column);
+				Py_DECREF(ptext);
+				Py_DECREF(text);
+				return NULL;
+			}
+
+			char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+			Py_DECREF(entry);
+			Py_DECREF(clipper);
+			Py_DECREF(column);
+			Py_DECREF(ptext);
+			Py_DECREF(text);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(absoluteTop);
+			Py_DECREF(width);
+			Py_DECREF(height);
+			return output;
+
+		}
+
+
+		os.str("");
+		os << "entry_" << i;
+
+		log.elog(os.str());
+		entry = _findByNameLayer(clipper, os.str());
+	}
+
+	return NULL;
+}
+
 char * Interfaces::FindPlayerInLocal(string name, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
