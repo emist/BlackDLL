@@ -4597,7 +4597,7 @@ char * Interfaces::_getModuleInfo(string name, int & size)
 	}
 
 	log.elog("Outputing modinfo");
-	char * output = builder.buildBooleanObject(PyString_AsString(hint), size);
+	char * output = builder.buildStringObject(PyString_AsString(hint), size);
 	Py_DECREF(module);
 	Py_DECREF(sr);
 	Py_DECREF(srmodule);
