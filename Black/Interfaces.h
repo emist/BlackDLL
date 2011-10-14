@@ -71,8 +71,12 @@ class Interfaces{
 	char * _getAgentButton(string name, int & size);
 	char * _getProbeButton(string name, int & size);
 	char * _findColumnEntryProbeWindow(string name, PyObject * layer, int & size);
-	
+	char * _getModuleInfo(string name, int & size);
+
 public:
+	char * GetHighSlotModuleInfo(int number, int & size);
+	char * GetMedSlotModuleInfo(int number, int & size);
+	char * GetLowSlotModuleInfo(int number, int & size);
 	char * GetProbeResult(string name, int & size);
 	char * GetProbe(string name, int & size);
 	char * GetAnalyzeProbesButton(int & size);

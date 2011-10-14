@@ -452,6 +452,27 @@ using namespace std;
 					 output = interfaces.IsHighSlotActive(atoi(func.strparameter().c_str()), size);
 				 }
 
+			     if(func.name().compare("getHighSlotModuleInfo") == 0)
+				 {
+					 log.elog(func.name());
+					 log.elog(func.strparameter());
+					 output = interfaces.GetHighSlotModuleInfo(atoi(func.strparameter().c_str()), size);
+				 }
+
+				 if(func.name().compare("getMedSlotModuleInfo") == 0)
+				 {
+					 log.elog(func.name());
+					 log.elog(func.strparameter());
+					 output = interfaces.GetMedSlotModuleInfo(atoi(func.strparameter().c_str()), size);
+				 }
+
+				 if(func.name().compare("getLowSlotModuleInfo") == 0)
+				 {
+					 log.elog(func.name());
+					 log.elog(func.strparameter());
+					 output = interfaces.GetLowSlotModuleInfo(atoi(func.strparameter().c_str()), size);
+				 }
+
 				 if(func.name().compare("getCargoList") == 0)
 				 {
 					 log.elog(func.name());

@@ -4341,6 +4341,42 @@ char * Interfaces::getHangar(int & size)
 
 }
 
+char * Interfaces::GetHighSlotModuleInfo(int number, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	stringstream os;
+	os << "inFlightHighSlot";
+	os << number;
+	output = _getModuleInfo(os.str(), size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetMedSlotModuleInfo(int number, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	stringstream os;
+	os << "inMediumHighSlot";
+	os << number;
+	output = _getModuleInfo(os.str(), size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetLowSlotModuleInfo(int number, int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = NULL;
+	stringstream os;
+	os << "inFlightLowSlot";
+	os << number;
+	output = _getModuleInfo(os.str(), size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::IsMedSlotActive(int number, int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -4512,6 +4548,64 @@ char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
 	return output;
 	
 }
+
+char * Interfaces::_getModuleInfo(string name, int & size)
+{
+	PyObject * module = _findModule(name);
+	bool isActive = false;
+	if(module == NULL)
+	{
+		log.elog("Couldn't find the module");
+		return NULL;
+	}
+
+	PyObject * sr = _getAttribute(module, "sr");
+	if(sr == NULL)
+	{
+		log.elog("Couldn't get sr");
+		Py_DECREF(module);
+		return NULL;
+	}
+	PyObject * srmodule = _getAttribute(sr, "module");
+	if(srmodule == NULL)
+	{
+		log.elog("Couldn't find srmodule");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		return NULL;
+	}
+
+	PyObject * sragain = _getAttribute(srmodule, "sr");
+	if(sragain == NULL)
+	{
+		log.elog("sragain is null");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		return NULL;
+	}
+
+	PyObject * hint = _getAttribute(sragain, "hint");
+	if(hint == NULL)
+	{
+		log.elog("Can't get the status");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		return NULL;
+	}
+
+	log.elog("Outputing modinfo");
+	char * output = builder.buildBooleanObject(PyString_AsString(hint), size);
+	Py_DECREF(module);
+	Py_DECREF(sr);
+	Py_DECREF(srmodule);
+	Py_DECREF(sragain);
+	Py_DECREF(hint);
+	return output;
+}
+
 
 char * Interfaces::_isModuleActive(string name, int & size)
 {
