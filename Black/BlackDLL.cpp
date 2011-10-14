@@ -473,6 +473,13 @@ using namespace std;
 					 output = interfaces.GetLowSlotModuleInfo(atoi(func.strparameter().c_str()), size);
 				 }
 
+				 if(func.name().compare("getHighSlotAttributes") == 0)
+				 {
+					 log.elog(func.name());
+					 log.elog(func.strparameter());
+					 output = interfaces.GetHighSlotAttributes(atoi(func.strparameter().c_str()), size);
+				 }
+
 				 if(func.name().compare("getCargoList") == 0)
 				 {
 					 log.elog(func.name());

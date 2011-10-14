@@ -4535,6 +4535,175 @@ char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
 	
 }
 
+//This allocates mem, up to the caller to cleanup
+char * Interfaces::_getModuleAttributeCA(string name, string attr, int & size)
+{
+	PyObject * module = _findModule(name);
+	if(module == NULL)
+	{
+		log.elog("Couldn't find the module");
+		return NULL;
+	}
+
+	PyObject * sr = _getAttribute(module, "sr");
+	if(sr == NULL)
+	{
+		log.elog("Couldn't get sr");
+		Py_DECREF(module);
+		return NULL;
+	}
+	PyObject * srmodule = _getAttribute(sr, "module");
+	if(srmodule == NULL)
+	{
+		log.elog("Couldn't find srmodule");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		return NULL;
+	}
+
+	PyObject * sragain = _getAttribute(srmodule, "sr");
+	if(sragain == NULL)
+	{
+		log.elog("sragain is null");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		return NULL;
+	}
+
+	PyObject * moduleInfo = _getAttribute(sragain, "moduleInfo");
+	if(moduleInfo == NULL)
+	{
+		log.elog("Can't get the moduleInfo");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		return NULL;
+	}
+
+	PyObject * attribute = _getAttribute(moduleInfo, attr);
+	if(attribute == NULL)
+	{
+		log.elog("Couldn't get maxRange");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		Py_DECREF(moduleInfo);
+		return NULL;
+	}
+
+	if(PyObject_Not(attribute))
+	{
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		Py_DECREF(moduleInfo);
+		Py_DECREF(attribute);
+		return NULL;
+	}
+
+	PyFloatObject * value = (PyFloatObject*)PyFloat_FromDouble(PyFloat_AsDouble(attribute));
+	if(value == NULL)
+	{
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		Py_DECREF(moduleInfo);
+		Py_DECREF(attribute);
+		return NULL;
+	}
+	char * buf = NULL;
+	buf = new char[200];
+	PyFloat_AsString(buf, value);
+
+	Py_DECREF(module);
+	Py_DECREF(sr);
+	Py_DECREF(srmodule);
+	Py_DECREF(sragain);
+	Py_DECREF(moduleInfo);
+	Py_DECREF(attribute);
+	Py_DECREF(value);
+	return buf;
+	
+}
+
+char * Interfaces::_getModuleAttributes(string name, int & size)
+{
+	list<string*> attributes = list<string*>();
+	stringstream os;
+	
+	char * radius = NULL, *rof = NULL, *tracking = NULL, *damageMult = NULL, *falloff = NULL, *maxRange = NULL, *optsigradius = NULL;
+
+	radius = _getModuleAttributeCA(name, "radius", size);
+	rof = _getModuleAttributeCA(name, "speed", size);
+	tracking = _getModuleAttributeCA(name, "trackingSpeed", size);
+	damageMult = _getModuleAttributeCA(name, "damageMultiplier", size);
+	falloff = _getModuleAttributeCA(name, "falloff", size);
+	maxRange = _getModuleAttributeCA(name, "maxRange", size);
+	optsigradius = _getModuleAttributeCA(name, "optimalSigRadius", size);
+	
+	if(radius != NULL)
+	{
+		attributes.push_back(new string(radius));
+		delete radius;
+	}
+	if(rof != NULL)
+	{
+		attributes.push_back(new string(rof));
+		delete rof;
+	}
+	if(tracking != NULL)
+	{
+		attributes.push_back(new string(tracking));
+		delete tracking;
+	}
+	if(damageMult != NULL)
+	{
+		attributes.push_back(new string(damageMult));
+		delete damageMult;
+	}
+	if(falloff != NULL)
+	{
+		attributes.push_back(new string(falloff));
+		delete falloff;
+	}
+	if(maxRange != NULL)
+	{
+		attributes.push_back(new string(maxRange));
+		delete maxRange;
+	}
+	if(optsigradius != NULL)
+	{
+		attributes.push_back(new string(optsigradius));
+		delete optsigradius;
+	}
+
+	char * output = builder.buildStringListObject(attributes, size);
+
+	for(list<string *>::iterator it = attributes.begin(); it != attributes.end(); it++)
+	{
+		delete (*it);		
+	}
+
+	return output;
+}
+
+char * Interfaces::GetHighSlotAttributes(int number, int & size)
+{
+	char * output = NULL;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	stringstream os;
+	os << "inFlightHighSlot";
+	os << number;
+	output = _getModuleAttributes(os.str(), size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::_getModuleInfo(string name, int & size)
 {
 	PyObject * module = _findModule(name);

@@ -72,8 +72,11 @@ class Interfaces{
 	char * _getProbeButton(string name, int & size);
 	char * _findColumnEntryProbeWindow(string name, PyObject * layer, int & size);
 	char * _getModuleInfo(string name, int & size);
+	char * _getModuleAttributeCA(string name, string attr, int & size); ///This allocates mem
+	char * _getModuleAttributes(string name, int & size);
 
 public:
+	char * GetHighSlotAttributes(int number, int & size);
 	char * GetHighSlotModuleInfo(int number, int & size);
 	char * GetMedSlotModuleInfo(int number, int & size);
 	char * GetLowSlotModuleInfo(int number, int & size);
