@@ -352,8 +352,8 @@ using namespace std;
 				 eveobjects::functionCall func;
 				 func.ParseFromArray(buf, bread);
 
-				 __try
-				 {
+				// __try
+				// {
 
 
 				 if(func.name().compare("atLogin") == 0)
@@ -898,13 +898,13 @@ using namespace std;
 					output = interfaces.GetProbeResult(func.strparameter(), size);
 				}
 
-				}
+				//}
 
 
-				__except( EXCEPTION_EXECUTE_HANDLER)
-				{
-					output = NULL;
-				}
+				//__except( EXCEPTION_EXECUTE_HANDLER)
+				//{
+				//	output = NULL;
+				//}
 
 
 

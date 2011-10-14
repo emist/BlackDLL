@@ -956,20 +956,6 @@ char * Interfaces::GetAgentMissionText(int & size)
 		return NULL;
 	}
 
-	PyObject * str = PyObject_Str(currentTXT);
-	if(str == NULL)
-	{
-		log.elog("couldn't turn into text");
-		Py_DECREF(agentWindow);
-		Py_DECREF(rightSide);
-		Py_DECREF(lines);
-		Py_DECREF(sr);
-		Py_DECREF(currentTXT);
-		PyGILState_Release(gstate);
-		return NULL;
-	}
-
-	//log.elog(PyString_AsString(str));
 	char * output = builder.buildStringObject(PyString_AsString(currentTXT), size);
 	Py_DECREF(agentWindow);
 	Py_DECREF(rightSide);
@@ -4593,6 +4579,17 @@ char * Interfaces::_getModuleInfo(string name, int & size)
 		Py_DECREF(sr);
 		Py_DECREF(srmodule);
 		Py_DECREF(sragain);
+		return NULL;
+	}
+
+	if(PyObject_IsTrue(hint) == 0)
+	{
+		log.elog("no data");
+		Py_DECREF(module);
+		Py_DECREF(sr);
+		Py_DECREF(srmodule);
+		Py_DECREF(sragain);
+		Py_DECREF(hint);
 		return NULL;
 	}
 
