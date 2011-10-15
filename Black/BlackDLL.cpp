@@ -905,6 +905,49 @@ using namespace std;
 					output = interfaces.GetProbeResult(func.strparameter(), size);
 				}
 
+
+				//
+				//	MARKET STUFF
+				//
+				if(func.name().compare("getBuyOrders") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetBuyOrders(size);
+				}
+
+				if(func.name().compare("getSellOrders") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetSellOrders(size);
+				}
+
+				if(func.name().compare("getMarketSearchEditContent") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetMarketSearchEditContent(size);
+				}
+
+				if(func.name().compare("getMarketSearchEdit") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetMarketSearchEdit(size);
+				}
+			
+				if(func.name().compare("getMarketSearchButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetMarketSearchButton(size);
+				}
+
+				if(func.name().compare("getMarketSearchResult") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetMarketSearchResult(size);
+				}
+
+				///
+				///
+				///
 				//}
 
 

@@ -1247,6 +1247,141 @@ char * Interfaces::GetProbeResult(string name, int & size)
 
 }
 
+char * Interfaces::_getMarketOrders(string type, int & size)
+{
+	
+	list<ObjectBuilder::targetEntry*> entries;
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		return NULL;
+	}
+
+	PyObject * marketbase = _findByNameLayer(main, "MarketBase");
+	if(marketbase == NULL)
+	{
+		log.elog("couldn't get market");
+		Py_DECREF(main);
+		return NULL;
+	}
+
+	PyObject * orders = _findByNameLayer(marketbase,type);
+	if(orders == NULL)
+	{
+		log.elog("couldn't get orders");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		return NULL;
+	}
+
+	PyObject * entry = _findByNameLayer(orders, "entry_0");
+	stringstream os;
+	os << "entry_";
+
+	for(int i = 1; entry != NULL; i++)
+	{
+		PyObject * ptext = _findByNameLayer(entry, "text");
+		if(ptext == NULL)
+		{
+			log.elog("couldn't get ptext");
+			Py_DECREF(entry);
+			Py_DECREF(orders);
+			Py_DECREF(main);
+			Py_DECREF(marketbase);
+			return NULL;
+		}
+
+		PyObject * text = _getAttribute(ptext, "text");
+		if(text == NULL)
+		{
+			log.elog("couldn't get text");
+			Py_DECREF(entry);
+			Py_DECREF(orders);
+			Py_DECREF(main);
+			Py_DECREF(ptext);
+			Py_DECREF(marketbase);
+			return NULL;
+		}
+
+		PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+		bool ok = _populateAttributes(entry, &width, &height, &absoluteTop, &absoluteLeft);
+		if(!ok)
+		{
+			log.elog("couldn't populate");
+			Py_DECREF(entry);
+			Py_DECREF(orders);
+			Py_DECREF(main);
+			Py_DECREF(ptext);
+			Py_DECREF(marketbase);
+			Py_DECREF(text);
+			return NULL;
+		}
+
+		ObjectBuilder::targetEntry * tEntry = new ObjectBuilder::targetEntry();
+		tEntry->name = PyString_AsString(text);
+		tEntry->height = PyInt_AsLong(height);
+		tEntry->width = PyInt_AsLong(width);
+		tEntry->topLeftX = PyInt_AsLong(absoluteLeft);
+		tEntry->topLeftY = PyInt_AsLong(absoluteTop);
+		entries.push_back(tEntry);
+
+
+
+		Py_DECREF(entry);
+		Py_DECREF(ptext);
+		Py_DECREF(text);
+		Py_DECREF(absoluteLeft);
+		Py_DECREF(absoluteTop);
+		Py_DECREF(width);
+		Py_DECREF(height);
+		
+
+		os.str("");
+		os << "entry_" << i;
+
+		log.elog(os.str());
+		entry = _findByNameLayer(orders, os.str());
+	}
+
+	char * output = builder.buildTargetObject(entries, size);
+
+	Py_DECREF(main);
+	Py_DECREF(marketbase);
+	Py_DECREF(orders);
+
+	for(list<ObjectBuilder::targetEntry *>::iterator it = entries.begin(); it != entries.end(); it++)
+	{
+		delete (*it);
+	}
+
+	return output;
+}
+
+char * Interfaces::GetMarketSearchResult(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getMarketOrders("leftSide", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetBuyOrders(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getMarketOrders("sellParent", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetSellOrders(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getMarketOrders("buyParent", size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
 char * Interfaces::_findColumnEntryProbeWindow(string name, PyObject * layer, int & size)
 {
 	PyObject * clipper = _findByNameLayer(layer, "__clipper");
@@ -1330,6 +1465,238 @@ char * Interfaces::_findColumnEntryProbeWindow(string name, PyObject * layer, in
 	}
 
 	return NULL;
+}
+
+char * Interfaces::GetMarketSearchEditContent(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("no main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * marketbase = _findByNameLayer(main, "MarketBase");
+	if(marketbase == NULL)
+	{
+		log.elog("no market");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * leftSide = _findByNameLayer(marketbase, "leftSide");
+	if(leftSide == NULL)
+	{
+		log.elog("no search");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * searchparent = _findByNameLayer(leftSide, "searchparent");
+	if(searchparent == NULL)
+	{
+		log.elog("no searcharea");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		Py_DECREF(leftSide);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * edit = _findByNameLayer(searchparent, "edit");
+	if(edit == NULL)
+	{
+		log.elog("no field");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		Py_DECREF(leftSide);
+		Py_DECREF(searchparent);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * text = _getAttribute(edit, "text");
+	if(text == NULL)
+	{
+		log.elog("no text");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		Py_DECREF(leftSide);
+		Py_DECREF(searchparent);
+		Py_DECREF(edit);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	char * output = builder.buildStringObject(PyString_AsString(text), size);
+	Py_DECREF(main);
+	Py_DECREF(marketbase);
+	Py_DECREF(leftSide);
+	Py_DECREF(searchparent);
+	Py_DECREF(edit);
+	Py_DECREF(text);
+	PyGILState_Release(gstate);
+	return output;
+
+}
+
+char * Interfaces::GetMarketSearchButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("no main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * marketbase = _findByNameLayer(main, "MarketBase");
+	if(marketbase == NULL)
+	{
+		log.elog("no market");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * leftSide = _findByNameLayer(marketbase, "leftSide");
+	if(leftSide == NULL)
+	{
+		log.elog("no search");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * searchparent = _findByNameLayer(leftSide, "searchparent");
+	if(searchparent == NULL)
+	{
+		log.elog("no searcharea");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		Py_DECREF(leftSide);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * button = _findByNameLayer(searchparent, "button");
+	if(button == NULL)
+	{
+		log.elog("no field");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		Py_DECREF(leftSide);
+		Py_DECREF(searchparent);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width=NULL, *height = NULL, * absoluteTop=NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributes(button, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("couldn't populate");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		Py_DECREF(leftSide);
+		Py_DECREF(searchparent);
+		Py_DECREF(button);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	char * output = builder.buildInterfaceObject("SearchButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(marketbase);
+	Py_DECREF(leftSide);
+	Py_DECREF(searchparent);
+	Py_DECREF(button);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::GetMarketSearchEdit(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("no main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * marketbase = _findByNameLayer(main, "MarketBase");
+	if(marketbase == NULL)
+	{
+		log.elog("no market");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * leftSide = _findByNameLayer(marketbase, "leftSide");
+	if(leftSide == NULL)
+	{
+		log.elog("no search");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * searchparent = _findByNameLayer(leftSide, "searchparent");
+	if(searchparent == NULL)
+	{
+		log.elog("no searcharea");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		Py_DECREF(leftSide);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * edit = _findByNameLayer(searchparent, "edit");
+	if(edit == NULL)
+	{
+		log.elog("no field");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		Py_DECREF(leftSide);
+		Py_DECREF(searchparent);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width=NULL, *height = NULL, * absoluteTop=NULL, *absoluteLeft = NULL;
+	bool ok = _populateAttributes(edit, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("couldn't populate");
+		Py_DECREF(main);
+		Py_DECREF(marketbase);
+		Py_DECREF(leftSide);
+		Py_DECREF(searchparent);
+		Py_DECREF(edit);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	char * output = builder.buildInterfaceObject("SearchArea", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	Py_DECREF(main);
+	Py_DECREF(marketbase);
+	Py_DECREF(leftSide);
+	Py_DECREF(searchparent);
+	Py_DECREF(edit);
+	PyGILState_Release(gstate);
+	return output;
+
 }
 
 char * Interfaces::FindPlayerInLocal(string name, int & size)

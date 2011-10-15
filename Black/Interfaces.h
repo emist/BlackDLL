@@ -74,8 +74,15 @@ class Interfaces{
 	char * _getModuleInfo(string name, int & size);
 	char * _getModuleAttributeCA(string name, string attr, int & size); ///This allocates mem
 	char * _getModuleAttributes(string name, int & size);
+	char * _getMarketOrders(string type, int & size);
 
 public:
+	char * GetMarketSearchEditContent(int & size);
+	char * GetMarketSearchEdit(int & size);
+	char * GetMarketSearchButton(int & size);
+	char * GetMarketSearchResult(int & size);
+	char * GetBuyOrders(int & size);
+	char * GetSellOrders(int & size);
 	char * GetHighSlotAttributes(int number, int & size);
 	char * GetHighSlotModuleInfo(int number, int & size);
 	char * GetMedSlotModuleInfo(int number, int & size);
