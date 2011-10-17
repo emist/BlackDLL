@@ -1675,7 +1675,7 @@ char * Interfaces::GetMarketSearchEdit(int & size)
 	}
 
 	PyObject * width=NULL, *height = NULL, * absoluteTop=NULL, *absoluteLeft = NULL;
-	bool ok = _populateAttributes(edit, &width, &height, &absoluteTop, &absoluteLeft);
+	bool ok = _populateAttributesDisplay(edit, &width, &height, &absoluteTop, &absoluteLeft);
 	if(!ok)
 	{
 		log.elog("couldn't populate");
