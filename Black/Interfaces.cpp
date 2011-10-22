@@ -667,6 +667,202 @@ char * Interfaces::GetSystemInformation(int & size)
 
 }
 
+char * Interfaces::getInjuredDrone(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	char * output = _getInjuredDrone(size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+char * Interfaces::_getInjuredDrone(int & size)
+{
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("Couldn't get main");
+		clearExceptions();
+		return NULL;
+	}
+	PyObject * droneChildren = _findByNameLayer(main, "droneview");
+	
+	if(droneChildren == NULL)
+	{
+		log.elog("Couldn't get children");
+		Py_DECREF(main);
+		clearExceptions();
+		return NULL;
+	}
+
+	string entryTxt = "entry_1";
+	int i = 0;
+	stringstream os;
+	os << "entry_";
+
+
+entry_lab:
+	PyObject * entry = _findByNameLayer(droneChildren, entryTxt);
+	if(entry == NULL)
+	{
+		if(i < 10)
+		{
+			i++;
+			os.str("");
+			os << "entry_" << i;
+			entryTxt = os.str();
+			os.str("");
+			goto entry_lab;
+		}
+		log.elog("cOuldn't get the entry");
+		Py_DECREF(main);
+		Py_DECREF(droneChildren);
+		clearExceptions();
+		return NULL;
+	}
+
+	bool onealloted = false;
+
+	for(; entry != NULL; i++)
+	{
+		os.str("");
+		os << "entry_" << i;
+
+		PyObject * gauge = _findByNameLayer(entry, "gauge_shield");
+		if(gauge == NULL)
+		{
+			log.elog("no gauge");
+			clearExceptions();
+			entry = _findByNameLayer(droneChildren, os.str());
+			continue;
+		}
+		
+		if(PyObject_Not(gauge))
+		{
+			log.elog("no gauge");
+			clearExceptions();
+			entry = _findByNameLayer(droneChildren, os.str());
+			continue;
+		}
+
+		PyObject * children = _getAttribute(gauge, "children");
+		if(children == NULL)
+		{
+			log.elog("no children");
+			Py_DECREF(main);
+			Py_DECREF(droneChildren);
+			Py_DECREF(gauge);
+			clearExceptions();
+			return NULL;
+		}
+
+		if(PyObject_Size(children) < 1)
+		{
+			log.elog("no children");
+			log.elog(os.str());
+			Py_DECREF(gauge);
+			clearExceptions();
+			entry = _findByNameLayer(droneChildren, os.str());
+			continue;
+		}
+
+		PyObject * pkey = NULL;
+		
+		pkey = PyInt_FromLong(0);
+
+		PyObject * frame = PyObject_GetItem(children, pkey);
+		if(frame == NULL)
+		{
+			log.elog("no frame");
+			log.elog(os.str());
+			log.elog("Evaluation coming");
+			log.elog(PyEval_GetFuncName(children));
+			Py_DECREF(main);
+			Py_DECREF(droneChildren);
+			Py_DECREF(gauge);
+			Py_DECREF(children);
+			clearExceptions();
+			return NULL;
+		}
+
+		pkey = PyInt_FromLong(1);
+		PyObject * fill = PyObject_GetItem(children, pkey);
+		if(fill == NULL)
+		{
+			log.elog("no data");
+			Py_DECREF(main);
+			Py_DECREF(droneChildren);
+			Py_DECREF(gauge);
+			Py_DECREF(children);
+			Py_DECREF(frame);
+			clearExceptions();
+			return NULL;
+		}
+		
+		PyObject * fillWidth = _getAttribute(fill, "displayWidth");
+		if(fillWidth == NULL)
+		{
+			log.elog("no fill");
+			Py_DECREF(main);
+			Py_DECREF(droneChildren);
+			Py_DECREF(gauge);
+			Py_DECREF(children);
+			Py_DECREF(frame);
+			clearExceptions();
+			return NULL;
+		}
+
+		PyObject * frameWidth = _getAttribute(frame, "displayWidth");
+		if(frameWidth == NULL)	
+		{
+			log.elog("no frame");
+			Py_DECREF(main);
+			Py_DECREF(droneChildren);
+			Py_DECREF(gauge);
+			Py_DECREF(children);
+			Py_DECREF(frame);
+			Py_DECREF(fillWidth);
+			clearExceptions();
+			return NULL;
+		}
+
+		if(PyInt_AsLong(fillWidth) + 10 < PyInt_AsLong(frameWidth))
+		{
+			PyObject * width = NULL, * height = NULL, * absoluteLeft = NULL, * absoluteTop = NULL;
+			bool ok = _populateAttributesDisplay(entry, &width, &height, &absoluteTop, &absoluteLeft);
+			if(!ok)
+			{
+				log.elog("couldn't populate");
+				Py_DECREF(main);
+				Py_DECREF(droneChildren);
+				Py_DECREF(gauge);
+				Py_DECREF(children);
+				Py_DECREF(frame);
+				Py_DECREF(fillWidth);
+				clearExceptions();
+				return NULL;
+			}
+			
+			char * output = builder.buildInterfaceObject("drone", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteLeft), PyInt_AsLong(width), PyInt_AsLong(height), size);
+			Py_DECREF(main);
+			Py_DECREF(droneChildren);
+			Py_DECREF(gauge);
+			Py_DECREF(children);
+			Py_DECREF(frame);
+			Py_DECREF(fillWidth);
+			Py_DECREF(width);
+			Py_DECREF(height);
+			Py_DECREF(absoluteLeft);
+			Py_DECREF(absoluteTop);
+			return output;
+		}
+			
+		entry = _findByNameLayer(droneChildren, os.str());
+	}
+
+	return NULL;
+	
+}
+
 char * Interfaces::_getDroneStatus(int & size)
 {
 	PyObject * main = _getLayer("main");

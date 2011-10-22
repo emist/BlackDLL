@@ -250,7 +250,7 @@ using namespace std;
 
 			"def handleSocket():\n"
 			"\ttry:\n"
-				"\t\tnetloc = ('', 7777)\n"
+				"\t\tnetloc = ('', 8777)\n"
 				"\t\tservsock = socket.socket()\n"
 				"\t\tservsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)\n"
 				"\t\tservsock.bind(netloc)\n"
@@ -352,8 +352,8 @@ using namespace std;
 				 eveobjects::functionCall func;
 				 func.ParseFromArray(buf, bread);
 
-				// __try
-				// {
+				 __try
+				 {
 
 
 				 if(func.name().compare("atLogin") == 0)
@@ -904,6 +904,11 @@ using namespace std;
 					log.elog(func.strparameter());
 					output = interfaces.GetProbeResult(func.strparameter(), size);
 				}
+				if(func.name().compare("getInjuredDrone") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.getInjuredDrone(size);
+				}
 
 
 				//
@@ -948,13 +953,14 @@ using namespace std;
 				///
 				///
 				///
-				//}
+				
+				}
 
 
-				//__except( EXCEPTION_EXECUTE_HANDLER)
-				//{
-				//	output = NULL;
-				//}
+				__except( EXCEPTION_EXECUTE_HANDLER)
+				{
+					output = NULL;
+				}
 
 
 

@@ -78,6 +78,7 @@ class Interfaces{
 	void clearExceptions();
 
 public:
+	char * getInjuredDrone(int & size);
 	char * GetMarketSearchEditContent(int & size);
 	char * GetMarketSearchEdit(int & size);
 	char * GetMarketSearchButton(int & size);
@@ -181,6 +182,7 @@ public:
 	char * findByNameLogin(string name, int & size);
 	char * findByTextLogin(string text, int & size);
 	char * GetShipHangar(int & size);
+	char * _getInjuredDrone(int & size);
 };
 
 #endif
