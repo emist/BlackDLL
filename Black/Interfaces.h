@@ -75,6 +75,7 @@ class Interfaces{
 	char * _getModuleAttributeCA(string name, string attr, int & size); ///This allocates mem
 	char * _getModuleAttributes(string name, int & size);
 	char * _getMarketOrders(string type, int & size);
+	void clearExceptions();
 
 public:
 	char * GetMarketSearchEditContent(int & size);
