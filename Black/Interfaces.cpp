@@ -32,9 +32,10 @@ char * Interfaces::atLogin(int & size)
 		//Py_DECREF(layer);
 		
 		PyGILState_STATE gstate = PyGILState_Ensure();
-
+		clearExceptions();
+		
 		PyObject * login = _getLayer("login");
-
+		
 		if(login == NULL)
 		{
 			log.elog("Login is NULL");
@@ -66,6 +67,7 @@ char * Interfaces::atLogin(int & size)
 		}
 
 		PyGILState_Release( gstate );
+	
 		return output;
 }
 
@@ -3278,7 +3280,7 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				log.elog("findChild is not callable");
 				Py_DECREF(findChild);
 				Py_DECREF(layer);
-				Py_DECREF(args);
+				//Py_DECREF(args);
 				Py_DECREF(param);
 				clearExceptions();
 				return NULL;
@@ -3293,7 +3295,7 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				log.elog(PyString_AsString(param));
 				Py_DECREF(findChild);
 				Py_DECREF(layer);
-				Py_DECREF(args);
+				//Py_DECREF(args);
 				Py_DECREF(param);
 				clearExceptions();
 				return NULL;
@@ -3307,7 +3309,7 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				log.elog("Failed to get leftPosVal");
 				Py_DECREF(findChild);
 				Py_DECREF(layer);
-				Py_DECREF(args);
+				//Py_DECREF(args);
 				Py_DECREF(param);
 				Py_DECREF(soughtInterface);
 				clearExceptions();
@@ -3321,7 +3323,7 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				log.elog("Failed to get topPosVal");
 				Py_DECREF(findChild);
 				Py_DECREF(layer);
-				Py_DECREF(args);
+				//Py_DECREF(args);
 				Py_DECREF(param);
 				Py_DECREF(soughtInterface);
 				Py_DECREF(leftPosVal);
@@ -3335,7 +3337,7 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				log.elog("Failed to get width");
 				Py_DECREF(findChild);
 				Py_DECREF(layer);
-				Py_DECREF(args);
+				//Py_DECREF(args);
 				Py_DECREF(param);
 				Py_DECREF(soughtInterface);
 				Py_DECREF(leftPosVal);
@@ -3351,7 +3353,7 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 				log.elog("Failed to get width");
 				Py_DECREF(findChild);
 				Py_DECREF(layer);
-				Py_DECREF(args);
+				//Py_DECREF(args);
 				Py_DECREF(param);
 				Py_DECREF(soughtInterface);
 				Py_DECREF(leftPosVal);
@@ -3366,7 +3368,7 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			output = builder.buildInterfaceObject(name,  (int)PyInt_AsLong(leftPosVal) ,(int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
 			Py_DECREF(findChild);
 			Py_DECREF(layer);
-			Py_DECREF(args);
+			//Py_DECREF(args);
 			Py_DECREF(param);
 			Py_DECREF(soughtInterface);
 			Py_DECREF(leftPosVal);
@@ -7032,7 +7034,6 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 
 	PyObject * soughtInterface = NULL;
 
-
 	log.elog(name);
 	if(layer == NULL)
 	{
@@ -7085,7 +7086,7 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 			{
 				log.elog("findChild is not callable");
 				Py_DECREF(findChild);
-				Py_DECREF(args);
+				//Py_DECREF(args);
 				Py_DECREF(param);
 				clearExceptions();
 				return NULL;
@@ -7099,7 +7100,7 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 				log.elog("Error calling FindChild(param)");
 				log.elog(PyString_AsString(param));
 				Py_DECREF(findChild);
-				Py_DECREF(args);
+				//Py_DECREF(args);
 				Py_DECREF(param);
 				clearExceptions();
 				return NULL;
@@ -7108,7 +7109,7 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 			{
 				log.elog("FindChild returned blank");
 				Py_DECREF(findChild);
-				Py_DECREF(args);
+				//Py_DECREF(args);
 				Py_DECREF(param);
 				clearExceptions();
 				return NULL;
@@ -7117,7 +7118,7 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 			log.elog("Found Child");
 			//output = builder.buildInterfaceObject(name,  (int)PyInt_AsLong(leftPosVal) ,(int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
 			Py_DECREF(findChild);
-			Py_DECREF(args);
+			//Py_DECREF(args);
 			Py_DECREF(param);
 		}
 		else
