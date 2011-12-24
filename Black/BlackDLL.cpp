@@ -373,6 +373,7 @@ using namespace std;
 						
 				 if(func.name().compare("findByTextMenu") == 0)
 				 {
+					 log.elog("Inside memnu");
 					 log.elog(func.strparameter());
 					 output = interfaces.findByTextMenu(func.strparameter(), size);
 				 }
@@ -662,6 +663,12 @@ using namespace std;
 				{
 					log.elog(func.name());
 					output = interfaces.GetBookMarkFieldName(size);
+				}
+
+				if(func.name().compare("getModalSubmitButton") == 0)
+				{
+					log.elog(func.name());
+					output = interfaces.GetModalSubmitButton(size);
 				}
 
 				if(func.name().compare("getModalNoButton") == 0)

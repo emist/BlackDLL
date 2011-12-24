@@ -129,6 +129,7 @@ public:
 	char * getPasswordBox(int & size);
 	char * IsFleeted(int & size);
 	string Internal_getVersion();
+	char * GetModalSubmitButton(int & size);
 	char * GetLocalChatScrollbar(int & size);
 	char * GetLocalChatTop(int & size);
 	char * GetLocalChatBottom(int & size);

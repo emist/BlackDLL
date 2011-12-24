@@ -173,13 +173,178 @@ PyObject * Interfaces::_getHeight(PyObject * result)
 	return _getAttribute(result, "height");
 }
 
-
 char * Interfaces::findByTextMenu(string label, int & size)
 {
+	char * output = NULL;
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * menu = _getLayer("menu");
+	if(menu == NULL)
+	{
+		log.elog("Couldn't get the menu");
+		clearExceptions();
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	PyObject * menuview = _findByNameLayer(menu, "menuview");
+	if(menuview == NULL)
+	{
+		log.elog("Couldn't get menuview");
+		Py_DECREF(menu);
+		clearExceptions();
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	
+	PyObject * entries = _findByNameLayer(menuview, "_entries");
+	if(entries == NULL)
+	{
+		log.elog("Couldn't get entries");
+		Py_DECREF(menu);
+		Py_DECREF(menuview);
+		clearExceptions();
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject *entries_children = _getAttribute(entries, "children");
+	if(entries_children == NULL)
+	{
+		log.elog("Has no children");
+		Py_DECREF(menu);
+		Py_DECREF(menuview);
+		Py_DECREF(entries);
+		clearExceptions();
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * pkey = NULL, * pvalue = NULL;
+	const char * fname;
+
+	PyObject * width = NULL, * height = NULL, * absoluteTop = NULL, * absoluteLeft = NULL;
+	int csize = PyObject_Size(entries_children);
+	for(int i = 0; i < csize; i++)
+	{
+		pkey = PyInt_FromLong(i);
+		pvalue = PyObject_GetItem(entries_children, pkey);
+		
+		if(pvalue == NULL)
+		{
+			log.elog("Couldn't get entries_children values");
+			Py_DECREF(menu);
+			Py_DECREF(menuview);
+			Py_DECREF(entries);
+			Py_DECREF(entries_children);
+			clearExceptions();
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+		
+		fname = PyEval_GetFuncName(pvalue);
+		if(fname == NULL)
+		{
+			log.elog("Couldn't get function name");
+			Py_DECREF(menu);
+			Py_DECREF(menuview);
+			Py_DECREF(entries);
+			Py_DECREF(entries_children);
+			Py_DECREF(pvalue);
+			clearExceptions();
+			PyGILState_Release(gstate);
+			return NULL;
+		}
+
+		if(strcmp(fname, "MenuEntryView") == 0)
+		{
+			//crucible changes
+			PyObject * text_child = _findByNameLayer(pvalue, "EveLabelSmall");
+			if(text_child == NULL)
+			{
+				log.elog("Couldn't get text child");
+				Py_DECREF(menu);
+				Py_DECREF(menuview);
+				Py_DECREF(entries);
+				Py_DECREF(entries_children);
+				Py_DECREF(pvalue);
+				clearExceptions();
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			PyObject * text = _getAttribute(text_child, "text");
+			if(text == NULL)
+			{
+				log.elog("couldn't get text");
+				Py_DECREF(menu);
+				Py_DECREF(menuview);
+				Py_DECREF(entries);
+				Py_DECREF(entries_children);
+				Py_DECREF(pvalue);
+				Py_DECREF(text_child);
+				clearExceptions();
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+			
+			char * ctext = PyString_AsString(text);
+			if(ctext == NULL)
+			{
+				log.elog("Couldn't convert into c string");
+				Py_DECREF(menu);
+				Py_DECREF(menuview);
+				Py_DECREF(entries);
+				Py_DECREF(entries_children);
+				Py_DECREF(pvalue);
+				Py_DECREF(text_child);
+				Py_DECREF(text);
+				clearExceptions();
+				PyGILState_Release(gstate);
+				return NULL;
+			}
+
+
+			log.elog(ctext);
+			log.elog(label.c_str());
+			if(strcmp(ctext, label.c_str()) == 0)
+			{
+				bool ok = _populateAttributes(text_child, &width, &height, &absoluteTop, &absoluteLeft);
+				if(!ok)
+				{
+					log.elog("Couldn't populate attributes");
+					Py_DECREF(menu);
+					Py_DECREF(menuview);
+					Py_DECREF(entries);
+					Py_DECREF(entries_children);
+					Py_DECREF(pvalue);
+					Py_DECREF(text_child);
+					Py_DECREF(text);
+					clearExceptions();
+					PyGILState_Release(gstate);
+					return NULL;
+				}
+				Py_DECREF(text);
+				Py_DECREF(text_child);
+				Py_DECREF(pvalue);
+				output = builder.buildInterfaceObject(label, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+				break;
+			}
+			Py_DECREF(text);
+			Py_DECREF(text_child);
+		}
+
+		Py_DECREF(pvalue);
+	}
+
+	Py_DECREF(menu);
+	Py_DECREF(menuview);
+	Py_DECREF(entries);
+	PyGILState_Release(gstate);
+	return output;
+	/*
 	PyGILState_STATE gstate = PyGILState_Ensure();
 	char * output = _findByTextGeneric("menu", label, size);
 	PyGILState_Release(gstate);
 	return output;
+	*/
 }
 
 char * Interfaces::findByTextLogin(string text, int & size)
@@ -617,20 +782,7 @@ char * Interfaces::GetSystemInformation(int & size)
 		return NULL;
 	}
 
-	PyObject * locationTextobj = _findByNameLayer(locationInfo, "locationText");
-	if(locationTextobj == NULL)
-	{
-		log.elog("locationText is null");
-		Py_DECREF(neocom);
-		Py_DECREF(locationInfo);
-		Py_DECREF(caption);
-		Py_DECREF(neocomLeftSide);
-		clearExceptions();
-		PyGILState_Release(gstate);
-		return NULL;
-	}
-
-	PyObject * locationText = _getAttribute(locationTextobj, "text");
+	PyObject * locationText = _getAttribute(caption, "text");
 	if(locationText == NULL)
 	{
 		log.elog("Couldn't get the text");
@@ -661,7 +813,6 @@ char * Interfaces::GetSystemInformation(int & size)
 	Py_DECREF(neocom);
 	Py_DECREF(locationInfo);
 	Py_DECREF(caption);
-	Py_DECREF(locationTextobj);
 	Py_DECREF(neocomLeftSide);
 	clearExceptions();
 	PyGILState_Release(gstate);
@@ -2486,8 +2637,6 @@ char * Interfaces::IsIncursion(int & size)
 
 }
 
-
-
 char * Interfaces::GetModalOkButton(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -2495,6 +2644,43 @@ char * Interfaces::GetModalOkButton(int & size)
 	PyGILState_Release(gstate);
 	return output;
 }
+
+char * Interfaces::GetModalSubmitButton(int & size)
+{
+	PyGILState_STATE gstate = PyGILState_Ensure();
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
+	{
+		log.elog("couldn't get main");
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+	PyObject * submit = _findByNameLayer(main, "Submit_Btn");
+	if(submit == NULL)
+	{
+		log.elog("couldn't get submit");
+		Py_DECREF(main);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	PyObject * width = NULL, * height = NULL, * absoluteLeft = NULL, * absoluteTop = NULL;
+	bool ok = _populateAttributes(submit, &width, &height, &absoluteTop, &absoluteLeft);
+	if(!ok)
+	{
+		log.elog("Couldn't populate");
+		Py_DECREF(main);
+		Py_DECREF(submit);
+		PyGILState_Release(gstate);
+		return NULL;
+	}
+
+	char * output = builder.buildInterfaceObject("submit", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
+	PyGILState_Release(gstate);
+	return output;
+}
+
+
 
 char * Interfaces::GetModalYesButton(int & size)
 {
@@ -3794,32 +3980,7 @@ PyObject * Interfaces::_getNeocomButton(string buttonname)
 		clearExceptions();
 		return NULL;
 	}
-
-	PyObject * buttonchildren = _getAttribute(button, "children");
-	if(buttonchildren == NULL)
-	{
-		log.elog("Couldn't get button's children");
-		Py_DECREF(layer);
-		Py_DECREF(neocom);
-		Py_DECREF(maincontainer);
-		Py_DECREF(button);
-		clearExceptions();
-		return NULL;
-	}
-
-	PyObject * icon = _findType("EveIcon", buttonchildren);
-	if(icon == NULL)
-	{
-		log.elog("Couldn't get the icon");
-		Py_DECREF(layer);
-		Py_DECREF(neocom);
-		Py_DECREF(maincontainer);
-		Py_DECREF(button);
-		clearExceptions();
-		return NULL;
-	}
-
-	return icon;
+	return button;
 
 }
 
@@ -4024,7 +4185,7 @@ char * Interfaces::GetShipSpeed(int & size)
 		return NULL;
 	}
 
-	PyObject * label = _findByNameLayer(underMain, "text");
+	PyObject * label = _findByNameLayer(underMain, "EveLabelSmall");
 	if(label == NULL)
 	{
 		log.elog("Couldn't get label");
@@ -4418,6 +4579,7 @@ char * Interfaces::GetInterfaceWindows(int & size)
 
 	return output;
 }
+
 char * Interfaces::GetMenuItems(int & size)
 {
 	list<ObjectBuilder::overViewEntry * > labels;
@@ -4501,7 +4663,8 @@ char * Interfaces::GetMenuItems(int & size)
 
 		if(strcmp(fname, "MenuEntryView") == 0)
 		{
-			PyObject * text_child = _findByNameLayer(pvalue, "text");
+			//crucible changes
+			PyObject * text_child = _findByNameLayer(pvalue, "EveLabelSmall");
 			if(text_child == NULL)
 			{
 				log.elog("Couldn't get text child");
@@ -4514,7 +4677,7 @@ char * Interfaces::GetMenuItems(int & size)
 				PyGILState_Release(gstate);
 				return NULL;
 			}
-			PyObject * text = _getAttribute(text_child, "text");
+			PyObject * text = _getAttribute(text_child, "EveLabelSmall");
 			if(text == NULL)
 			{
 				log.elog("couldn't get text");
@@ -4615,7 +4778,7 @@ char * Interfaces::_getNeoComItem(string name, int & size)
 		return NULL;
 	}
 
-	PyObject * text = _findByNameLayer(neocomitem, "text");
+	PyObject * text = _findByNameLayer(neocomitem, "EveLabelSmall");
 	if(text == NULL)
 	{
 		log.elog("Couldn't get text");
@@ -4749,7 +4912,7 @@ char * Interfaces::GetAddressBookWindow(int & size)
 char * Interfaces::GetAddressBookBMButton(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
-	char * output = _getPeopleAndPlacesButton("Add Bookmark_Btn", size);
+	char * output = _getPeopleAndPlacesButton("Add Location_Btn", size);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -5098,7 +5261,7 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 			return;
 		}
 
-		sort_qty = _getAttribute(node, "sort_qty");
+		sort_qty = _getAttribute(node, "sort_Quantity");
 		if(sort_qty == NULL)
 		{
 			log.elog("Couldn't get sort_qty");
@@ -5133,7 +5296,7 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 			return;			
 		}
 		
-		meta = _getAttribute(node, "meta");
+		meta = _getAttribute(node, "metaLevel");
 		if(meta == NULL)
 		{
 			log.elog("Couldn't get meta");
@@ -5932,10 +6095,10 @@ char * Interfaces::GetSelectedItem(int & size)
 		return NULL;
 	}
 
-	PyObject * text = _findByNameLayer(toparea, "text");
+	PyObject * text = _findByNameLayer(toparea, "EveLabelSmall");
 	if(text == NULL)
 	{
-		log.elog("text is null");
+		log.elog("evelabel is null");
 		Py_DECREF(main);
 		Py_DECREF(selectedItemView);
 		Py_DECREF(maincontainer);
@@ -6058,7 +6221,7 @@ char * Interfaces::GetTargetList(int & size)
 			log.elog("Found target object");
 			PyObject * label = NULL, * text = NULL, * width =NULL, * height=NULL, *absoluteLeft=NULL, *absoluteTop=NULL;
 			char * ctext;
-			label = _findByNameLayer(pvalue, "text");
+			label = _findByNameLayer(pvalue, "EveLabelSmall");
 			if(label == NULL)
 			{
 				log.elog("Couldn't pull the text child off the target");
@@ -6535,7 +6698,7 @@ char * Interfaces::GetLocalCount(int & size)
 		return NULL;
 	}
 
-	PyObject * label = _findByNameLayer(captionParent, "text");
+	PyObject * label = _findByNameLayer(captionParent, "EveLabelSmall");
 	if(label == NULL)
 	{
 		log.elog("Couldn't get text");
@@ -6873,8 +7036,8 @@ char * Interfaces::OverViewGetMembers(int & size)
 			return NULL;
 		}
 	
-
-		PyObject * label = _findByNameLayer(pvalue, "text");
+		//crucible change text->EveLabelMedium
+		PyObject * label = _findByNameLayer(pvalue, "EveLabelMedium");
 		if(label == NULL)
 		{
 			log.elog("No label");
