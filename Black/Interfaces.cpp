@@ -2431,7 +2431,7 @@ char * Interfaces::GetOverviewSelectText(int & size)
 		return NULL;
 	}
 
-	PyObject * label = _findByNameLayer(captionP, "text");
+	PyObject * label = _findByNameLayer(captionP, "EveLabelSmall");
 	if(label == NULL)
 	{
 		log.elog("couldn't get the label");
