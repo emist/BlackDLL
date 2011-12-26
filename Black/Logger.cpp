@@ -41,12 +41,11 @@ void Logger::elog(LPCSTR * message)
 
 void Logger::elog(string message)
 {
-/*
+
 	ofstream myfile;
 	myfile.open(f, fstream::app);
 	myfile << message << endl;
 	myfile.flush();
 	myfile.close();
-*/
 }
 

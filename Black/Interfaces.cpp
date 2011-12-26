@@ -304,7 +304,9 @@ char * Interfaces::findByTextMenu(string label, int & size)
 
 			log.elog(ctext);
 			log.elog(label.c_str());
-			if(strcmp(ctext, label.c_str()) == 0)
+
+					
+			if(stricmp(ctext, label.c_str()) == 0)
 			{
 				bool ok = _populateAttributes(text_child, &width, &height, &absoluteTop, &absoluteLeft);
 				if(!ok)
@@ -4677,7 +4679,7 @@ char * Interfaces::GetMenuItems(int & size)
 				PyGILState_Release(gstate);
 				return NULL;
 			}
-			PyObject * text = _getAttribute(text_child, "EveLabelSmall");
+			PyObject * text = _getAttribute(text_child, "text");
 			if(text == NULL)
 			{
 				log.elog("couldn't get text");
