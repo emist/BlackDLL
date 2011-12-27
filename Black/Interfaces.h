@@ -76,6 +76,7 @@ class Interfaces{
 	char * _getModuleAttributes(string name, int & size);
 	char * _getMarketOrders(string type, int & size);
 	void clearExceptions();
+	void stoupper(std::string& s);
 
 public:
 	char * getInjuredDrone(int & size);
