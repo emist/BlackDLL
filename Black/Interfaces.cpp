@@ -173,6 +173,8 @@ PyObject * Interfaces::_getHeight(PyObject * result)
 	return _getAttribute(result, "height");
 }
 
+
+
 char * Interfaces::findByTextMenu(string label, int & size)
 {
 	char * output = NULL;
@@ -304,9 +306,13 @@ char * Interfaces::findByTextMenu(string label, int & size)
 
 			log.elog(ctext);
 			log.elog(label.c_str());
+			string stext(ctext);
+			
+			stoupper(label);
+			stoupper(stext);
+			
 
-					
-			if(stricmp(ctext, label.c_str()) == 0)
+			if(stext.find(label) != stext.npos)
 			{
 				bool ok = _populateAttributes(text_child, &width, &height, &absoluteTop, &absoluteLeft);
 				if(!ok)
@@ -1060,7 +1066,7 @@ entry_lab:
 		return NULL;
 	}
 
-	PyObject * label = _findByNameLayer(entry, "text");
+	PyObject * label = _findByNameLayer(entry, "EveLabelMedium");
 	if(label == NULL)
 	{
 		log.elog("Couldn't get label");
@@ -1145,7 +1151,7 @@ char * Interfaces::_getDroneLabel(int type, int & size)
 		return NULL;
 	}
 
-	PyObject * label = _findByNameLayer(droneChildren, "text");
+	PyObject * label = _findByNameLayer(droneChildren, "EveLabelMedium");
 	if(label == NULL)
 	{
 		log.elog("Couldn't get label");
@@ -1500,6 +1506,19 @@ char * Interfaces::GetAgent(string agentname, int & size)
 
 }
 
+void Interfaces::stoupper(std::string& s)
+{
+	  std::string::iterator i = s.begin();
+	  std::string::iterator end = s.end();
+	 
+	  while (i != end) 
+	  {
+		
+		*i = toupper((unsigned char)*i);
+		++i;
+	  }
+}
+
 char * Interfaces::_getProbeButton(string name, int & size)
 {
 	PyObject * main = _getLayer("main");
@@ -1733,7 +1752,7 @@ char * Interfaces::_getMarketOrders(string type, int & size)
 
 	for(int i = 1; entry != NULL; i++)
 	{
-		PyObject * ptext = _findByNameLayer(entry, "text");
+		PyObject * ptext = _findByNameLayer(entry, "EveLabelMedium");
 		if(ptext == NULL)
 		{
 			log.elog("couldn't get ptext");
@@ -3102,52 +3121,38 @@ char * Interfaces::GetLogOffButton(int & size)
 char * Interfaces::GetBookMarkFieldName(int & size)
 {
 	PyGILState_STATE gstate = PyGILState_Ensure();
-	PyObject * modal = _getLayer("modal");
-	if(modal == NULL)
+	PyObject * main = _getLayer("main");
+	if(main == NULL)
 	{
-		log.elog("Couldn't get modal");
+		log.elog("Couldn't get main");
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
-	PyObject * newbm = _findByNameLayer(modal, "l_modal_New Bookmark");
+	PyObject * newbm = _findByNameLayer(main, "labelEdit");
 	if(newbm == NULL)
 	{
 		log.elog("Couldn't get new bm");
-		Py_DECREF(modal);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 	
-	PyObject * editcap = _findByNameLayer(newbm, "edit_caption");
-	if(editcap == NULL)
-	{
-		log.elog("Couldn't get caption");
-		Py_DECREF(modal);
-		Py_DECREF(newbm);
-		clearExceptions();
-		PyGILState_Release(gstate);
-		return NULL;
-	}
-
-	PyObject * text = _getAttribute(editcap, "text");
+	PyObject * text = _getAttribute(newbm, "text");
 	if(text == NULL)
 	{
 		log.elog("Couldn't get the text");
-		Py_DECREF(modal);
+		Py_DECREF(main);
 		Py_DECREF(newbm);
-		Py_DECREF(editcap);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildStringObject(PyString_AsString(text), size);
-	Py_DECREF(modal);
+	Py_DECREF(main);
 	Py_DECREF(newbm);
-	Py_DECREF(editcap);
 	Py_DECREF(text);
 	clearExceptions();
 	PyGILState_Release(gstate);
