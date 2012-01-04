@@ -27,9 +27,9 @@ char * Interfaces::atLogin(int & size)
 {
 		char * output;
 
-		//Py_DECREF(main);
-		//Py_DECREF(uicore);
-		//Py_DECREF(layer);
+		//Py_XDECREF(main);
+		//Py_XDECREF(uicore);
+		//Py_XDECREF(layer);
 		
 		PyGILState_STATE gstate = PyGILState_Ensure();
 		clearExceptions();
@@ -66,6 +66,7 @@ char * Interfaces::atLogin(int & size)
 			return NULL;
 		}
 
+		Py_XDECREF(isopen);
 		PyGILState_Release( gstate );
 	
 		return output;
@@ -87,7 +88,7 @@ char * Interfaces::getInflightInterface(int & size)
 	PyObject * absoluteTop = _getAbsoluteTop(layer);
 	if(absoluteTop == NULL)
 	{
-		Py_DECREF(layer);
+		Py_XDECREF(layer);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -96,8 +97,8 @@ char * Interfaces::getInflightInterface(int & size)
 	PyObject * absoluteLeft = _getAbsoluteLeft(layer);
 	if(absoluteLeft == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(absoluteTop);
+		Py_XDECREF(layer);
+		Py_XDECREF(absoluteTop);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -107,9 +108,9 @@ char * Interfaces::getInflightInterface(int & size)
 	
 	if(displayWidth == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(absoluteTop);
-		Py_DECREF(absoluteLeft);
+		Py_XDECREF(layer);
+		Py_XDECREF(absoluteTop);
+		Py_XDECREF(absoluteLeft);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -118,10 +119,10 @@ char * Interfaces::getInflightInterface(int & size)
 	PyObject * displayHeight = _getDisplayHeight(layer);
 	if(displayHeight == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(absoluteTop);
-		Py_DECREF(absoluteLeft);
-		Py_DECREF(displayWidth);
+		Py_XDECREF(layer);
+		Py_XDECREF(absoluteTop);
+		Py_XDECREF(absoluteLeft);
+		Py_XDECREF(displayWidth);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -130,11 +131,11 @@ char * Interfaces::getInflightInterface(int & size)
 	PyObject * name = _getName(layer);
 	if(name == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(absoluteTop);
-		Py_DECREF(absoluteLeft);
-		Py_DECREF(displayWidth);
-		Py_DECREF(displayHeight);
+		Py_XDECREF(layer);
+		Py_XDECREF(absoluteTop);
+		Py_XDECREF(absoluteLeft);
+		Py_XDECREF(displayWidth);
+		Py_XDECREF(displayHeight);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -142,12 +143,12 @@ char * Interfaces::getInflightInterface(int & size)
 
 	char * iname = PyString_AsString(name);
 	output = builder.buildInterfaceObject(iname,  (int)PyInt_AsLong(absoluteLeft),(int)PyInt_AsLong(absoluteTop), (int)PyInt_AsLong(displayWidth), (int)PyInt_AsLong(displayHeight), size);
-	Py_DECREF(layer);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(displayWidth);
-	Py_DECREF(displayHeight);
-	Py_DECREF(name);
+	Py_XDECREF(layer);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(displayWidth);
+	Py_XDECREF(displayHeight);
+	Py_XDECREF(name);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -191,7 +192,7 @@ char * Interfaces::findByTextMenu(string label, int & size)
 	if(menuview == NULL)
 	{
 		log.elog("Couldn't get menuview");
-		Py_DECREF(menu);
+		Py_XDECREF(menu);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -201,8 +202,8 @@ char * Interfaces::findByTextMenu(string label, int & size)
 	if(entries == NULL)
 	{
 		log.elog("Couldn't get entries");
-		Py_DECREF(menu);
-		Py_DECREF(menuview);
+		Py_XDECREF(menu);
+		Py_XDECREF(menuview);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -212,9 +213,9 @@ char * Interfaces::findByTextMenu(string label, int & size)
 	if(entries_children == NULL)
 	{
 		log.elog("Has no children");
-		Py_DECREF(menu);
-		Py_DECREF(menuview);
-		Py_DECREF(entries);
+		Py_XDECREF(menu);
+		Py_XDECREF(menuview);
+		Py_XDECREF(entries);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -233,10 +234,10 @@ char * Interfaces::findByTextMenu(string label, int & size)
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get entries_children values");
-			Py_DECREF(menu);
-			Py_DECREF(menuview);
-			Py_DECREF(entries);
-			Py_DECREF(entries_children);
+			Py_XDECREF(menu);
+			Py_XDECREF(menuview);
+			Py_XDECREF(entries);
+			Py_XDECREF(entries_children);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -246,11 +247,11 @@ char * Interfaces::findByTextMenu(string label, int & size)
 		if(fname == NULL)
 		{
 			log.elog("Couldn't get function name");
-			Py_DECREF(menu);
-			Py_DECREF(menuview);
-			Py_DECREF(entries);
-			Py_DECREF(entries_children);
-			Py_DECREF(pvalue);
+			Py_XDECREF(menu);
+			Py_XDECREF(menuview);
+			Py_XDECREF(entries);
+			Py_XDECREF(entries_children);
+			Py_XDECREF(pvalue);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -263,11 +264,11 @@ char * Interfaces::findByTextMenu(string label, int & size)
 			if(text_child == NULL)
 			{
 				log.elog("Couldn't get text child");
-				Py_DECREF(menu);
-				Py_DECREF(menuview);
-				Py_DECREF(entries);
-				Py_DECREF(entries_children);
-				Py_DECREF(pvalue);
+				Py_XDECREF(menu);
+				Py_XDECREF(menuview);
+				Py_XDECREF(entries);
+				Py_XDECREF(entries_children);
+				Py_XDECREF(pvalue);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -276,12 +277,12 @@ char * Interfaces::findByTextMenu(string label, int & size)
 			if(text == NULL)
 			{
 				log.elog("couldn't get text");
-				Py_DECREF(menu);
-				Py_DECREF(menuview);
-				Py_DECREF(entries);
-				Py_DECREF(entries_children);
-				Py_DECREF(pvalue);
-				Py_DECREF(text_child);
+				Py_XDECREF(menu);
+				Py_XDECREF(menuview);
+				Py_XDECREF(entries);
+				Py_XDECREF(entries_children);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(text_child);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -291,13 +292,13 @@ char * Interfaces::findByTextMenu(string label, int & size)
 			if(ctext == NULL)
 			{
 				log.elog("Couldn't convert into c string");
-				Py_DECREF(menu);
-				Py_DECREF(menuview);
-				Py_DECREF(entries);
-				Py_DECREF(entries_children);
-				Py_DECREF(pvalue);
-				Py_DECREF(text_child);
-				Py_DECREF(text);
+				Py_XDECREF(menu);
+				Py_XDECREF(menuview);
+				Py_XDECREF(entries);
+				Py_XDECREF(entries_children);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(text_child);
+				Py_XDECREF(text);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -318,33 +319,33 @@ char * Interfaces::findByTextMenu(string label, int & size)
 				if(!ok)
 				{
 					log.elog("Couldn't populate attributes");
-					Py_DECREF(menu);
-					Py_DECREF(menuview);
-					Py_DECREF(entries);
-					Py_DECREF(entries_children);
-					Py_DECREF(pvalue);
-					Py_DECREF(text_child);
-					Py_DECREF(text);
+					Py_XDECREF(menu);
+					Py_XDECREF(menuview);
+					Py_XDECREF(entries);
+					Py_XDECREF(entries_children);
+					Py_XDECREF(pvalue);
+					Py_XDECREF(text_child);
+					Py_XDECREF(text);
 					clearExceptions();
 					PyGILState_Release(gstate);
 					return NULL;
 				}
-				Py_DECREF(text);
-				Py_DECREF(text_child);
-				Py_DECREF(pvalue);
+				Py_XDECREF(text);
+				Py_XDECREF(text_child);
+				Py_XDECREF(pvalue);
 				output = builder.buildInterfaceObject(label, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
 				break;
 			}
-			Py_DECREF(text);
-			Py_DECREF(text_child);
+			Py_XDECREF(text);
+			Py_XDECREF(text_child);
 		}
 
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 	}
 
-	Py_DECREF(menu);
-	Py_DECREF(menuview);
-	Py_DECREF(entries);
+	Py_XDECREF(menu);
+	Py_XDECREF(menuview);
+	Py_XDECREF(entries);
 	PyGILState_Release(gstate);
 	return output;
 	/*
@@ -377,12 +378,12 @@ PyObject * Interfaces::_getLoginItem(string name)
 	if(item == NULL)
 	{
 		log.elog("Couldn't get item");
-		Py_DECREF(login);
+		Py_XDECREF(login);
 		clearExceptions();
 		return NULL;
 	}
 
-	Py_DECREF(login);
+	Py_XDECREF(login);
 	return item;
 }
 
@@ -400,7 +401,7 @@ char * Interfaces::_getLoginBoxesWithText(string name, int & size)
 	if(text == NULL)
 	{
 		log.elog("couldn't get text");
-		Py_DECREF(item);
+		Py_XDECREF(item);
 		clearExceptions();
 		return NULL;
 	}
@@ -411,19 +412,19 @@ char * Interfaces::_getLoginBoxesWithText(string name, int & size)
 	if(!ok)
 	{
 		log.elog("couldn't populate");
-		Py_DECREF(item);
-		Py_DECREF(text);
+		Py_XDECREF(item);
+		Py_XDECREF(text);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject(PyString_AsString(text), PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(item);
-	Py_DECREF(text);
-	Py_DECREF(height);
-	Py_DECREF(width);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(absoluteTop);
+	Py_XDECREF(item);
+	Py_XDECREF(text);
+	Py_XDECREF(height);
+	Py_XDECREF(width);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(absoluteTop);
 	clearExceptions();
 	return output;
 }
@@ -462,7 +463,7 @@ char * Interfaces::getEnterButton(int & size)
 	if(enterButton == NULL)
 	{
 		log.elog("couldn't find the enter");
-		Py_DECREF(charsel);
+		Py_XDECREF(charsel);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -474,20 +475,20 @@ char * Interfaces::getEnterButton(int & size)
 	if(!ok)
 	{
 		log.elog("Couldn't populate correctly");
-		Py_DECREF(charsel);
-		Py_DECREF(enterButton);
+		Py_XDECREF(charsel);
+		Py_XDECREF(enterButton);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("EnterButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(charsel);
-	Py_DECREF(enterButton);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(charsel);
+	Py_XDECREF(enterButton);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -514,7 +515,7 @@ char * Interfaces::isAtCharSel(int & size)
 	{
 		log.elog("isopen is null");
 		output = builder.buildBooleanObject(false, size);
-		Py_DECREF(charsel);
+		Py_XDECREF(charsel);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return output;
@@ -528,8 +529,8 @@ char * Interfaces::isAtCharSel(int & size)
 	}
 	
 	output = builder.buildBooleanObject(open, size);
-	Py_DECREF(charsel);
-	Py_DECREF(isopen);
+	Py_XDECREF(charsel);
+	Py_XDECREF(isopen);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -581,7 +582,7 @@ char * Interfaces::isMenuOpen(int & size)
 
 	if(!PyObject_HasAttrString(menu, "children"))
 	{
-		Py_DECREF(menu);
+		Py_XDECREF(menu);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -591,7 +592,7 @@ char * Interfaces::isMenuOpen(int & size)
 	if(children == NULL)
 	{
 		log.elog("Couldn't get the children attribute");
-		Py_DECREF(menu);
+		Py_XDECREF(menu);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -611,8 +612,8 @@ char * Interfaces::isMenuOpen(int & size)
 		output = builder.buildBooleanObject(true, size);
 	}
 
-	Py_DECREF(menu);
-	Py_DECREF(children);
+	Py_XDECREF(menu);
+	Py_XDECREF(children);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -635,7 +636,7 @@ char * Interfaces::GetServerMessage(int & size)
 	{
 		log.elog("Couldn't get message");
 		clearExceptions();
-		Py_DECREF(abovemain);
+		Py_XDECREF(abovemain);
 		PyGILState_Release(gstate);
 		return NULL;
 	}
@@ -644,8 +645,8 @@ char * Interfaces::GetServerMessage(int & size)
 	if(messageattr == NULL)
 	{
 		log.elog("couldn't get message attr");
-		Py_DECREF(abovemain);
-		Py_DECREF(message);
+		Py_XDECREF(abovemain);
+		Py_XDECREF(message);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -655,19 +656,19 @@ char * Interfaces::GetServerMessage(int & size)
 	if(text == NULL)
 	{
 		log.elog("couldn't get text");
-		Py_DECREF(abovemain);
-		Py_DECREF(message);
-		Py_DECREF(messageattr);
+		Py_XDECREF(abovemain);
+		Py_XDECREF(message);
+		Py_XDECREF(messageattr);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildStringObject(PyString_AsString(text), size);
-	Py_DECREF(abovemain);
-	Py_DECREF(message);
-	Py_DECREF(messageattr);
-	Py_DECREF(text);
+	Py_XDECREF(abovemain);
+	Py_XDECREF(message);
+	Py_XDECREF(messageattr);
+	Py_XDECREF(text);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -691,7 +692,7 @@ char * Interfaces::IsLoading(int & size)
 	if(progresswindow == NULL)
 	{
 		log.elog("can't get the window");
-		Py_DECREF(loading);
+		Py_XDECREF(loading);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -701,8 +702,8 @@ char * Interfaces::IsLoading(int & size)
 	if(sr == NULL)
 	{
 		log.elog("can't get sr");
-		Py_DECREF(loading);
-		Py_DECREF(progresswindow);
+		Py_XDECREF(loading);
+		Py_XDECREF(progresswindow);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -712,9 +713,9 @@ char * Interfaces::IsLoading(int & size)
 	if(tickTimer == NULL)
 	{
 		log.elog("can't get the timer");
-		Py_DECREF(loading);
-		Py_DECREF(progresswindow);
-		Py_DECREF(sr);
+		Py_XDECREF(loading);
+		Py_XDECREF(progresswindow);
+		Py_XDECREF(sr);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -728,10 +729,10 @@ char * Interfaces::IsLoading(int & size)
 		isTrue  = false;
 
 	char * output = builder.buildBooleanObject(isTrue, size);
-	Py_DECREF(loading);
-	Py_DECREF(progresswindow);
-	Py_DECREF(sr);
-	Py_DECREF(tickTimer);
+	Py_XDECREF(loading);
+	Py_XDECREF(progresswindow);
+	Py_XDECREF(sr);
+	Py_XDECREF(tickTimer);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -760,7 +761,7 @@ char * Interfaces::GetSystemInformation(int & size)
 	if(neocomLeftSide == NULL)
 	{
 		log.elog("Couldn't get the left side");
-		Py_DECREF(neocom);
+		Py_XDECREF(neocom);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -771,8 +772,8 @@ char * Interfaces::GetSystemInformation(int & size)
 	if(locationInfo == NULL)
 	{
 		log.elog("locationInfo is null");
-		Py_DECREF(neocom);
-		Py_DECREF(neocomLeftSide);
+		Py_XDECREF(neocom);
+		Py_XDECREF(neocomLeftSide);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -782,9 +783,9 @@ char * Interfaces::GetSystemInformation(int & size)
 	if(caption == NULL)
 	{
 		log.elog("caption is null");
-		Py_DECREF(neocom);
-		Py_DECREF(locationInfo);
-		Py_DECREF(neocomLeftSide);
+		Py_XDECREF(neocom);
+		Py_XDECREF(locationInfo);
+		Py_XDECREF(neocomLeftSide);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -794,10 +795,10 @@ char * Interfaces::GetSystemInformation(int & size)
 	if(locationText == NULL)
 	{
 		log.elog("Couldn't get the text");
-		Py_DECREF(neocom);
-		Py_DECREF(locationInfo);
-		Py_DECREF(caption);
-		Py_DECREF(neocomLeftSide);
+		Py_XDECREF(neocom);
+		Py_XDECREF(locationInfo);
+		Py_XDECREF(caption);
+		Py_XDECREF(neocomLeftSide);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -807,21 +808,21 @@ char * Interfaces::GetSystemInformation(int & size)
 	if(captionText == NULL)
 	{
 		log.elog("couldn't get the caption");
-		Py_DECREF(neocom);
-		Py_DECREF(locationInfo);
-		Py_DECREF(caption);
-		Py_DECREF(neocomLeftSide);
-		Py_DECREF(locationText);
+		Py_XDECREF(neocom);
+		Py_XDECREF(locationInfo);
+		Py_XDECREF(caption);
+		Py_XDECREF(neocomLeftSide);
+		Py_XDECREF(locationText);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildSolarSystemObject(PyString_AsString(captionText), PyString_AsString(locationText), size);
-	Py_DECREF(neocom);
-	Py_DECREF(locationInfo);
-	Py_DECREF(caption);
-	Py_DECREF(neocomLeftSide);
+	Py_XDECREF(neocom);
+	Py_XDECREF(locationInfo);
+	Py_XDECREF(caption);
+	Py_XDECREF(neocomLeftSide);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -850,7 +851,7 @@ char * Interfaces::_getInjuredDrone(int & size)
 	if(droneChildren == NULL)
 	{
 		log.elog("Couldn't get children");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -875,8 +876,8 @@ entry_lab:
 			goto entry_lab;
 		}
 		log.elog("cOuldn't get the entry");
-		Py_DECREF(main);
-		Py_DECREF(droneChildren);
+		Py_XDECREF(main);
+		Py_XDECREF(droneChildren);
 		clearExceptions();
 		return NULL;
 	}
@@ -909,9 +910,9 @@ entry_lab:
 		if(children == NULL)
 		{
 			log.elog("no children");
-			Py_DECREF(main);
-			Py_DECREF(droneChildren);
-			Py_DECREF(gauge);
+			Py_XDECREF(main);
+			Py_XDECREF(droneChildren);
+			Py_XDECREF(gauge);
 			clearExceptions();
 			return NULL;
 		}
@@ -920,7 +921,7 @@ entry_lab:
 		{
 			log.elog("no children");
 			log.elog(os.str());
-			Py_DECREF(gauge);
+			Py_XDECREF(gauge);
 			clearExceptions();
 			entry = _findByNameLayer(droneChildren, os.str());
 			continue;
@@ -937,10 +938,10 @@ entry_lab:
 			log.elog(os.str());
 			log.elog("Evaluation coming");
 			log.elog(PyEval_GetFuncName(children));
-			Py_DECREF(main);
-			Py_DECREF(droneChildren);
-			Py_DECREF(gauge);
-			Py_DECREF(children);
+			Py_XDECREF(main);
+			Py_XDECREF(droneChildren);
+			Py_XDECREF(gauge);
+			Py_XDECREF(children);
 			clearExceptions();
 			return NULL;
 		}
@@ -950,11 +951,11 @@ entry_lab:
 		if(fill == NULL)
 		{
 			log.elog("no data");
-			Py_DECREF(main);
-			Py_DECREF(droneChildren);
-			Py_DECREF(gauge);
-			Py_DECREF(children);
-			Py_DECREF(frame);
+			Py_XDECREF(main);
+			Py_XDECREF(droneChildren);
+			Py_XDECREF(gauge);
+			Py_XDECREF(children);
+			Py_XDECREF(frame);
 			clearExceptions();
 			return NULL;
 		}
@@ -963,11 +964,11 @@ entry_lab:
 		if(fillWidth == NULL)
 		{
 			log.elog("no fill");
-			Py_DECREF(main);
-			Py_DECREF(droneChildren);
-			Py_DECREF(gauge);
-			Py_DECREF(children);
-			Py_DECREF(frame);
+			Py_XDECREF(main);
+			Py_XDECREF(droneChildren);
+			Py_XDECREF(gauge);
+			Py_XDECREF(children);
+			Py_XDECREF(frame);
 			clearExceptions();
 			return NULL;
 		}
@@ -976,12 +977,12 @@ entry_lab:
 		if(frameWidth == NULL)	
 		{
 			log.elog("no frame");
-			Py_DECREF(main);
-			Py_DECREF(droneChildren);
-			Py_DECREF(gauge);
-			Py_DECREF(children);
-			Py_DECREF(frame);
-			Py_DECREF(fillWidth);
+			Py_XDECREF(main);
+			Py_XDECREF(droneChildren);
+			Py_XDECREF(gauge);
+			Py_XDECREF(children);
+			Py_XDECREF(frame);
+			Py_XDECREF(fillWidth);
 			clearExceptions();
 			return NULL;
 		}
@@ -993,27 +994,27 @@ entry_lab:
 			if(!ok)
 			{
 				log.elog("couldn't populate");
-				Py_DECREF(main);
-				Py_DECREF(droneChildren);
-				Py_DECREF(gauge);
-				Py_DECREF(children);
-				Py_DECREF(frame);
-				Py_DECREF(fillWidth);
+				Py_XDECREF(main);
+				Py_XDECREF(droneChildren);
+				Py_XDECREF(gauge);
+				Py_XDECREF(children);
+				Py_XDECREF(frame);
+				Py_XDECREF(fillWidth);
 				clearExceptions();
 				return NULL;
 			}
 			
 			char * output = builder.buildInterfaceObject("drone", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteLeft), PyInt_AsLong(width), PyInt_AsLong(height), size);
-			Py_DECREF(main);
-			Py_DECREF(droneChildren);
-			Py_DECREF(gauge);
-			Py_DECREF(children);
-			Py_DECREF(frame);
-			Py_DECREF(fillWidth);
-			Py_DECREF(width);
-			Py_DECREF(height);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(absoluteTop);
+			Py_XDECREF(main);
+			Py_XDECREF(droneChildren);
+			Py_XDECREF(gauge);
+			Py_XDECREF(children);
+			Py_XDECREF(frame);
+			Py_XDECREF(fillWidth);
+			Py_XDECREF(width);
+			Py_XDECREF(height);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(absoluteTop);
 			return output;
 		}
 			
@@ -1038,7 +1039,7 @@ char * Interfaces::_getDroneStatus(int & size)
 	if(droneChildren == NULL)
 	{
 		log.elog("Couldn't get children");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -1060,8 +1061,8 @@ entry_lab:
 			goto entry_lab;
 		}
 		log.elog("cOuldn't get the entry");
-		Py_DECREF(main);
-		Py_DECREF(droneChildren);
+		Py_XDECREF(main);
+		Py_XDECREF(droneChildren);
 		clearExceptions();
 		return NULL;
 	}
@@ -1070,9 +1071,9 @@ entry_lab:
 	if(label == NULL)
 	{
 		log.elog("Couldn't get label");
-		Py_DECREF(main);
-		Py_DECREF(droneChildren);
-		Py_DECREF(entry);
+		Py_XDECREF(main);
+		Py_XDECREF(droneChildren);
+		Py_XDECREF(entry);
 		clearExceptions();
 		return NULL;
 	}
@@ -1080,10 +1081,10 @@ entry_lab:
 	PyObject * text = _getAttribute(label,"text");
 	if(text == NULL)
 	{
-		Py_DECREF(main);
-		Py_DECREF(droneChildren);
-		Py_DECREF(label);
-		Py_DECREF(entry);
+		Py_XDECREF(main);
+		Py_XDECREF(droneChildren);
+		Py_XDECREF(label);
+		Py_XDECREF(entry);
 		clearExceptions();
 		return NULL;
 	}
@@ -1093,26 +1094,26 @@ entry_lab:
 	if(!ok)
 	{
 		log.elog("Couldn't populate attributes");
-		Py_DECREF(main);
-		Py_DECREF(droneChildren);
-		Py_DECREF(label);
-		Py_DECREF(text);
-		Py_DECREF(entry);
+		Py_XDECREF(main);
+		Py_XDECREF(droneChildren);
+		Py_XDECREF(label);
+		Py_XDECREF(text);
+		Py_XDECREF(entry);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * ctext = PyString_AsString(text);
 	char * output = builder.buildInterfaceObject(ctext, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(droneChildren);
-	Py_DECREF(label);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(text);
-	Py_DECREF(entry);
+	Py_XDECREF(main);
+	Py_XDECREF(droneChildren);
+	Py_XDECREF(label);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(text);
+	Py_XDECREF(entry);
 	clearExceptions();
 
 	return output;
@@ -1146,7 +1147,7 @@ char * Interfaces::_getDroneLabel(int type, int & size)
 	if(droneChildren == NULL)
 	{
 		log.elog("Couldn't get children");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -1155,8 +1156,8 @@ char * Interfaces::_getDroneLabel(int type, int & size)
 	if(label == NULL)
 	{
 		log.elog("Couldn't get label");
-		Py_DECREF(main);
-		Py_DECREF(droneChildren);
+		Py_XDECREF(main);
+		Py_XDECREF(droneChildren);
 		clearExceptions();
 		return NULL;
 	}
@@ -1164,9 +1165,9 @@ char * Interfaces::_getDroneLabel(int type, int & size)
 	PyObject * text = _getAttribute(label,"text");
 	if(text == NULL)
 	{
-		Py_DECREF(main);
-		Py_DECREF(droneChildren);
-		Py_DECREF(label);
+		Py_XDECREF(main);
+		Py_XDECREF(droneChildren);
+		Py_XDECREF(label);
 		clearExceptions();
 		return NULL;
 	}
@@ -1176,24 +1177,24 @@ char * Interfaces::_getDroneLabel(int type, int & size)
 	if(!ok)
 	{
 		log.elog("Couldn't populate attributes");
-		Py_DECREF(main);
-		Py_DECREF(droneChildren);
-		Py_DECREF(label);
-		Py_DECREF(text);
+		Py_XDECREF(main);
+		Py_XDECREF(droneChildren);
+		Py_XDECREF(label);
+		Py_XDECREF(text);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * ctext = PyString_AsString(text);
 	char * output = builder.buildInterfaceObject(ctext, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(droneChildren);
-	Py_DECREF(label);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(text);
+	Py_XDECREF(main);
+	Py_XDECREF(droneChildren);
+	Py_XDECREF(label);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(text);
 	clearExceptions();
 
 	return output;
@@ -1233,9 +1234,9 @@ char * Interfaces::IsFleeted(int & size)
 		fleeted = true;
 	}
 	char * output = builder.buildBooleanObject(fleeted, size);
-	Py_DECREF(main);
+	Py_XDECREF(main);
 	if(fleetwindow != NULL)
-		Py_DECREF(fleetwindow);
+		Py_XDECREF(fleetwindow);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -1261,7 +1262,7 @@ char * Interfaces::_getAgentButton(string name, int & size)
 	if(agentButton == NULL)
 	{
 		log.elog("Couldn't get button");
-		Py_DECREF(agentWindow);
+		Py_XDECREF(agentWindow);
 		clearExceptions();
 		return NULL;
 	}
@@ -1271,19 +1272,19 @@ char * Interfaces::_getAgentButton(string name, int & size)
 	if(!ok)
 	{
 		log.elog("Couldn't populate");
-		Py_DECREF(agentWindow);
-		Py_DECREF(agentButton);
+		Py_XDECREF(agentWindow);
+		Py_XDECREF(agentButton);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("AgentButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(agentWindow);
-	Py_DECREF(agentButton);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(agentWindow);
+	Py_XDECREF(agentButton);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	clearExceptions();
 	return output;
 }
@@ -1345,7 +1346,7 @@ char * Interfaces::GetAgentMissionText(int & size)
 	if(rightSide == NULL)
 	{
 		log.elog("Couldn't get the right side");
-		Py_DECREF(agentWindow);
+		Py_XDECREF(agentWindow);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1355,8 +1356,8 @@ char * Interfaces::GetAgentMissionText(int & size)
 	if(lines == NULL)
 	{
 		log.elog("Couldn't get the lines");
-		Py_DECREF(agentWindow);
-		Py_DECREF(rightSide);
+		Py_XDECREF(agentWindow);
+		Py_XDECREF(rightSide);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1366,9 +1367,9 @@ char * Interfaces::GetAgentMissionText(int & size)
 	if(sr == NULL)
 	{
 		log.elog("Couldn't get the rows");
-		Py_DECREF(agentWindow);
-		Py_DECREF(rightSide);
-		Py_DECREF(lines);
+		Py_XDECREF(agentWindow);
+		Py_XDECREF(rightSide);
+		Py_XDECREF(lines);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1378,21 +1379,21 @@ char * Interfaces::GetAgentMissionText(int & size)
 	if(currentTXT == NULL)
 	{
 		log.elog("Couldn't get the text");
-		Py_DECREF(agentWindow);
-		Py_DECREF(rightSide);
-		Py_DECREF(lines);
-		Py_DECREF(sr);
+		Py_XDECREF(agentWindow);
+		Py_XDECREF(rightSide);
+		Py_XDECREF(lines);
+		Py_XDECREF(sr);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildStringObject(PyString_AsString(currentTXT), size);
-	Py_DECREF(agentWindow);
-	Py_DECREF(rightSide);
-	Py_DECREF(lines);
-	Py_DECREF(sr);
-	Py_DECREF(currentTXT);
+	Py_XDECREF(agentWindow);
+	Py_XDECREF(rightSide);
+	Py_XDECREF(lines);
+	Py_XDECREF(sr);
+	Py_XDECREF(currentTXT);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -1429,7 +1430,7 @@ PyObject * Interfaces::_getAgentWindow()
 	if(children == NULL)
 	{
 		log.elog("no children");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -1444,17 +1445,17 @@ PyObject * Interfaces::_getAgentWindow()
 
 		if(strcmp(PyEval_GetFuncName(pvalue), "AgentDialogueWindow") == 0)
 		{
-			Py_DECREF(main);
-			Py_DECREF(children);
+			Py_XDECREF(main);
+			Py_XDECREF(children);
 			clearExceptions();
 			return pvalue;
 		}
 
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 	}
 
-	Py_DECREF(main);
-	Py_DECREF(children);
+	Py_XDECREF(main);
+	Py_XDECREF(children);
 	clearExceptions();
 	return NULL;
 }
@@ -1476,7 +1477,7 @@ char * Interfaces::GetAgent(string agentname, int & size)
 	if(agent == NULL)
 	{
 		log.elog("Couldn't find agent");
-		Py_DECREF(bottom);
+		Py_XDECREF(bottom);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1488,8 +1489,8 @@ char * Interfaces::GetAgent(string agentname, int & size)
 	if(!ok)
 	{
 		log.elog("couldn't populate");
-		Py_DECREF(bottom);
-		Py_DECREF(agent);
+		Py_XDECREF(bottom);
+		Py_XDECREF(agent);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1498,8 +1499,8 @@ char * Interfaces::GetAgent(string agentname, int & size)
 
 	char * output = builder.buildInterfaceObject(agentname, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
 	
-	Py_DECREF(bottom);
-	Py_DECREF(agent);
+	Py_XDECREF(bottom);
+	Py_XDECREF(agent);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -1533,7 +1534,7 @@ char * Interfaces::_getProbeButton(string name, int & size)
 	if(settings == NULL)
 	{
 		log.elog("no settings");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -1542,8 +1543,8 @@ char * Interfaces::_getProbeButton(string name, int & size)
 	if(children == NULL)
 	{
 		log.elog("no children");
-		Py_DECREF(main);
-		Py_DECREF(settings);
+		Py_XDECREF(main);
+		Py_XDECREF(settings);
 		clearExceptions();
 		return NULL;
 	}
@@ -1567,9 +1568,9 @@ char * Interfaces::_getProbeButton(string name, int & size)
 	if(csize <= pos || pos == -1)
 	{
 		log.elog("children too small");
-		Py_DECREF(main);
-		Py_DECREF(settings);
-		Py_DECREF(children);
+		Py_XDECREF(main);
+		Py_XDECREF(settings);
+		Py_XDECREF(children);
 		clearExceptions();
 		return NULL;
 	}
@@ -1580,9 +1581,9 @@ char * Interfaces::_getProbeButton(string name, int & size)
 	if(button == NULL)
 	{
 		log.elog("couldn't get the button");
-		Py_DECREF(main);
-		Py_DECREF(settings);
-		Py_DECREF(children);
+		Py_XDECREF(main);
+		Py_XDECREF(settings);
+		Py_XDECREF(children);
 		clearExceptions();
 		return NULL;
 	}
@@ -1592,22 +1593,22 @@ char * Interfaces::_getProbeButton(string name, int & size)
 	if(!ok)
 	{
 		log.elog("error populating");
-		Py_DECREF(main);
-		Py_DECREF(settings);
-		Py_DECREF(children);
+		Py_XDECREF(main);
+		Py_XDECREF(settings);
+		Py_XDECREF(children);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
 
-	Py_DECREF(main);
-	Py_DECREF(settings);
-	Py_DECREF(children);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(height);
-	Py_DECREF(width);
+	Py_XDECREF(main);
+	Py_XDECREF(settings);
+	Py_XDECREF(children);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(height);
+	Py_XDECREF(width);
 	clearExceptions();
 	return output;
 }
@@ -1645,7 +1646,7 @@ char * Interfaces::GetProbe(string name, int & size)
 	if(scanner == NULL)
 	{
 		log.elog("couldn't get scanner");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1655,17 +1656,17 @@ char * Interfaces::GetProbe(string name, int & size)
 	if(system == NULL)
 	{
 		log.elog("couldn't get probe window");
-		Py_DECREF(main);
-		Py_DECREF(scanner);
+		Py_XDECREF(main);
+		Py_XDECREF(scanner);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = _findColumnEntryProbeWindow(name, system, size);
-	Py_DECREF(main);
-	Py_DECREF(scanner);
-	Py_DECREF(system);
+	Py_XDECREF(main);
+	Py_XDECREF(scanner);
+	Py_XDECREF(system);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -1688,7 +1689,7 @@ char * Interfaces::GetProbeResult(string name, int & size)
 	if(scanner == NULL)
 	{
 		log.elog("couldn't get scanner");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1698,17 +1699,17 @@ char * Interfaces::GetProbeResult(string name, int & size)
 	if(resultscroll == NULL)
 	{
 		log.elog("couldn't get probe window");
-		Py_DECREF(main);
-		Py_DECREF(scanner);
+		Py_XDECREF(main);
+		Py_XDECREF(scanner);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = _findColumnEntryProbeWindow(name, resultscroll, size);
-	Py_DECREF(main);
-	Py_DECREF(scanner);
-	Py_DECREF(resultscroll);
+	Py_XDECREF(main);
+	Py_XDECREF(scanner);
+	Py_XDECREF(resultscroll);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -1731,7 +1732,7 @@ char * Interfaces::_getMarketOrders(string type, int & size)
 	if(marketbase == NULL)
 	{
 		log.elog("couldn't get market");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -1740,8 +1741,8 @@ char * Interfaces::_getMarketOrders(string type, int & size)
 	if(orders == NULL)
 	{
 		log.elog("couldn't get orders");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
 		clearExceptions();
 		return NULL;
 	}
@@ -1756,10 +1757,10 @@ char * Interfaces::_getMarketOrders(string type, int & size)
 		if(ptext == NULL)
 		{
 			log.elog("couldn't get ptext");
-			Py_DECREF(entry);
-			Py_DECREF(orders);
-			Py_DECREF(main);
-			Py_DECREF(marketbase);
+			Py_XDECREF(entry);
+			Py_XDECREF(orders);
+			Py_XDECREF(main);
+			Py_XDECREF(marketbase);
 			clearExceptions();
 			return NULL;
 		}
@@ -1768,11 +1769,11 @@ char * Interfaces::_getMarketOrders(string type, int & size)
 		if(text == NULL)
 		{
 			log.elog("couldn't get text");
-			Py_DECREF(entry);
-			Py_DECREF(orders);
-			Py_DECREF(main);
-			Py_DECREF(ptext);
-			Py_DECREF(marketbase);
+			Py_XDECREF(entry);
+			Py_XDECREF(orders);
+			Py_XDECREF(main);
+			Py_XDECREF(ptext);
+			Py_XDECREF(marketbase);
 			clearExceptions();
 			return NULL;
 		}
@@ -1782,12 +1783,12 @@ char * Interfaces::_getMarketOrders(string type, int & size)
 		if(!ok)
 		{
 			log.elog("couldn't populate");
-			Py_DECREF(entry);
-			Py_DECREF(orders);
-			Py_DECREF(main);
-			Py_DECREF(ptext);
-			Py_DECREF(marketbase);
-			Py_DECREF(text);
+			Py_XDECREF(entry);
+			Py_XDECREF(orders);
+			Py_XDECREF(main);
+			Py_XDECREF(ptext);
+			Py_XDECREF(marketbase);
+			Py_XDECREF(text);
 			clearExceptions();
 			return NULL;
 		}
@@ -1802,13 +1803,13 @@ char * Interfaces::_getMarketOrders(string type, int & size)
 
 
 
-		Py_DECREF(entry);
-		Py_DECREF(ptext);
-		Py_DECREF(text);
-		Py_DECREF(absoluteLeft);
-		Py_DECREF(absoluteTop);
-		Py_DECREF(width);
-		Py_DECREF(height);
+		Py_XDECREF(entry);
+		Py_XDECREF(ptext);
+		Py_XDECREF(text);
+		Py_XDECREF(absoluteLeft);
+		Py_XDECREF(absoluteTop);
+		Py_XDECREF(width);
+		Py_XDECREF(height);
 		
 
 		os.str("");
@@ -1820,9 +1821,9 @@ char * Interfaces::_getMarketOrders(string type, int & size)
 
 	char * output = builder.buildTargetObject(entries, size);
 
-	Py_DECREF(main);
-	Py_DECREF(marketbase);
-	Py_DECREF(orders);
+	Py_XDECREF(main);
+	Py_XDECREF(marketbase);
+	Py_XDECREF(orders);
 
 	for(list<ObjectBuilder::targetEntry *>::iterator it = entries.begin(); it != entries.end(); it++)
 	{
@@ -1877,8 +1878,8 @@ char * Interfaces::_findColumnEntryProbeWindow(string name, PyObject * layer, in
 		if(column == NULL)
 		{
 			log.elog("no column");
-			Py_DECREF(entry);
-			Py_DECREF(clipper);
+			Py_XDECREF(entry);
+			Py_XDECREF(clipper);
 			clearExceptions();
 			return NULL;
 		}
@@ -1887,9 +1888,9 @@ char * Interfaces::_findColumnEntryProbeWindow(string name, PyObject * layer, in
 		if(ptext == NULL)
 		{
 			log.elog("couldn't get ptext");
-			Py_DECREF(entry);
-			Py_DECREF(clipper);
-			Py_DECREF(column);
+			Py_XDECREF(entry);
+			Py_XDECREF(clipper);
+			Py_XDECREF(column);
 			clearExceptions();
 			return NULL;
 		}
@@ -1898,10 +1899,10 @@ char * Interfaces::_findColumnEntryProbeWindow(string name, PyObject * layer, in
 		if(text == NULL)
 		{
 			log.elog("couldn't get text");
-			Py_DECREF(entry);
-			Py_DECREF(clipper);
-			Py_DECREF(column);
-			Py_DECREF(ptext);
+			Py_XDECREF(entry);
+			Py_XDECREF(clipper);
+			Py_XDECREF(column);
+			Py_XDECREF(ptext);
 			clearExceptions();
 			return NULL;
 		}
@@ -1913,25 +1914,25 @@ char * Interfaces::_findColumnEntryProbeWindow(string name, PyObject * layer, in
 			if(!ok)
 			{
 				log.elog("couldn't populate");
-				Py_DECREF(entry);
-				Py_DECREF(clipper);
-				Py_DECREF(column);
-				Py_DECREF(ptext);
-				Py_DECREF(text);
+				Py_XDECREF(entry);
+				Py_XDECREF(clipper);
+				Py_XDECREF(column);
+				Py_XDECREF(ptext);
+				Py_XDECREF(text);
 				clearExceptions();
 				return NULL;
 			}
 
 			char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-			Py_DECREF(entry);
-			Py_DECREF(clipper);
-			Py_DECREF(column);
-			Py_DECREF(ptext);
-			Py_DECREF(text);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(width);
-			Py_DECREF(height);
+			Py_XDECREF(entry);
+			Py_XDECREF(clipper);
+			Py_XDECREF(column);
+			Py_XDECREF(ptext);
+			Py_XDECREF(text);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(width);
+			Py_XDECREF(height);
 			clearExceptions();
 			return output;
 
@@ -1964,7 +1965,7 @@ char * Interfaces::GetMarketSearchEditContent(int & size)
 	if(marketbase == NULL)
 	{
 		log.elog("no market");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1974,8 +1975,8 @@ char * Interfaces::GetMarketSearchEditContent(int & size)
 	if(leftSide == NULL)
 	{
 		log.elog("no search");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1985,9 +1986,9 @@ char * Interfaces::GetMarketSearchEditContent(int & size)
 	if(searchparent == NULL)
 	{
 		log.elog("no searcharea");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
-		Py_DECREF(leftSide);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
+		Py_XDECREF(leftSide);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -1997,10 +1998,10 @@ char * Interfaces::GetMarketSearchEditContent(int & size)
 	if(edit == NULL)
 	{
 		log.elog("no field");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
-		Py_DECREF(leftSide);
-		Py_DECREF(searchparent);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
+		Py_XDECREF(leftSide);
+		Py_XDECREF(searchparent);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2010,22 +2011,22 @@ char * Interfaces::GetMarketSearchEditContent(int & size)
 	if(text == NULL)
 	{
 		log.elog("no text");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
-		Py_DECREF(leftSide);
-		Py_DECREF(searchparent);
-		Py_DECREF(edit);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
+		Py_XDECREF(leftSide);
+		Py_XDECREF(searchparent);
+		Py_XDECREF(edit);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 	char * output = builder.buildStringObject(PyString_AsString(text), size);
-	Py_DECREF(main);
-	Py_DECREF(marketbase);
-	Py_DECREF(leftSide);
-	Py_DECREF(searchparent);
-	Py_DECREF(edit);
-	Py_DECREF(text);
+	Py_XDECREF(main);
+	Py_XDECREF(marketbase);
+	Py_XDECREF(leftSide);
+	Py_XDECREF(searchparent);
+	Py_XDECREF(edit);
+	Py_XDECREF(text);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -2048,7 +2049,7 @@ char * Interfaces::GetMarketSearchButton(int & size)
 	if(marketbase == NULL)
 	{
 		log.elog("no market");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2058,8 +2059,8 @@ char * Interfaces::GetMarketSearchButton(int & size)
 	if(leftSide == NULL)
 	{
 		log.elog("no search");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2069,9 +2070,9 @@ char * Interfaces::GetMarketSearchButton(int & size)
 	if(searchparent == NULL)
 	{
 		log.elog("no searcharea");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
-		Py_DECREF(leftSide);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
+		Py_XDECREF(leftSide);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2081,10 +2082,10 @@ char * Interfaces::GetMarketSearchButton(int & size)
 	if(button == NULL)
 	{
 		log.elog("no field");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
-		Py_DECREF(leftSide);
-		Py_DECREF(searchparent);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
+		Py_XDECREF(leftSide);
+		Py_XDECREF(searchparent);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2095,22 +2096,22 @@ char * Interfaces::GetMarketSearchButton(int & size)
 	if(!ok)
 	{
 		log.elog("couldn't populate");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
-		Py_DECREF(leftSide);
-		Py_DECREF(searchparent);
-		Py_DECREF(button);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
+		Py_XDECREF(leftSide);
+		Py_XDECREF(searchparent);
+		Py_XDECREF(button);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 	
 	char * output = builder.buildInterfaceObject("SearchButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(marketbase);
-	Py_DECREF(leftSide);
-	Py_DECREF(searchparent);
-	Py_DECREF(button);
+	Py_XDECREF(main);
+	Py_XDECREF(marketbase);
+	Py_XDECREF(leftSide);
+	Py_XDECREF(searchparent);
+	Py_XDECREF(button);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -2132,7 +2133,7 @@ char * Interfaces::GetMarketSearchEdit(int & size)
 	if(marketbase == NULL)
 	{
 		log.elog("no market");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2142,8 +2143,8 @@ char * Interfaces::GetMarketSearchEdit(int & size)
 	if(leftSide == NULL)
 	{
 		log.elog("no search");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2153,9 +2154,9 @@ char * Interfaces::GetMarketSearchEdit(int & size)
 	if(searchparent == NULL)
 	{
 		log.elog("no searcharea");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
-		Py_DECREF(leftSide);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
+		Py_XDECREF(leftSide);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2165,10 +2166,10 @@ char * Interfaces::GetMarketSearchEdit(int & size)
 	if(edit == NULL)
 	{
 		log.elog("no field");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
-		Py_DECREF(leftSide);
-		Py_DECREF(searchparent);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
+		Py_XDECREF(leftSide);
+		Py_XDECREF(searchparent);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2179,22 +2180,22 @@ char * Interfaces::GetMarketSearchEdit(int & size)
 	if(!ok)
 	{
 		log.elog("couldn't populate");
-		Py_DECREF(main);
-		Py_DECREF(marketbase);
-		Py_DECREF(leftSide);
-		Py_DECREF(searchparent);
-		Py_DECREF(edit);
+		Py_XDECREF(main);
+		Py_XDECREF(marketbase);
+		Py_XDECREF(leftSide);
+		Py_XDECREF(searchparent);
+		Py_XDECREF(edit);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 	
 	char * output = builder.buildInterfaceObject("SearchArea", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(marketbase);
-	Py_DECREF(leftSide);
-	Py_DECREF(searchparent);
-	Py_DECREF(edit);
+	Py_XDECREF(main);
+	Py_XDECREF(marketbase);
+	Py_XDECREF(leftSide);
+	Py_XDECREF(searchparent);
+	Py_XDECREF(edit);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -2218,7 +2219,7 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 	if(local == NULL)
 	{
 		log.elog("couldn't get local");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2244,7 +2245,7 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 
 		if(strcmp(PyEval_GetFuncName(entry), "SE_EditTextlineCore") == 0)
 		{
-			Py_DECREF(entry);
+			Py_XDECREF(entry);
 			os.str("");
 			os << "entry_";
 			os << i;
@@ -2258,9 +2259,9 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 		if(sr == NULL)
 		{
 			log.elog("No sr");
-			Py_DECREF(main);
-			Py_DECREF(local);
-			Py_DECREF(entry);
+			Py_XDECREF(main);
+			Py_XDECREF(local);
+			Py_XDECREF(entry);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -2270,10 +2271,10 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 		if(node == NULL)
 		{
 			log.elog("no node");
-			Py_DECREF(main);
-			Py_DECREF(local);
-			Py_DECREF(entry);
-			Py_DECREF(sr);
+			Py_XDECREF(main);
+			Py_XDECREF(local);
+			Py_XDECREF(entry);
+			Py_XDECREF(sr);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -2283,11 +2284,11 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 		if(label == NULL)
 		{
 			log.elog("no label");
-			Py_DECREF(main);
-			Py_DECREF(local);
-			Py_DECREF(entry);
-			Py_DECREF(sr);
-			Py_DECREF(node);
+			Py_XDECREF(main);
+			Py_XDECREF(local);
+			Py_XDECREF(entry);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -2302,12 +2303,12 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 			if(state == NULL)
 			{
 				log.elog("Couldn't get the state");
-				Py_DECREF(main);
-				Py_DECREF(local);
-				Py_DECREF(entry);
-				Py_DECREF(sr);
-				Py_DECREF(node);
-				Py_DECREF(label);
+				Py_XDECREF(main);
+				Py_XDECREF(local);
+				Py_XDECREF(entry);
+				Py_XDECREF(sr);
+				Py_XDECREF(node);
+				Py_XDECREF(label);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -2318,13 +2319,13 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 			if(!ok)
 			{
 				log.elog("issue populating");
-				Py_DECREF(main);
-				Py_DECREF(local);
-				Py_DECREF(entry);
-				Py_DECREF(sr);
-				Py_DECREF(node);
-				Py_DECREF(label);
-				Py_DECREF(state);
+				Py_XDECREF(main);
+				Py_XDECREF(local);
+				Py_XDECREF(entry);
+				Py_XDECREF(sr);
+				Py_XDECREF(node);
+				Py_XDECREF(label);
+				Py_XDECREF(state);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -2339,33 +2340,33 @@ char * Interfaces::FindPlayerInLocal(string name, int & size)
 			}
 
 			char * output = builder.buildInterfaceObject(PyString_AsString(label), x, y, PyInt_AsLong(width), PyInt_AsLong(height), size);
-			Py_DECREF(main);
-			Py_DECREF(local);
-			Py_DECREF(entry);
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(label);
-			Py_DECREF(state);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(width);
-			Py_DECREF(height);
+			Py_XDECREF(main);
+			Py_XDECREF(local);
+			Py_XDECREF(entry);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(label);
+			Py_XDECREF(state);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(width);
+			Py_XDECREF(height);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return output;
 		}
 		
-		Py_DECREF(entry);
-		Py_DECREF(sr);
-		Py_DECREF(node);
-		Py_DECREF(label);
+		Py_XDECREF(entry);
+		Py_XDECREF(sr);
+		Py_XDECREF(node);
+		Py_XDECREF(label);
 
 		log.elog(os.str());
 		entry = _findByNameLayer(local, os.str());
 	}
 	
-	Py_DECREF(main);
-	Py_DECREF(local);
+	Py_XDECREF(main);
+	Py_XDECREF(local);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return NULL;
@@ -2388,7 +2389,7 @@ char * Interfaces::GetOverViewSelectIcon(int & size)
 	if(headerIcon == NULL)
 	{
 		log.elog("couldn't get the icon");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2399,20 +2400,20 @@ char * Interfaces::GetOverViewSelectIcon(int & size)
 	if(!ok)
 	{
 		log.elog("error populating");
-		Py_DECREF(main);
-		Py_DECREF(headerIcon);
+		Py_XDECREF(main);
+		Py_XDECREF(headerIcon);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("overvIcon", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(headerIcon);
-	Py_DECREF(height);
-	Py_DECREF(width);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(main);
+	Py_XDECREF(headerIcon);
+	Py_XDECREF(height);
+	Py_XDECREF(width);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -2435,7 +2436,7 @@ char * Interfaces::GetOverviewSelectText(int & size)
 	if(overview == NULL)
 	{
 		log.elog("Couldn't get overview");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2445,8 +2446,8 @@ char * Interfaces::GetOverviewSelectText(int & size)
 	if(captionP == NULL)
 	{
 		log.elog("Couldn't get caption");
-		Py_DECREF(main);
-		Py_DECREF(overview);
+		Py_XDECREF(main);
+		Py_XDECREF(overview);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2456,9 +2457,9 @@ char * Interfaces::GetOverviewSelectText(int & size)
 	if(label == NULL)
 	{
 		log.elog("couldn't get the label");
-		Py_DECREF(main);
-		Py_DECREF(overview);
-		Py_DECREF(captionP);
+		Py_XDECREF(main);
+		Py_XDECREF(overview);
+		Py_XDECREF(captionP);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2468,21 +2469,21 @@ char * Interfaces::GetOverviewSelectText(int & size)
 	if(text == NULL)
 	{
 		log.elog("Couldn't get the text");
-		Py_DECREF(main);
-		Py_DECREF(overview);
-		Py_DECREF(captionP);
-		Py_DECREF(label);
+		Py_XDECREF(main);
+		Py_XDECREF(overview);
+		Py_XDECREF(captionP);
+		Py_XDECREF(label);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 	
 	char * output = builder.buildStringObject(PyString_AsString(text), size);
-	Py_DECREF(main);
-	Py_DECREF(overview);
-	Py_DECREF(captionP);
-	Py_DECREF(label);
-	Py_DECREF(text);
+	Py_XDECREF(main);
+	Py_XDECREF(overview);
+	Py_XDECREF(captionP);
+	Py_XDECREF(label);
+	Py_XDECREF(text);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -2505,7 +2506,7 @@ char * Interfaces::CheckLocal(int & size)
 	if(local == NULL)
 	{
 		log.elog("couldn't get local");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2525,9 +2526,9 @@ char * Interfaces::CheckLocal(int & size)
 		if(flag == NULL)
 		{
 			log.elog("No flag");
-			Py_DECREF(main);
-			Py_DECREF(local);
-			Py_DECREF(entry);
+			Py_XDECREF(main);
+			Py_XDECREF(local);
+			Py_XDECREF(entry);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return builder.buildBooleanObject(true, size);
@@ -2539,15 +2540,15 @@ char * Interfaces::CheckLocal(int & size)
 			if(!onealloted)
 			{
 				onealloted = true;
-				Py_DECREF(flag);
-				Py_DECREF(entry);
+				Py_XDECREF(flag);
+				Py_XDECREF(entry);
 				continue;
 			}
 			log.elog("fill is null");
-			Py_DECREF(main);
-			Py_DECREF(local);
-			Py_DECREF(entry);
-			Py_DECREF(flag);
+			Py_XDECREF(main);
+			Py_XDECREF(local);
+			Py_XDECREF(entry);
+			Py_XDECREF(flag);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return builder.buildBooleanObject(true, size);
@@ -2557,11 +2558,11 @@ char * Interfaces::CheckLocal(int & size)
 		if(color == NULL)
 		{
 			log.elog("color is null");
-			Py_DECREF(main);
-			Py_DECREF(local);
-			Py_DECREF(entry);
-			Py_DECREF(fill);
-			Py_DECREF(flag);
+			Py_XDECREF(main);
+			Py_XDECREF(local);
+			Py_XDECREF(entry);
+			Py_XDECREF(fill);
+			Py_XDECREF(flag);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return builder.buildBooleanObject(true, size);
@@ -2571,12 +2572,12 @@ char * Interfaces::CheckLocal(int & size)
 		if(g == NULL)
 		{
 			log.elog("g is null");
-			Py_DECREF(main);
-			Py_DECREF(local);
-			Py_DECREF(entry);
-			Py_DECREF(fill);
-			Py_DECREF(color);
-			Py_DECREF(flag);
+			Py_XDECREF(main);
+			Py_XDECREF(local);
+			Py_XDECREF(entry);
+			Py_XDECREF(fill);
+			Py_XDECREF(color);
+			Py_XDECREF(flag);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return builder.buildBooleanObject(true, size);
@@ -2585,30 +2586,30 @@ char * Interfaces::CheckLocal(int & size)
 		double c = PyFloat_AsDouble(g);
 		if(c == 0.7 || c == 0.0 || c == 0.35)
 		{
-			Py_DECREF(main);
-			Py_DECREF(local);
-			Py_DECREF(entry);
-			Py_DECREF(flag);
-			Py_DECREF(fill);
-			Py_DECREF(color);
-			Py_DECREF(g);
+			Py_XDECREF(main);
+			Py_XDECREF(local);
+			Py_XDECREF(entry);
+			Py_XDECREF(flag);
+			Py_XDECREF(fill);
+			Py_XDECREF(color);
+			Py_XDECREF(g);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return builder.buildBooleanObject(true, size);
 		}
 	
-		Py_DECREF(flag);
-		Py_DECREF(fill);
-		Py_DECREF(color);
-		Py_DECREF(g);
-		Py_DECREF(entry);
+		Py_XDECREF(flag);
+		Py_XDECREF(fill);
+		Py_XDECREF(color);
+		Py_XDECREF(g);
+		Py_XDECREF(entry);
 	
 		log.elog(os.str());
 		entry = _findByNameLayer(local, os.str());
 	}
 	
-	Py_DECREF(main);
-	Py_DECREF(local);
+	Py_XDECREF(main);
+	Py_XDECREF(local);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return builder.buildBooleanObject(false, size);
@@ -2629,7 +2630,7 @@ char * Interfaces::IsIncursion(int & size)
 	if(neocomLeftSide == NULL)
 	{
 		log.elog("Couldn't get the left side");
-		Py_DECREF(neocom);
+		Py_XDECREF(neocom);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2640,8 +2641,8 @@ char * Interfaces::IsIncursion(int & size)
 	if(locationInfo == NULL)
 	{
 		log.elog("IncursionInfoContainer is null");
-		Py_DECREF(neocom);
-		Py_DECREF(neocomLeftSide);
+		Py_XDECREF(neocom);
+		Py_XDECREF(neocomLeftSide);
 		char * output = builder.buildBooleanObject(false, size);
 		clearExceptions();
 		PyGILState_Release(gstate);
@@ -2649,9 +2650,9 @@ char * Interfaces::IsIncursion(int & size)
 	}	
 
 	char * output = builder.buildBooleanObject(true, size);
-	Py_DECREF(neocom);
-	Py_DECREF(locationInfo);
-	Py_DECREF(neocomLeftSide);
+	Py_XDECREF(neocom);
+	Py_XDECREF(locationInfo);
+	Py_XDECREF(neocomLeftSide);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -2680,7 +2681,7 @@ char * Interfaces::GetModalSubmitButton(int & size)
 	if(submit == NULL)
 	{
 		log.elog("couldn't get submit");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		PyGILState_Release(gstate);
 		return NULL;
 	}
@@ -2690,8 +2691,8 @@ char * Interfaces::GetModalSubmitButton(int & size)
 	if(!ok)
 	{
 		log.elog("Couldn't populate");
-		Py_DECREF(main);
-		Py_DECREF(submit);
+		Py_XDECREF(main);
+		Py_XDECREF(submit);
 		PyGILState_Release(gstate);
 		return NULL;
 	}
@@ -2735,7 +2736,7 @@ char * Interfaces::GetLocalWritingArea(int & size)
 	if(chatchannel == NULL)
 	{
 		log.elog("cant get the channel");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2745,8 +2746,8 @@ char * Interfaces::GetLocalWritingArea(int & size)
 	if(input == NULL)
 	{
 		log.elog("cant get the input row");
-		Py_DECREF(main);
-		Py_DECREF(chatchannel);
+		Py_XDECREF(main);
+		Py_XDECREF(chatchannel);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2757,22 +2758,22 @@ char * Interfaces::GetLocalWritingArea(int & size)
 	if(!ok)
 	{
 		log.elog("Error populating");
-		Py_DECREF(main);
-		Py_DECREF(chatchannel);
-		Py_DECREF(input);
+		Py_XDECREF(main);
+		Py_XDECREF(chatchannel);
+		Py_XDECREF(input);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("localinput", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(chatchannel);
-	Py_DECREF(input);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(main);
+	Py_XDECREF(chatchannel);
+	Py_XDECREF(input);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -2795,7 +2796,7 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 	if(chatchannel == NULL)
 	{
 		log.elog("Couldn't get the channel");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2808,8 +2809,8 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 	if(channelparent == NULL)
 	{
 		log.elog("Couldn't get the channel parent");
-		Py_DECREF(main);
-		Py_DECREF(chatchannel);
+		Py_XDECREF(main);
+		Py_XDECREF(chatchannel);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2819,9 +2820,9 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 	if(content == NULL)
 	{
 		log.elog("couldn't get the container");
-		Py_DECREF(main);
-		Py_DECREF(chatchannel);
-		Py_DECREF(channelparent);
+		Py_XDECREF(main);
+		Py_XDECREF(chatchannel);
+		Py_XDECREF(channelparent);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2831,10 +2832,10 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 	if(children == NULL)
 	{
 		log.elog("Couldn't get the children");
-		Py_DECREF(main);
-		Py_DECREF(chatchannel);
-		Py_DECREF(channelparent);
-		Py_DECREF(content);
+		Py_XDECREF(main);
+		Py_XDECREF(chatchannel);
+		Py_XDECREF(channelparent);
+		Py_XDECREF(content);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2859,11 +2860,11 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get the value");
-			Py_DECREF(main);
-			Py_DECREF(chatchannel);
-			Py_DECREF(channelparent);
-			Py_DECREF(content);
-			Py_DECREF(children);
+			Py_XDECREF(main);
+			Py_XDECREF(chatchannel);
+			Py_XDECREF(channelparent);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -2873,12 +2874,12 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 		if(label == NULL)
 		{
 			log.elog("Couldn't get the label");
-			Py_DECREF(main);
-			Py_DECREF(chatchannel);
-			Py_DECREF(channelparent);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(pvalue);
+			Py_XDECREF(main);
+			Py_XDECREF(chatchannel);
+			Py_XDECREF(channelparent);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
+			Py_XDECREF(pvalue);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -2888,22 +2889,22 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 		if(text == NULL)
 		{
 			log.elog("Couldn't get the text");
-			Py_DECREF(main);
-			Py_DECREF(chatchannel);
-			Py_DECREF(channelparent);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
+			Py_XDECREF(main);
+			Py_XDECREF(chatchannel);
+			Py_XDECREF(channelparent);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(label);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
 		}
 
 		chatlist.push_back(new string(PyString_AsString(text)));
-		Py_DECREF(pvalue);
-		Py_DECREF(label);
-		Py_DECREF(text);
+		Py_XDECREF(pvalue);
+		Py_XDECREF(label);
+		Py_XDECREF(text);
 
 	}
 
@@ -2913,11 +2914,11 @@ char * Interfaces::GetLocalChatText(int sysid, int & size)
 		delete (*it);		
 	}
 
-	Py_DECREF(main);
-	Py_DECREF(chatchannel);
-	Py_DECREF(channelparent);
-	Py_DECREF(content);
-	Py_DECREF(children);
+	Py_XDECREF(main);
+	Py_XDECREF(chatchannel);
+	Py_XDECREF(channelparent);
+	Py_XDECREF(content);
+	Py_XDECREF(children);
 	clearExceptions();
 	PyGILState_Release(gstate);
 
@@ -2943,7 +2944,7 @@ char * Interfaces::GetCurrentSolarsystemid(int & size)
 	if(maindic == NULL)
 	{
 		log.elog("Couldn't load main dictionary");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2953,8 +2954,8 @@ char * Interfaces::GetCurrentSolarsystemid(int & size)
 	if(eve == NULL)
 	{
 		log.elog("Couldn't get eve");
-		Py_DECREF(main);
-		Py_DECREF(maindic);
+		Py_XDECREF(main);
+		Py_XDECREF(maindic);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2964,9 +2965,9 @@ char * Interfaces::GetCurrentSolarsystemid(int & size)
 	if(session == NULL)
 	{
 		log.elog("Couldn't get session");
-		Py_DECREF(main);
-		Py_DECREF(maindic);
-		Py_DECREF(eve);
+		Py_XDECREF(main);
+		Py_XDECREF(maindic);
+		Py_XDECREF(eve);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2976,10 +2977,10 @@ char * Interfaces::GetCurrentSolarsystemid(int & size)
 	if(solarsystemid2 == NULL)
 	{
 		log.elog("couldn't get the id");
-		Py_DECREF(main);
-		Py_DECREF(maindic);
-		Py_DECREF(eve);
-		Py_DECREF(session);
+		Py_XDECREF(main);
+		Py_XDECREF(maindic);
+		Py_XDECREF(eve);
+		Py_XDECREF(session);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -2989,11 +2990,11 @@ char * Interfaces::GetCurrentSolarsystemid(int & size)
 	os << PyInt_AsLong(solarsystemid2);
 
 	char * output = builder.buildStringObject(os.str(), size);
-	Py_DECREF(main);
-	Py_DECREF(maindic);
-	Py_DECREF(eve);
-	Py_DECREF(session);
-	Py_DECREF(solarsystemid2);
+	Py_XDECREF(main);
+	Py_XDECREF(maindic);
+	Py_XDECREF(eve);
+	Py_XDECREF(session);
+	Py_XDECREF(solarsystemid2);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -3014,7 +3015,7 @@ PyObject * Interfaces::_getSysMenuButtonByText(string ctext)
 	if(system_menu == NULL)
 	{
 		log.elog("Couldn't get system menu");
-		Py_DECREF(modal);
+		Py_XDECREF(modal);
 		clearExceptions();
 		return NULL;
 	}
@@ -3023,8 +3024,8 @@ PyObject * Interfaces::_getSysMenuButtonByText(string ctext)
 	if(btnPar == NULL)
 	{
 		log.elog("Couldn't get buttons");
-		Py_DECREF(modal);
-		Py_DECREF(system_menu);
+		Py_XDECREF(modal);
+		Py_XDECREF(system_menu);
 		clearExceptions();
 		return NULL;
 	}
@@ -3044,9 +3045,9 @@ PyObject * Interfaces::_getSysMenuButtonByText(string ctext)
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get the value");
-			Py_DECREF(modal);
-			Py_DECREF(system_menu);
-			Py_DECREF(children);
+			Py_XDECREF(modal);
+			Py_XDECREF(system_menu);
+			Py_XDECREF(children);
 			clearExceptions();
 			return NULL;
 		}
@@ -3054,10 +3055,10 @@ PyObject * Interfaces::_getSysMenuButtonByText(string ctext)
 		PyObject * text = _getAttribute(pvalue, "text");
 		if(text == NULL)
 		{
-			Py_DECREF(modal);
-			Py_DECREF(system_menu);
-			Py_DECREF(children);
-			Py_DECREF(pvalue);
+			Py_XDECREF(modal);
+			Py_XDECREF(system_menu);
+			Py_XDECREF(children);
+			Py_XDECREF(pvalue);
 			clearExceptions();
 			return NULL;
 		}
@@ -3066,15 +3067,15 @@ PyObject * Interfaces::_getSysMenuButtonByText(string ctext)
 		if(strcmp(PyString_AsString(text), ctext.c_str()) == 0)
 		{
 			log.elog("Found button");
-			Py_DECREF(modal);
-			Py_DECREF(system_menu);
-			Py_DECREF(children);
-			Py_DECREF(text);
+			Py_XDECREF(modal);
+			Py_XDECREF(system_menu);
+			Py_XDECREF(children);
+			Py_XDECREF(text);
 			clearExceptions();
 			return pvalue;
 		}
 
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 	}
 	
 	clearExceptions();
@@ -3101,18 +3102,18 @@ char * Interfaces::GetLogOffButton(int & size)
 	if(!ok)
 	{
 		log.elog("something went wrong in populating");
-		Py_DECREF(button);
+		Py_XDECREF(button);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 		
 	char * output = builder.buildInterfaceObject("logoffButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(button);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(button);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -3143,17 +3144,17 @@ char * Interfaces::GetBookMarkFieldName(int & size)
 	if(text == NULL)
 	{
 		log.elog("Couldn't get the text");
-		Py_DECREF(main);
-		Py_DECREF(newbm);
+		Py_XDECREF(main);
+		Py_XDECREF(newbm);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildStringObject(PyString_AsString(text), size);
-	Py_DECREF(main);
-	Py_DECREF(newbm);
-	Py_DECREF(text);
+	Py_XDECREF(main);
+	Py_XDECREF(newbm);
+	Py_XDECREF(text);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -3176,7 +3177,7 @@ char * Interfaces::_getModalButton(string name, int & size)
 	if(button == NULL)
 	{
 		log.elog("Doesn't have button");
-		Py_DECREF(modal);
+		Py_XDECREF(modal);
 		clearExceptions();
 		return NULL;
 	}
@@ -3186,15 +3187,15 @@ char * Interfaces::_getModalButton(string name, int & size)
 	bool ok = _populateAttributes(button, &width, &height, &absoluteTop, &absoluteLeft);
 	if(!ok)
 	{
-		Py_DECREF(button);
-		Py_DECREF(modal);
+		Py_XDECREF(button);
+		Py_XDECREF(modal);
 		clearExceptions();
 		return NULL;
 	}
 	
 	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(button);
-	Py_DECREF(modal);
+	Py_XDECREF(button);
+	Py_XDECREF(modal);
 	clearExceptions();
 
 	return output;
@@ -3223,11 +3224,11 @@ char * Interfaces::IsSystemMenuOpen(int & size)
 	else
 	{
 		output = builder.buildBooleanObject(true, size);
-		Py_DECREF(sysmenu);
+		Py_XDECREF(sysmenu);
 		clearExceptions();
 	}
 	
-	Py_DECREF(modal);
+	Py_XDECREF(modal);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -3255,7 +3256,7 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	if(result == NULL)
 	{
 		log.elog("Result is NULL");
-		Py_DECREF(layer);
+		Py_XDECREF(layer);
 		clearExceptions();
 		return NULL;
 	}
@@ -3266,8 +3267,8 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	
 	if(leftPosVal == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(result);
+		Py_XDECREF(layer);
+		Py_XDECREF(result);
 		clearExceptions();
 		return NULL;
 	}
@@ -3275,9 +3276,9 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	topPosVal = _getAbsoluteTop(result);
 	if(topPosVal == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(leftPosVal);
-		Py_DECREF(result);
+		Py_XDECREF(layer);
+		Py_XDECREF(leftPosVal);
+		Py_XDECREF(result);
 		clearExceptions();
 		return NULL;
 	}
@@ -3285,10 +3286,10 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	name = _getName(result);
 	if(name == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(leftPosVal);
-		Py_DECREF(topPosVal);
-		Py_DECREF(result);
+		Py_XDECREF(layer);
+		Py_XDECREF(leftPosVal);
+		Py_XDECREF(topPosVal);
+		Py_XDECREF(result);
 		clearExceptions();
 		return NULL;
 	}
@@ -3296,11 +3297,11 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	height = _getHeight(result);
 	if(height == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(leftPosVal);
-		Py_DECREF(topPosVal);
-		Py_DECREF(name);
-		Py_DECREF(result);
+		Py_XDECREF(layer);
+		Py_XDECREF(leftPosVal);
+		Py_XDECREF(topPosVal);
+		Py_XDECREF(name);
+		Py_XDECREF(result);
 		clearExceptions();
 		return NULL;
 	}
@@ -3308,12 +3309,12 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	width = _getWidth(result);
 	if(height == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(leftPosVal);
-		Py_DECREF(topPosVal);
-		Py_DECREF(name);
-		Py_DECREF(height);
-		Py_DECREF(result);
+		Py_XDECREF(layer);
+		Py_XDECREF(leftPosVal);
+		Py_XDECREF(topPosVal);
+		Py_XDECREF(name);
+		Py_XDECREF(height);
+		Py_XDECREF(result);
 		clearExceptions();
 		return NULL;
 	}
@@ -3321,13 +3322,13 @@ char * Interfaces::_findByTextGeneric(string layername, string label, int & size
 	log.elog("Found Child");
 	char * iname = PyString_AsString(name);
 	output = builder.buildInterfaceObject(iname,  (int)PyInt_AsLong(leftPosVal),(int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
-	Py_DECREF(layer);
-	Py_DECREF(result);
-	Py_DECREF(leftPosVal);
-	Py_DECREF(topPosVal);
-	Py_DECREF(name);
-	Py_DECREF(width);
-	Py_DECREF(height);
+	Py_XDECREF(layer);
+	Py_XDECREF(result);
+	Py_XDECREF(leftPosVal);
+	Py_XDECREF(topPosVal);
+	Py_XDECREF(name);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
 	clearExceptions();
 	return output;
 }
@@ -3345,7 +3346,7 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 	
 	if(leftPosVal == NULL)
 	{
-		Py_DECREF(layer);
+		Py_XDECREF(layer);
 		clearExceptions();
 		return NULL;
 	}
@@ -3353,8 +3354,8 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 	topPosVal = _getAbsoluteTop(layer);
 	if(topPosVal == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(leftPosVal);
+		Py_XDECREF(layer);
+		Py_XDECREF(leftPosVal);
 		clearExceptions();
 		return NULL;
 	}
@@ -3362,9 +3363,9 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 	name = _getName(layer);
 	if(name == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(leftPosVal);
-		Py_DECREF(topPosVal);
+		Py_XDECREF(layer);
+		Py_XDECREF(leftPosVal);
+		Py_XDECREF(topPosVal);
 		clearExceptions();
 		return NULL;
 	}
@@ -3372,10 +3373,10 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 	height = _getHeight(layer);
 	if(height == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(leftPosVal);
-		Py_DECREF(topPosVal);
-		Py_DECREF(name);
+		Py_XDECREF(layer);
+		Py_XDECREF(leftPosVal);
+		Py_XDECREF(topPosVal);
+		Py_XDECREF(name);
 		clearExceptions();
 		return NULL;
 	}
@@ -3383,22 +3384,22 @@ char * Interfaces::_getLayerWithAttributes(string layername, int & size)
 	width = _getWidth(layer);
 	if(height == NULL)
 	{
-		Py_DECREF(layer);
-		Py_DECREF(leftPosVal);
-		Py_DECREF(topPosVal);
-		Py_DECREF(name);
-		Py_DECREF(height);
+		Py_XDECREF(layer);
+		Py_XDECREF(leftPosVal);
+		Py_XDECREF(topPosVal);
+		Py_XDECREF(name);
+		Py_XDECREF(height);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * iname = PyString_AsString(name);
 	output = builder.buildInterfaceObject(iname,  (int)PyInt_AsLong(leftPosVal),(int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
-	Py_DECREF(layer);
-	Py_DECREF(leftPosVal);
-	Py_DECREF(topPosVal);
-	Py_DECREF(name);
-	Py_DECREF(height);
+	Py_XDECREF(layer);
+	Py_XDECREF(leftPosVal);
+	Py_XDECREF(topPosVal);
+	Py_XDECREF(name);
+	Py_XDECREF(height);
 	clearExceptions();
 	return output;
 }
@@ -3434,8 +3435,8 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			{
 				log.elog("Failed to create args with args: ");
 				log.elog(name);
-				Py_DECREF(findChild);
-				Py_DECREF(layer);
+				Py_XDECREF(findChild);
+				Py_XDECREF(layer);
 				clearExceptions();
 				return NULL;
 			}
@@ -3447,9 +3448,9 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			if(param == NULL)
 			{
 				log.elog("Failed to build PyTuple");
-				Py_DECREF(findChild);
-				Py_DECREF(layer);
-				Py_DECREF(args);
+				Py_XDECREF(findChild);
+				Py_XDECREF(layer);
+				Py_XDECREF(args);
 				clearExceptions();
 				return NULL;
 			}
@@ -3458,10 +3459,10 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			if(PyTuple_SetItem(param, 0, args) != 0)
 			{
 				log.elog("Failed to setitem in tuple");
-				Py_DECREF(findChild);
-				Py_DECREF(layer);
-				Py_DECREF(args);
-				Py_DECREF(param);
+				Py_XDECREF(findChild);
+				Py_XDECREF(layer);
+				Py_XDECREF(args);
+				Py_XDECREF(param);
 				clearExceptions();
 				return NULL;
 			}
@@ -3471,10 +3472,10 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			if(PyCallable_Check(findChild) == 0)
 			{
 				log.elog("findChild is not callable");
-				Py_DECREF(findChild);
-				Py_DECREF(layer);
-				//Py_DECREF(args);
-				Py_DECREF(param);
+				Py_XDECREF(findChild);
+				Py_XDECREF(layer);
+				//Py_XDECREF(args);
+				Py_XDECREF(param);
 				clearExceptions();
 				return NULL;
 			}
@@ -3486,10 +3487,10 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			{
 				log.elog("Error calling FindChild(param)");
 				log.elog(PyString_AsString(param));
-				Py_DECREF(findChild);
-				Py_DECREF(layer);
-				//Py_DECREF(args);
-				Py_DECREF(param);
+				Py_XDECREF(findChild);
+				Py_XDECREF(layer);
+				//Py_XDECREF(args);
+				Py_XDECREF(param);
 				clearExceptions();
 				return NULL;
 			}
@@ -3500,11 +3501,11 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			{
 
 				log.elog("Failed to get leftPosVal");
-				Py_DECREF(findChild);
-				Py_DECREF(layer);
-				//Py_DECREF(args);
-				Py_DECREF(param);
-				Py_DECREF(soughtInterface);
+				Py_XDECREF(findChild);
+				Py_XDECREF(layer);
+				//Py_XDECREF(args);
+				Py_XDECREF(param);
+				Py_XDECREF(soughtInterface);
 				clearExceptions();
 				return NULL;
 			}
@@ -3514,12 +3515,12 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			if(topPosVal == NULL)
 			{
 				log.elog("Failed to get topPosVal");
-				Py_DECREF(findChild);
-				Py_DECREF(layer);
-				//Py_DECREF(args);
-				Py_DECREF(param);
-				Py_DECREF(soughtInterface);
-				Py_DECREF(leftPosVal);
+				Py_XDECREF(findChild);
+				Py_XDECREF(layer);
+				//Py_XDECREF(args);
+				Py_XDECREF(param);
+				Py_XDECREF(soughtInterface);
+				Py_XDECREF(leftPosVal);
 				clearExceptions();
 				return NULL;
 			}
@@ -3528,13 +3529,13 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			if(topPosVal == NULL)
 			{
 				log.elog("Failed to get width");
-				Py_DECREF(findChild);
-				Py_DECREF(layer);
-				//Py_DECREF(args);
-				Py_DECREF(param);
-				Py_DECREF(soughtInterface);
-				Py_DECREF(leftPosVal);
-				Py_DECREF(topPosVal);
+				Py_XDECREF(findChild);
+				Py_XDECREF(layer);
+				//Py_XDECREF(args);
+				Py_XDECREF(param);
+				Py_XDECREF(soughtInterface);
+				Py_XDECREF(leftPosVal);
+				Py_XDECREF(topPosVal);
 				clearExceptions();
 				return NULL;
 			}			
@@ -3544,14 +3545,14 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			if(topPosVal == NULL)
 			{
 				log.elog("Failed to get width");
-				Py_DECREF(findChild);
-				Py_DECREF(layer);
-				//Py_DECREF(args);
-				Py_DECREF(param);
-				Py_DECREF(soughtInterface);
-				Py_DECREF(leftPosVal);
-				Py_DECREF(topPosVal);
-				Py_DECREF(width);
+				Py_XDECREF(findChild);
+				Py_XDECREF(layer);
+				//Py_XDECREF(args);
+				Py_XDECREF(param);
+				Py_XDECREF(soughtInterface);
+				Py_XDECREF(leftPosVal);
+				Py_XDECREF(topPosVal);
+				Py_XDECREF(width);
 				clearExceptions();
 				return NULL;
 			}
@@ -3559,15 +3560,15 @@ char * Interfaces::_findByNameGeneric(string layername, string name, int & size)
 			
 			log.elog("Found Child");
 			output = builder.buildInterfaceObject(name,  (int)PyInt_AsLong(leftPosVal) ,(int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
-			Py_DECREF(findChild);
-			Py_DECREF(layer);
-			//Py_DECREF(args);
-			Py_DECREF(param);
-			Py_DECREF(soughtInterface);
-			Py_DECREF(leftPosVal);
-			Py_DECREF(topPosVal);
-			Py_DECREF(width);
-			Py_DECREF(height);
+			Py_XDECREF(findChild);
+			Py_XDECREF(layer);
+			//Py_XDECREF(args);
+			Py_XDECREF(param);
+			Py_XDECREF(soughtInterface);
+			Py_XDECREF(leftPosVal);
+			Py_XDECREF(topPosVal);
+			Py_XDECREF(width);
+			Py_XDECREF(height);
 			clearExceptions();
 		}
 		else
@@ -3595,7 +3596,7 @@ PyObject * Interfaces::_findModule(string module)
 	if(slotsContainer == NULL)
 	{
 		log.elog("doesn't have a slots container");
-		Py_DECREF(shipui);
+		Py_XDECREF(shipui);
 		clearExceptions();
 		return NULL;
 	}
@@ -3604,8 +3605,8 @@ PyObject * Interfaces::_findModule(string module)
 	if(mod == NULL)
 	{
 		log.elog("Mod not visible");
-		Py_DECREF(shipui);
-		Py_DECREF(slotsContainer);
+		Py_XDECREF(shipui);
+		Py_XDECREF(slotsContainer);
 		clearExceptions();
 		return NULL;
 	}
@@ -3632,7 +3633,7 @@ char * Interfaces::_buildModule(PyObject * mod, string name, int & size)
 	if(width == NULL)
 	{
 		log.elog("Coudn't get width");
-		Py_DECREF(height);
+		Py_XDECREF(height);
 		clearExceptions();
 		return NULL;
 	}
@@ -3640,8 +3641,8 @@ char * Interfaces::_buildModule(PyObject * mod, string name, int & size)
 	if(absoluteTop == NULL)
 	{
 		log.elog("Couldn't get absoluteTop");
-		Py_DECREF(width);
-		Py_DECREF(height);
+		Py_XDECREF(width);
+		Py_XDECREF(height);
 		clearExceptions();
 		return NULL;
 	}
@@ -3650,18 +3651,18 @@ char * Interfaces::_buildModule(PyObject * mod, string name, int & size)
 	if(absoluteLeft == NULL)
 	{
 		log.elog("Couldn't get absoluteLeft");
-		Py_DECREF(width);
-		Py_DECREF(height);
-		Py_DECREF(absoluteTop);
+		Py_XDECREF(width);
+		Py_XDECREF(height);
+		Py_XDECREF(absoluteTop);
 		clearExceptions();
 		return NULL;		
 	}
 
 	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	clearExceptions();
 	return output;
 
@@ -3691,7 +3692,7 @@ char * Interfaces::_getLobbyTab(string name, int & size)
 	if(tab == NULL)
 	{
 		log.elog("couldn't get tab");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -3701,19 +3702,19 @@ char * Interfaces::_getLobbyTab(string name, int & size)
 	if(!ok)
 	{
 		log.elog("couldn't populate");
-		Py_DECREF(main);
-		Py_DECREF(tab);
+		Py_XDECREF(main);
+		Py_XDECREF(tab);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("LobbyTab", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(tab);
-	Py_DECREF(height);
-	Py_DECREF(width);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(main);
+	Py_XDECREF(tab);
+	Py_XDECREF(height);
+	Py_XDECREF(width);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	clearExceptions();
 	return output;
 }
@@ -3733,7 +3734,7 @@ PyObject * Interfaces::_getStationLobbyBottom()
 	if(lobby == NULL)
 	{
 		log.elog("Couldn't get the lobby");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -3742,8 +3743,8 @@ PyObject * Interfaces::_getStationLobbyBottom()
 	if(lmain == NULL)
 	{
 		log.elog("lmain error");
-		Py_DECREF(main);
-		Py_DECREF(lobby);
+		Py_XDECREF(main);
+		Py_XDECREF(lobby);
 		clearExceptions();
 		return NULL;
 	}
@@ -3752,16 +3753,16 @@ PyObject * Interfaces::_getStationLobbyBottom()
 	if(bottomparent == NULL)
 	{
 		log.elog("Couldn't get the bottom");
-		Py_DECREF(main);
-		Py_DECREF(lobby);
-		Py_DECREF(lmain);
+		Py_XDECREF(main);
+		Py_XDECREF(lobby);
+		Py_XDECREF(lmain);
 		clearExceptions();
 		return NULL;
 	}
 
-	Py_DECREF(main);
-	Py_DECREF(lobby);
-	Py_DECREF(lmain);
+	Py_XDECREF(main);
+	Py_XDECREF(lobby);
+	Py_XDECREF(lmain);
 	clearExceptions();
 	return bottomparent;
 }
@@ -3781,7 +3782,7 @@ PyObject * Interfaces::_GetInflightCargoView()
 	if(children == NULL)
 	{
 		log.elog("children is null");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -3799,8 +3800,8 @@ PyObject * Interfaces::_GetInflightCargoView()
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get the value");
-			Py_DECREF(main);
-			Py_DECREF(children);
+			Py_XDECREF(main);
+			Py_XDECREF(children);
 			clearExceptions();
 			return NULL;
 		}
@@ -3809,24 +3810,24 @@ PyObject * Interfaces::_GetInflightCargoView()
 		if(strcmp(PyEval_GetFuncName(pvalue), "InflightCargoView") == 0)
 		{
 			log.elog("Found cargoview");
-			Py_DECREF(main);
-			Py_DECREF(children);
+			Py_XDECREF(main);
+			Py_XDECREF(children);
 			clearExceptions();
 			return pvalue;
 		}
 		if(strcmp(PyEval_GetFuncName(pvalue), "DockedCargoView") == 0)
 		{
 			log.elog("Found docked cargoview");
-			Py_DECREF(main);
-			Py_DECREF(children);
+			Py_XDECREF(main);
+			Py_XDECREF(children);
 			clearExceptions();
 			return pvalue;
 		}
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 	}
 
-	Py_DECREF(main);
-	Py_DECREF(children);
+	Py_XDECREF(main);
+	Py_XDECREF(children);
 	clearExceptions();
 	return NULL;
 }
@@ -3860,7 +3861,7 @@ PyObject * Interfaces::_findType(string name, PyObject * children)
 			log.elog("Found " + name);
 			return pvalue;
 		}
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 	}
 
 	
@@ -3882,7 +3883,7 @@ PyObject * Interfaces::_GetEntry(string entryname)
 	if(children == NULL)
 	{
 		log.elog("children is null");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -3908,8 +3909,8 @@ PyObject * Interfaces::_GetEntry(string entryname)
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get the value");
-			Py_DECREF(main);
-			Py_DECREF(children);
+			Py_XDECREF(main);
+			Py_XDECREF(children);
 			clearExceptions();
 			return NULL;
 		}
@@ -3922,27 +3923,27 @@ PyObject * Interfaces::_GetEntry(string entryname)
 			if(entry == NULL)
 			{
 				log.elog("cant find entry " + entryname);
-				Py_DECREF(main);
-				Py_DECREF(children);
-				Py_DECREF(pvalue);
+				Py_XDECREF(main);
+				Py_XDECREF(children);
+				Py_XDECREF(pvalue);
 				clearExceptions();
 				return NULL;
 			}
 		}
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 	}
 
 	if(entry == NULL)
 	{
 		log.elog("doesn't have an entry " + entryname);
-		Py_DECREF(main);
-		Py_DECREF(children);
+		Py_XDECREF(main);
+		Py_XDECREF(children);
 		clearExceptions();
 		return NULL;
 	}
 
-	Py_DECREF(main);
-	Py_DECREF(children);
+	Py_XDECREF(main);
+	Py_XDECREF(children);
 	clearExceptions();
 	return entry;
 
@@ -3962,7 +3963,7 @@ PyObject * Interfaces::_getNeocomButton(string buttonname)
 	if(neocom == NULL)
 	{
 		log.elog("Couldn't get neocom layer");
-		Py_DECREF(layer);
+		Py_XDECREF(layer);
 		clearExceptions();
 		return NULL;
 	}
@@ -3971,8 +3972,8 @@ PyObject * Interfaces::_getNeocomButton(string buttonname)
 	if(maincontainer == NULL)
 	{
 		log.elog("Couldn't get maincontainer");
-		Py_DECREF(layer);
-		Py_DECREF(neocom);
+		Py_XDECREF(layer);
+		Py_XDECREF(neocom);
 		clearExceptions();
 		return NULL;
 	}
@@ -3981,9 +3982,9 @@ PyObject * Interfaces::_getNeocomButton(string buttonname)
 	if(button == NULL)
 	{
 		log.elog("couldn't get button");
-		Py_DECREF(layer);
-		Py_DECREF(neocom);
-		Py_DECREF(maincontainer);
+		Py_XDECREF(layer);
+		Py_XDECREF(neocom);
+		Py_XDECREF(maincontainer);
 		clearExceptions();
 		return NULL;
 	}
@@ -4021,7 +4022,7 @@ char * Interfaces::_getOverViewHeaders(string name, int & size)
 	if(overview == NULL)
 	{
 		log.elog("couldn't get overview");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -4030,8 +4031,8 @@ char * Interfaces::_getOverViewHeaders(string name, int & size)
 	if(header == NULL)
 	{
 		log.elog("couldn't get header");
-		Py_DECREF(main);
-		Py_DECREF(overview);
+		Py_XDECREF(main);
+		Py_XDECREF(overview);
 		clearExceptions();
 		return NULL;
 	}
@@ -4042,21 +4043,21 @@ char * Interfaces::_getOverViewHeaders(string name, int & size)
 	if(!ok)
 	{
 		log.elog("couldn't populate");
-		Py_DECREF(main);
-		Py_DECREF(overview);
-		Py_DECREF(header);
+		Py_XDECREF(main);
+		Py_XDECREF(overview);
+		Py_XDECREF(header);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(overview);
-	Py_DECREF(header);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(main);
+	Py_XDECREF(overview);
+	Py_XDECREF(header);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	clearExceptions();
 	return output;
 
@@ -4086,7 +4087,7 @@ char * Interfaces::GetShipCapacitor(int & size)
 	if(powercore == NULL)
 	{
 		log.elog("Couldn't get the cap");
-		Py_DECREF(shipui);
+		Py_XDECREF(shipui);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4096,17 +4097,17 @@ char * Interfaces::GetShipCapacitor(int & size)
 	if(hint == NULL)
 	{
 		log.elog("Couldn't get the cap text");
-		Py_DECREF(shipui);
-		Py_DECREF(powercore);
+		Py_XDECREF(shipui);
+		Py_XDECREF(powercore);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildStringObject(PyString_AsString(hint), size);
-	Py_DECREF(shipui);
-	Py_DECREF(powercore);
-	Py_DECREF(hint);
+	Py_XDECREF(shipui);
+	Py_XDECREF(powercore);
+	Py_XDECREF(hint);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -4134,7 +4135,7 @@ char * Interfaces::_GetShipUIGauge(string name, int & size)
 	if(underMain == NULL)
 	{
 		log.elog("Couldn't get underMain");
-		Py_DECREF(shipui);
+		Py_XDECREF(shipui);
 		clearExceptions();
 		return NULL;
 	}
@@ -4143,8 +4144,8 @@ char * Interfaces::_GetShipUIGauge(string name, int & size)
 	if(gauge == NULL)
 	{
 		log.elog("Couldn't get structure");
-		Py_DECREF(shipui);
-		Py_DECREF(underMain);
+		Py_XDECREF(shipui);
+		Py_XDECREF(underMain);
 		clearExceptions();
 		return NULL;
 	}
@@ -4153,18 +4154,18 @@ char * Interfaces::_GetShipUIGauge(string name, int & size)
 	if(hint == NULL)
 	{
 		log.elog("Couldn't get hint");
-		Py_DECREF(shipui);
-		Py_DECREF(underMain);
-		Py_DECREF(gauge);
+		Py_XDECREF(shipui);
+		Py_XDECREF(underMain);
+		Py_XDECREF(gauge);
 		clearExceptions();
 		return NULL;
 	}
 	
 	char * output = builder.buildStringObject(PyString_AsString(hint), size);
-	Py_DECREF(shipui);
-	Py_DECREF(underMain);
-	Py_DECREF(gauge);
-	Py_DECREF(hint);
+	Py_XDECREF(shipui);
+	Py_XDECREF(underMain);
+	Py_XDECREF(gauge);
+	Py_XDECREF(hint);
 	clearExceptions();
 	return output;
 }
@@ -4186,7 +4187,7 @@ char * Interfaces::GetShipSpeed(int & size)
 	if(underMain == NULL)
 	{
 		log.elog("Couldn't get underMain");
-		Py_DECREF(shipui);
+		Py_XDECREF(shipui);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4196,8 +4197,8 @@ char * Interfaces::GetShipSpeed(int & size)
 	if(label == NULL)
 	{
 		log.elog("Couldn't get label");
-		Py_DECREF(shipui);
-		Py_DECREF(underMain);
+		Py_XDECREF(shipui);
+		Py_XDECREF(underMain);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4207,19 +4208,19 @@ char * Interfaces::GetShipSpeed(int & size)
 	if(text == NULL)
 	{
 		log.elog("Couldn't get text");
-		Py_DECREF(shipui);
-		Py_DECREF(underMain);
-		Py_DECREF(label);
+		Py_XDECREF(shipui);
+		Py_XDECREF(underMain);
+		Py_XDECREF(label);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 	
 	char * output = builder.buildStringObject(PyString_AsString(text), size);
-	Py_DECREF(shipui);
-	Py_DECREF(underMain);
-	Py_DECREF(label);
-	Py_DECREF(text);
+	Py_XDECREF(shipui);
+	Py_XDECREF(underMain);
+	Py_XDECREF(label);
+	Py_XDECREF(text);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -4242,18 +4243,18 @@ char * Interfaces::GetShipHangar(int & size)
 	if(!ok)
 	{
 		log.elog("Couldn't populate");
-		Py_DECREF(cargoWindow);
+		Py_XDECREF(cargoWindow);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("shipHangar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(cargoWindow);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(absoluteTop);
+	Py_XDECREF(cargoWindow);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(absoluteTop);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -4277,7 +4278,7 @@ char * Interfaces::GetStationHangar(int & size)
 	if(stationHangar == NULL)
 	{
 		log.elog("stationHangar is null");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4288,20 +4289,20 @@ char * Interfaces::GetStationHangar(int & size)
 	bool ok = _populateAttributesDisplay(stationHangar, &width, &height, &absoluteTop, &absoluteLeft);
 	if(!ok)
 	{
-		Py_DECREF(main);
-		Py_DECREF(stationHangar);
+		Py_XDECREF(main);
+		Py_XDECREF(stationHangar);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("stationHangar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(stationHangar);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(absoluteTop);
+	Py_XDECREF(main);
+	Py_XDECREF(stationHangar);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(absoluteTop);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -4323,7 +4324,7 @@ bool Interfaces::_populateAttributesDisplay(PyObject * item, PyObject ** width, 
 			if(*height == NULL)
 			{
 				log.elog("Couldn't get height");
-				Py_DECREF(width);
+				Py_XDECREF(width);
 				clearExceptions();
 				return false;
 			}
@@ -4332,8 +4333,8 @@ bool Interfaces::_populateAttributesDisplay(PyObject * item, PyObject ** width, 
 			if(*absoluteLeft == NULL)
 			{
 				log.elog("Couldn't get absoluteLeft");
-				Py_DECREF(height);
-				Py_DECREF(width);
+				Py_XDECREF(height);
+				Py_XDECREF(width);
 				clearExceptions();
 				return false;
 			}
@@ -4342,9 +4343,9 @@ bool Interfaces::_populateAttributesDisplay(PyObject * item, PyObject ** width, 
 			if(*absoluteTop == NULL)
 			{
 				log.elog("Couldn't get absoluteTop");
-				Py_DECREF(height);
-				Py_DECREF(width);
-				Py_DECREF(absoluteLeft);
+				Py_XDECREF(height);
+				Py_XDECREF(width);
+				Py_XDECREF(absoluteLeft);
 				clearExceptions();
 				return false;
 			}
@@ -4368,7 +4369,7 @@ bool Interfaces::_populateAttributes(PyObject * item, PyObject ** width, PyObjec
 			if(*height == NULL)
 			{
 				log.elog("Couldn't get height");
-				Py_DECREF(width);
+				Py_XDECREF(width);
 				clearExceptions();
 				return false;
 			}
@@ -4377,8 +4378,8 @@ bool Interfaces::_populateAttributes(PyObject * item, PyObject ** width, PyObjec
 			if(*absoluteLeft == NULL)
 			{
 				log.elog("Couldn't get absoluteLeft");
-				Py_DECREF(height);
-				Py_DECREF(width);
+				Py_XDECREF(height);
+				Py_XDECREF(width);
 				clearExceptions();
 				return false;
 			}
@@ -4387,9 +4388,9 @@ bool Interfaces::_populateAttributes(PyObject * item, PyObject ** width, PyObjec
 			if(*absoluteTop == NULL)
 			{
 				log.elog("Couldn't get absoluteTop");
-				Py_DECREF(height);
-				Py_DECREF(width);
-				Py_DECREF(absoluteLeft);
+				Py_XDECREF(height);
+				Py_XDECREF(width);
+				Py_XDECREF(absoluteLeft);
 				clearExceptions();
 				return false;
 			}
@@ -4423,11 +4424,11 @@ char * Interfaces::GetUndockButton(int & size)
 	
 	char * output = builder.buildInterfaceObject("UndockButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
 	
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(buttonIcon);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(buttonIcon);
 	clearExceptions();
 	
 	PyGILState_Release(gstate);
@@ -4459,11 +4460,11 @@ char * Interfaces::GetStationItemsButton(int & size)
 	
 	char * output = builder.buildInterfaceObject("ItemsButton", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
 	
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(buttonIcon);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(buttonIcon);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -4488,7 +4489,7 @@ char * Interfaces::GetShipCapacity(int & size)
 	if(label == NULL)
 	{
 		log.elog("Couldn't get capacityLabel");
-		Py_DECREF(cargoView);
+		Py_XDECREF(cargoView);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;;
@@ -4498,8 +4499,8 @@ char * Interfaces::GetShipCapacity(int & size)
 	if(ptext == NULL)
 	{
 		log.elog("Couldn't pull the text off the label");
-		Py_DECREF(cargoView);
-		Py_DECREF(label);
+		Py_XDECREF(cargoView);
+		Py_XDECREF(label);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;;
@@ -4528,7 +4529,7 @@ char * Interfaces::GetInterfaceWindows(int & size)
 	if(children == NULL)
 	{
 		log.elog("Has no children");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4545,8 +4546,8 @@ char * Interfaces::GetInterfaceWindows(int & size)
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get entries_children values");
-			Py_DECREF(main);
-			Py_DECREF(children);
+			Py_XDECREF(main);
+			Py_XDECREF(children);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -4556,9 +4557,9 @@ char * Interfaces::GetInterfaceWindows(int & size)
 		if(!ok)
 		{	
 			log.elog("Couldn't populate attributes");
-			Py_DECREF(main);
-			Py_DECREF(children);
-			Py_DECREF(pvalue);
+			Py_XDECREF(main);
+			Py_XDECREF(children);
+			Py_XDECREF(pvalue);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -4572,12 +4573,12 @@ char * Interfaces::GetInterfaceWindows(int & size)
 		entry->topLeftY = PyInt_AsLong(absoluteTop);
 		
 		labels.push_back(entry);
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 	}
 
 	char * output = builder.buildOverViewObject(labels, size);
-	Py_DECREF(main);
-	Py_DECREF(children);
+	Py_XDECREF(main);
+	Py_XDECREF(children);
 	PyGILState_Release(gstate);
 	for(list<ObjectBuilder::overViewEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
 	{
@@ -4603,7 +4604,7 @@ char * Interfaces::GetMenuItems(int & size)
 	if(menuview == NULL)
 	{
 		log.elog("Couldn't get menuview");
-		Py_DECREF(menu);
+		Py_XDECREF(menu);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4613,8 +4614,8 @@ char * Interfaces::GetMenuItems(int & size)
 	if(entries == NULL)
 	{
 		log.elog("Couldn't get entries");
-		Py_DECREF(menu);
-		Py_DECREF(menuview);
+		Py_XDECREF(menu);
+		Py_XDECREF(menuview);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4624,9 +4625,9 @@ char * Interfaces::GetMenuItems(int & size)
 	if(entries_children == NULL)
 	{
 		log.elog("Has no children");
-		Py_DECREF(menu);
-		Py_DECREF(menuview);
-		Py_DECREF(entries);
+		Py_XDECREF(menu);
+		Py_XDECREF(menuview);
+		Py_XDECREF(entries);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4645,10 +4646,10 @@ char * Interfaces::GetMenuItems(int & size)
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get entries_children values");
-			Py_DECREF(menu);
-			Py_DECREF(menuview);
-			Py_DECREF(entries);
-			Py_DECREF(entries_children);
+			Py_XDECREF(menu);
+			Py_XDECREF(menuview);
+			Py_XDECREF(entries);
+			Py_XDECREF(entries_children);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -4658,11 +4659,11 @@ char * Interfaces::GetMenuItems(int & size)
 		if(fname == NULL)
 		{
 			log.elog("Couldn't get function name");
-			Py_DECREF(menu);
-			Py_DECREF(menuview);
-			Py_DECREF(entries);
-			Py_DECREF(entries_children);
-			Py_DECREF(pvalue);
+			Py_XDECREF(menu);
+			Py_XDECREF(menuview);
+			Py_XDECREF(entries);
+			Py_XDECREF(entries_children);
+			Py_XDECREF(pvalue);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -4675,11 +4676,11 @@ char * Interfaces::GetMenuItems(int & size)
 			if(text_child == NULL)
 			{
 				log.elog("Couldn't get text child");
-				Py_DECREF(menu);
-				Py_DECREF(menuview);
-				Py_DECREF(entries);
-				Py_DECREF(entries_children);
-				Py_DECREF(pvalue);
+				Py_XDECREF(menu);
+				Py_XDECREF(menuview);
+				Py_XDECREF(entries);
+				Py_XDECREF(entries_children);
+				Py_XDECREF(pvalue);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -4688,12 +4689,12 @@ char * Interfaces::GetMenuItems(int & size)
 			if(text == NULL)
 			{
 				log.elog("couldn't get text");
-				Py_DECREF(menu);
-				Py_DECREF(menuview);
-				Py_DECREF(entries);
-				Py_DECREF(entries_children);
-				Py_DECREF(pvalue);
-				Py_DECREF(text_child);
+				Py_XDECREF(menu);
+				Py_XDECREF(menuview);
+				Py_XDECREF(entries);
+				Py_XDECREF(entries_children);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(text_child);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -4703,13 +4704,13 @@ char * Interfaces::GetMenuItems(int & size)
 			if(ctext == NULL)
 			{
 				log.elog("Couldn't convert into c string");
-				Py_DECREF(menu);
-				Py_DECREF(menuview);
-				Py_DECREF(entries);
-				Py_DECREF(entries_children);
-				Py_DECREF(pvalue);
-				Py_DECREF(text_child);
-				Py_DECREF(text);
+				Py_XDECREF(menu);
+				Py_XDECREF(menuview);
+				Py_XDECREF(entries);
+				Py_XDECREF(entries_children);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(text_child);
+				Py_XDECREF(text);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -4719,13 +4720,13 @@ char * Interfaces::GetMenuItems(int & size)
 			if(!ok)
 			{
 				log.elog("Couldn't populate attributes");
-				Py_DECREF(menu);
-				Py_DECREF(menuview);
-				Py_DECREF(entries);
-				Py_DECREF(entries_children);
-				Py_DECREF(pvalue);
-				Py_DECREF(text_child);
-				Py_DECREF(text);
+				Py_XDECREF(menu);
+				Py_XDECREF(menuview);
+				Py_XDECREF(entries);
+				Py_XDECREF(entries_children);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(text_child);
+				Py_XDECREF(text);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -4739,16 +4740,16 @@ char * Interfaces::GetMenuItems(int & size)
 			entry->topLeftY = PyInt_AsLong(absoluteTop);
 
 			labels.push_back(entry);
-			Py_DECREF(text);
-			Py_DECREF(text_child);
+			Py_XDECREF(text);
+			Py_XDECREF(text_child);
 		}
 
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 	}
 
-	Py_DECREF(menu);
-	Py_DECREF(menuview);
-	Py_DECREF(entries);
+	Py_XDECREF(menu);
+	Py_XDECREF(menuview);
+	Py_XDECREF(entries);
 	PyGILState_Release(gstate);
 	char * output = builder.buildOverViewObject(labels, size);
 	for(list<ObjectBuilder::overViewEntry *>::iterator it = labels.begin(); it != labels.end(); it++)
@@ -4780,7 +4781,7 @@ char * Interfaces::_getNeoComItem(string name, int & size)
 	if(neocomitem == NULL)
 	{
 		log.elog("couldn't find neocom item");
-		Py_DECREF(neocom);
+		Py_XDECREF(neocom);
 		clearExceptions();
 		return NULL;
 	}
@@ -4789,8 +4790,8 @@ char * Interfaces::_getNeoComItem(string name, int & size)
 	if(text == NULL)
 	{
 		log.elog("Couldn't get text");
-		Py_DECREF(neocom);
-		Py_DECREF(neocomitem);
+		Py_XDECREF(neocom);
+		Py_XDECREF(neocomitem);
 		clearExceptions();
 		return NULL;
 	}
@@ -4800,21 +4801,21 @@ char * Interfaces::_getNeoComItem(string name, int & size)
 	if(!ok)
 	{
 		log.elog("error populating");
-		Py_DECREF(neocom);
-		Py_DECREF(neocomitem);
-		Py_DECREF(text);
+		Py_XDECREF(neocom);
+		Py_XDECREF(neocomitem);
+		Py_XDECREF(text);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(neocom);
-	Py_DECREF(neocomitem);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(text);
+	Py_XDECREF(neocom);
+	Py_XDECREF(neocomitem);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(text);
 	clearExceptions();
 	return output;
 }
@@ -4833,7 +4834,7 @@ PyObject * Interfaces::_getAddressBookWindow()
 	if(addressbook == NULL)
 	{
 		log.elog("Couldn't get addressbook");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -4856,7 +4857,7 @@ char * Interfaces::_getPeopleAndPlacesButton(string name, int & size)
 	if(button == NULL)
 	{
 		log.elog("Couldn't get button");
-		Py_DECREF(addressbookWindow);
+		Py_XDECREF(addressbookWindow);
 		clearExceptions();
 		return NULL;
 	}
@@ -4866,19 +4867,19 @@ char * Interfaces::_getPeopleAndPlacesButton(string name, int & size)
 	if(!ok)
 	{
 		log.elog("Couldn't populate");
-		Py_DECREF(addressbookWindow);
-		Py_DECREF(button);
+		Py_XDECREF(addressbookWindow);
+		Py_XDECREF(button);
 		clearExceptions();
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject(name, PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(addressbookWindow);
-	Py_DECREF(button);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(absoluteTop);
+	Py_XDECREF(addressbookWindow);
+	Py_XDECREF(button);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(absoluteTop);
 	return output;
 
 }
@@ -4900,18 +4901,18 @@ char * Interfaces::GetAddressBookWindow(int & size)
 	if(!ok)
 	{
 		log.elog("Trouble populating");
-		Py_DECREF(window);
+		Py_XDECREF(window);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("Addressbook", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(window);
-	Py_DECREF(height);
-	Py_DECREF(width);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(window);
+	Py_XDECREF(height);
+	Py_XDECREF(width);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -4940,7 +4941,7 @@ char * Interfaces::GetAddressBookPlacesTab(int & size)
 	if(tabparent == NULL)
 	{
 		log.elog("Couldn't get the tabs");
-		Py_DECREF(addressbookWindow);
+		Py_XDECREF(addressbookWindow);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4951,8 +4952,8 @@ char * Interfaces::GetAddressBookPlacesTab(int & size)
 	if(children == NULL)
 	{
 		log.elog("Couldn't get children");
-		Py_DECREF(addressbookWindow);
-		Py_DECREF(children);
+		Py_XDECREF(addressbookWindow);
+		Py_XDECREF(children);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -4967,8 +4968,8 @@ char * Interfaces::GetAddressBookPlacesTab(int & size)
 		if(pvalue == NULL)
 		{
 			log.elog("pvalue is null");
-			Py_DECREF(addressbookWindow);
-			Py_DECREF(children);
+			Py_XDECREF(addressbookWindow);
+			Py_XDECREF(children);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -4981,9 +4982,9 @@ char * Interfaces::GetAddressBookPlacesTab(int & size)
 			if(tabLabel == NULL)
 			{
 				log.elog("couldn't get label");
-				Py_DECREF(addressbookWindow);
-				Py_DECREF(children);
-				Py_DECREF(pvalue);
+				Py_XDECREF(addressbookWindow);
+				Py_XDECREF(children);
+				Py_XDECREF(pvalue);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -4993,10 +4994,10 @@ char * Interfaces::GetAddressBookPlacesTab(int & size)
 			if(ptext == NULL)
 			{
 				log.elog("Couldn't get text");
-				Py_DECREF(addressbookWindow);
-				Py_DECREF(children);
-				Py_DECREF(pvalue);
-				Py_DECREF(tabLabel);
+				Py_XDECREF(addressbookWindow);
+				Py_XDECREF(children);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(tabLabel);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -5009,38 +5010,38 @@ char * Interfaces::GetAddressBookPlacesTab(int & size)
 				if(!ok)
 				{
 					log.elog("Couldn't populate");
-					Py_DECREF(addressbookWindow);
-					Py_DECREF(children);
-					Py_DECREF(pvalue);
-					Py_DECREF(tabLabel);
-					Py_DECREF(ptext);
+					Py_XDECREF(addressbookWindow);
+					Py_XDECREF(children);
+					Py_XDECREF(pvalue);
+					Py_XDECREF(tabLabel);
+					Py_XDECREF(ptext);
 					clearExceptions();
 					PyGILState_Release(gstate);
 					return NULL;
 				}
 
 				char * output = builder.buildInterfaceObject(PyString_AsString(ptext), PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-				Py_DECREF(addressbookWindow);
-				Py_DECREF(children);
-				Py_DECREF(pvalue);
-				Py_DECREF(tabLabel);
-				Py_DECREF(ptext);
+				Py_XDECREF(addressbookWindow);
+				Py_XDECREF(children);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(tabLabel);
+				Py_XDECREF(ptext);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return output;
 
 			}
-			Py_DECREF(tabLabel);
-			Py_DECREF(ptext);
+			Py_XDECREF(tabLabel);
+			Py_XDECREF(ptext);
 
 		}
 
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 
 	}
 
-	Py_DECREF(addressbookWindow);
-	Py_DECREF(children);
+	Py_XDECREF(addressbookWindow);
+	Py_XDECREF(children);
 	PyGILState_Release(gstate);
 	return NULL;
 
@@ -5071,7 +5072,7 @@ char * Interfaces::GetHangarItems(int & size)
 	if(hangarView == NULL)
 	{
 		log.elog("Couldn't get hangar");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;;
@@ -5162,7 +5163,7 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(pvalue == NULL)
 		{
 			log.elog("pvalue is null");
-			Py_DECREF(entry_children);
+			Py_XDECREF(entry_children);
 			clearExceptions();
 			return;
 		}
@@ -5171,8 +5172,8 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(sr == NULL)
 		{
 			log.elog("sr null");
-			Py_DECREF(pvalue);
-			Py_DECREF(entry_children);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(entry_children);
 			clearExceptions();
 			return;
 		}
@@ -5181,18 +5182,18 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(node == NULL)
 		{
 			log.elog("node is null");
-			Py_DECREF(pvalue);
-			Py_DECREF(sr);
-			Py_DECREF(entry_children);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(entry_children);
 			clearExceptions();
 			return;
 		}
 
 		if(PyObject_Not(node))
 		{
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(pvalue);
 			clearExceptions();
 			continue;
 		}
@@ -5202,10 +5203,10 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(name == NULL)
 		{
 			log.elog("couldn't get the name");
-			Py_DECREF(pvalue);
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(entry_children);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(entry_children);
 			clearExceptions();
 			return;
 		}
@@ -5214,11 +5215,11 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(absoluteTop == NULL)
 		{
 			log.elog("Couldn't get absoluteTop");
-			Py_DECREF(pvalue);
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(name);
-			Py_DECREF(entry_children);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(name);
+			Py_XDECREF(entry_children);
 			clearExceptions();
 			return;
 		}
@@ -5227,12 +5228,12 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(absoluteLeft == NULL)
 		{
 			log.elog("Couldnt' get absoluteleft");
-			Py_DECREF(pvalue);
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(name);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(entry_children);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(name);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(entry_children);
 			clearExceptions();
 			return;
 		}
@@ -5241,13 +5242,13 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(width == NULL)
 		{
 			log.elog("Couldn't get width");
-			Py_DECREF(name);
-			Py_DECREF(pvalue);
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(entry_children);
+			Py_XDECREF(name);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(entry_children);
 			clearExceptions();
 			return;
 		}
@@ -5256,14 +5257,14 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(height == NULL)
 		{
 			log.elog("Couldn't get height");
-			Py_DECREF(name);
-			Py_DECREF(pvalue);
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(width);
-			Py_DECREF(entry_children);
+			Py_XDECREF(name);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(width);
+			Py_XDECREF(entry_children);
 			clearExceptions();
 			return;
 		}
@@ -5272,15 +5273,15 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(sort_qty == NULL)
 		{
 			log.elog("Couldn't get sort_qty");
-			Py_DECREF(name);
-			Py_DECREF(pvalue);
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(width);
-			Py_DECREF(entry_children);
-			Py_DECREF(height);
+			Py_XDECREF(name);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(width);
+			Py_XDECREF(entry_children);
+			Py_XDECREF(height);
 			clearExceptions();
 			return;			
 		}
@@ -5289,16 +5290,16 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(volume == NULL)
 		{
 			log.elog("Couldn't get volume");
-			Py_DECREF(name);
-			Py_DECREF(pvalue);
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(width);
-			Py_DECREF(entry_children);
-			Py_DECREF(height);
-			Py_DECREF(sort_qty);
+			Py_XDECREF(name);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(width);
+			Py_XDECREF(entry_children);
+			Py_XDECREF(height);
+			Py_XDECREF(sort_qty);
 			clearExceptions();
 			return;			
 		}
@@ -5307,17 +5308,17 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		if(meta == NULL)
 		{
 			log.elog("Couldn't get meta");
-			Py_DECREF(name);
-			Py_DECREF(pvalue);
-			Py_DECREF(sr);
-			Py_DECREF(node);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(width);
-			Py_DECREF(entry_children);
-			Py_DECREF(height);
-			Py_DECREF(sort_qty);
-			Py_DECREF(volume);
+			Py_XDECREF(name);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(sr);
+			Py_XDECREF(node);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(width);
+			Py_XDECREF(entry_children);
+			Py_XDECREF(height);
+			Py_XDECREF(sort_qty);
+			Py_XDECREF(volume);
 			clearExceptions();
 			return;			
 		}
@@ -5345,20 +5346,20 @@ void Interfaces::_IterateThroughEntryAndBuild(PyObject * entry, list<ObjectBuild
 		over->height = PyInt_AsLong(height);
 		
 		labels.push_back(over);
-		Py_DECREF(pvalue);
-		Py_DECREF(height);
-		Py_DECREF(name);
-		Py_DECREF(sr);
-		Py_DECREF(node);
-		Py_DECREF(absoluteLeft);
-		Py_DECREF(absoluteTop);
-		Py_DECREF(width);
-		Py_DECREF(sort_qty);
-		Py_DECREF(volume);
+		Py_XDECREF(pvalue);
+		Py_XDECREF(height);
+		Py_XDECREF(name);
+		Py_XDECREF(sr);
+		Py_XDECREF(node);
+		Py_XDECREF(absoluteLeft);
+		Py_XDECREF(absoluteTop);
+		Py_XDECREF(width);
+		Py_XDECREF(sort_qty);
+		Py_XDECREF(volume);
 
 	}///end of for
 
-	Py_DECREF(entry_children);
+	Py_XDECREF(entry_children);
 		
 }
 
@@ -5392,7 +5393,7 @@ char * Interfaces::getHangar(int & size)
 	if(hangar == NULL)
 	{
 		log.elog("couldn't get hangar");
-		Py_DECREF(layer);
+		Py_XDECREF(layer);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -5403,20 +5404,20 @@ char * Interfaces::getHangar(int & size)
 	if(!ok)
 	{
 		log.elog("couldn't populate");
-		Py_DECREF(layer);
-		Py_DECREF(hangar);
+		Py_XDECREF(layer);
+		Py_XDECREF(hangar);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("hangar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(layer);
-	Py_DECREF(hangar);
-	Py_DECREF(width);
-	Py_DECREF(height);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(layer);
+	Py_XDECREF(hangar);
+	Py_XDECREF(width);
+	Py_XDECREF(height);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	PyGILState_Release(gstate);
 	return output;
 
@@ -5548,7 +5549,7 @@ char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
 	if(sr == NULL)
 	{
 		log.elog("Couldn't get sr");
-		Py_DECREF(module);
+		Py_XDECREF(module);
 		clearExceptions();
 		return NULL;
 	}
@@ -5556,8 +5557,8 @@ char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
 	if(srmodule == NULL)
 	{
 		log.elog("Couldn't find srmodule");
-		Py_DECREF(module);
-		Py_DECREF(sr);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
 		clearExceptions();
 		return NULL;
 	}
@@ -5566,9 +5567,9 @@ char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
 	if(sragain == NULL)
 	{
 		log.elog("sragain is null");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
 		clearExceptions();
 		return NULL;
 	}
@@ -5577,10 +5578,10 @@ char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
 	if(moduleInfo == NULL)
 	{
 		log.elog("Can't get the moduleInfo");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
 		clearExceptions();
 		return NULL;
 	}
@@ -5589,23 +5590,23 @@ char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
 	if(attribute == NULL)
 	{
 		log.elog("Couldn't get maxRange");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
-		Py_DECREF(moduleInfo);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
+		Py_XDECREF(moduleInfo);
 		clearExceptions();
 		return NULL;
 	}
 
 	if(PyObject_Not(attribute))
 	{
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
-		Py_DECREF(moduleInfo);
-		Py_DECREF(attribute);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
+		Py_XDECREF(moduleInfo);
+		Py_XDECREF(attribute);
 		clearExceptions();
 		return NULL;
 	}
@@ -5614,12 +5615,12 @@ char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
 	PyFloatObject * value = (PyFloatObject*)PyFloat_FromDouble(PyFloat_AsDouble(attribute));
 	if(value == NULL)
 	{
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
-		Py_DECREF(moduleInfo);
-		Py_DECREF(attribute);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
+		Py_XDECREF(moduleInfo);
+		Py_XDECREF(attribute);
 		clearExceptions();
 		return NULL;
 	}
@@ -5627,13 +5628,13 @@ char * Interfaces::_getModuleAttribute(string name, string attr, int & size)
 	PyFloat_AsString(buf, value);
 
 	char * output = builder.buildStringObject(buf, size);
-	Py_DECREF(module);
-	Py_DECREF(sr);
-	Py_DECREF(srmodule);
-	Py_DECREF(sragain);
-	Py_DECREF(moduleInfo);
-	Py_DECREF(attribute);
-	Py_DECREF(value);
+	Py_XDECREF(module);
+	Py_XDECREF(sr);
+	Py_XDECREF(srmodule);
+	Py_XDECREF(sragain);
+	Py_XDECREF(moduleInfo);
+	Py_XDECREF(attribute);
+	Py_XDECREF(value);
 	clearExceptions();
 	return output;
 	
@@ -5654,7 +5655,7 @@ char * Interfaces::_getModuleAttributeCA(string name, string attr, int & size)
 	if(sr == NULL)
 	{
 		log.elog("Couldn't get sr");
-		Py_DECREF(module);
+		Py_XDECREF(module);
 		clearExceptions();
 		return NULL;
 	}
@@ -5662,8 +5663,8 @@ char * Interfaces::_getModuleAttributeCA(string name, string attr, int & size)
 	if(srmodule == NULL)
 	{
 		log.elog("Couldn't find srmodule");
-		Py_DECREF(module);
-		Py_DECREF(sr);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
 		clearExceptions();
 		return NULL;
 	}
@@ -5672,9 +5673,9 @@ char * Interfaces::_getModuleAttributeCA(string name, string attr, int & size)
 	if(sragain == NULL)
 	{
 		log.elog("sragain is null");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
 		clearExceptions();
 		return NULL;
 	}
@@ -5683,10 +5684,10 @@ char * Interfaces::_getModuleAttributeCA(string name, string attr, int & size)
 	if(moduleInfo == NULL)
 	{
 		log.elog("Can't get the moduleInfo");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
 		clearExceptions();
 		return NULL;
 	}
@@ -5695,23 +5696,23 @@ char * Interfaces::_getModuleAttributeCA(string name, string attr, int & size)
 	if(attribute == NULL)
 	{
 		log.elog("Couldn't get maxRange");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
-		Py_DECREF(moduleInfo);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
+		Py_XDECREF(moduleInfo);
 		clearExceptions();
 		return NULL;
 	}
 
 	if(PyObject_Not(attribute))
 	{
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
-		Py_DECREF(moduleInfo);
-		Py_DECREF(attribute);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
+		Py_XDECREF(moduleInfo);
+		Py_XDECREF(attribute);
 		clearExceptions();
 		return NULL;
 	}
@@ -5719,12 +5720,12 @@ char * Interfaces::_getModuleAttributeCA(string name, string attr, int & size)
 	PyFloatObject * value = (PyFloatObject*)PyFloat_FromDouble(PyFloat_AsDouble(attribute));
 	if(value == NULL)
 	{
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
-		Py_DECREF(moduleInfo);
-		Py_DECREF(attribute);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
+		Py_XDECREF(moduleInfo);
+		Py_XDECREF(attribute);
 		clearExceptions();
 		return NULL;
 	}
@@ -5732,13 +5733,13 @@ char * Interfaces::_getModuleAttributeCA(string name, string attr, int & size)
 	buf = new char[200];
 	PyFloat_AsString(buf, value);
 
-	Py_DECREF(module);
-	Py_DECREF(sr);
-	Py_DECREF(srmodule);
-	Py_DECREF(sragain);
-	Py_DECREF(moduleInfo);
-	Py_DECREF(attribute);
-	Py_DECREF(value);
+	Py_XDECREF(module);
+	Py_XDECREF(sr);
+	Py_XDECREF(srmodule);
+	Py_XDECREF(sragain);
+	Py_XDECREF(moduleInfo);
+	Py_XDECREF(attribute);
+	Py_XDECREF(value);
 	clearExceptions();
 	return buf;
 	
@@ -5839,7 +5840,7 @@ char * Interfaces::_getModuleInfo(string name, int & size)
 	if(sr == NULL)
 	{
 		log.elog("Couldn't get sr");
-		Py_DECREF(module);
+		Py_XDECREF(module);
 		clearExceptions();
 		return NULL;
 	}
@@ -5847,8 +5848,8 @@ char * Interfaces::_getModuleInfo(string name, int & size)
 	if(srmodule == NULL)
 	{
 		log.elog("Couldn't find srmodule");
-		Py_DECREF(module);
-		Py_DECREF(sr);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
 		clearExceptions();
 		return NULL;
 	}
@@ -5857,9 +5858,9 @@ char * Interfaces::_getModuleInfo(string name, int & size)
 	if(sragain == NULL)
 	{
 		log.elog("sragain is null");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
 		clearExceptions();
 		return NULL;
 	}
@@ -5868,10 +5869,10 @@ char * Interfaces::_getModuleInfo(string name, int & size)
 	if(hint == NULL)
 	{
 		log.elog("Can't get the status");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
 		clearExceptions();
 		return NULL;
 	}
@@ -5879,22 +5880,22 @@ char * Interfaces::_getModuleInfo(string name, int & size)
 	if(PyObject_IsTrue(hint) == 0)
 	{
 		log.elog("no data");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
-		Py_DECREF(hint);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
+		Py_XDECREF(hint);
 		clearExceptions();
 		return NULL;
 	}
 
 	log.elog("Outputing modinfo");
 	char * output = builder.buildStringObject(PyString_AsString(hint), size);
-	Py_DECREF(module);
-	Py_DECREF(sr);
-	Py_DECREF(srmodule);
-	Py_DECREF(sragain);
-	Py_DECREF(hint);
+	Py_XDECREF(module);
+	Py_XDECREF(sr);
+	Py_XDECREF(srmodule);
+	Py_XDECREF(sragain);
+	Py_XDECREF(hint);
 	clearExceptions();
 	return output;
 }
@@ -5915,7 +5916,7 @@ char * Interfaces::_isModuleActive(string name, int & size)
 	if(sr == NULL)
 	{
 		log.elog("Couldn't get sr");
-		Py_DECREF(module);
+		Py_XDECREF(module);
 		clearExceptions();
 		return NULL;
 	}
@@ -5923,8 +5924,8 @@ char * Interfaces::_isModuleActive(string name, int & size)
 	if(srmodule == NULL)
 	{
 		log.elog("Couldn't find srmodule");
-		Py_DECREF(module);
-		Py_DECREF(sr);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
 		clearExceptions();
 		return NULL;
 	}
@@ -5933,9 +5934,9 @@ char * Interfaces::_isModuleActive(string name, int & size)
 	if(sragain == NULL)
 	{
 		log.elog("sragain is null");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
 		clearExceptions();
 		return NULL;
 	}
@@ -5944,10 +5945,10 @@ char * Interfaces::_isModuleActive(string name, int & size)
 	if(glow == NULL)
 	{
 		log.elog("Can't get the glow");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
 		clearExceptions();
 		return NULL;
 	}
@@ -5956,11 +5957,11 @@ char * Interfaces::_isModuleActive(string name, int & size)
 	if(state == NULL)
 	{
 		log.elog("Couldn't get state");
-		Py_DECREF(module);
-		Py_DECREF(sr);
-		Py_DECREF(srmodule);
-		Py_DECREF(sragain);
-		Py_DECREF(glow);
+		Py_XDECREF(module);
+		Py_XDECREF(sr);
+		Py_XDECREF(srmodule);
+		Py_XDECREF(sragain);
+		Py_XDECREF(glow);
 		clearExceptions();
 		return NULL;
 	}
@@ -5973,12 +5974,12 @@ char * Interfaces::_isModuleActive(string name, int & size)
 
 	log.elog("Outputing isActive");
 	char * output = builder.buildBooleanObject(isActive, size);
-	Py_DECREF(module);
-	Py_DECREF(sr);
-	Py_DECREF(srmodule);
-	Py_DECREF(sragain);
-	Py_DECREF(glow);
-	Py_DECREF(state);
+	Py_XDECREF(module);
+	Py_XDECREF(sr);
+	Py_XDECREF(srmodule);
+	Py_XDECREF(sragain);
+	Py_XDECREF(glow);
+	Py_XDECREF(state);
 	return output;
 
 
@@ -5994,7 +5995,7 @@ char * Interfaces::_GetSlot(string name, string  outputname, int & size)
 		return NULL;
 	}
 	char * output = _buildModule(mod, outputname, size);
-	Py_DECREF(mod);
+	Py_XDECREF(mod);
 	return output;
 }
 
@@ -6060,7 +6061,7 @@ char * Interfaces::GetSelectedItem(int & size)
 	if(selectedItemView == NULL)
 	{
 		log.elog("selectedItemView is null");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6070,8 +6071,8 @@ char * Interfaces::GetSelectedItem(int & size)
 	if(maincontainer == NULL)
 	{
 		log.elog("__maincontainer is null");
-		Py_DECREF(main);
-		Py_DECREF(selectedItemView);
+		Py_XDECREF(main);
+		Py_XDECREF(selectedItemView);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6081,9 +6082,9 @@ char * Interfaces::GetSelectedItem(int & size)
 	if(mainitem == NULL)
 	{
 		log.elog("mainitem is null");
-		Py_DECREF(main);
-		Py_DECREF(selectedItemView);
-		Py_DECREF(maincontainer);
+		Py_XDECREF(main);
+		Py_XDECREF(selectedItemView);
+		Py_XDECREF(maincontainer);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6093,10 +6094,10 @@ char * Interfaces::GetSelectedItem(int & size)
 	if(toparea == NULL)
 	{
 		log.elog("toparea is null");
-		Py_DECREF(main);
-		Py_DECREF(selectedItemView);
-		Py_DECREF(maincontainer);
-		Py_DECREF(mainitem);
+		Py_XDECREF(main);
+		Py_XDECREF(selectedItemView);
+		Py_XDECREF(maincontainer);
+		Py_XDECREF(mainitem);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6106,11 +6107,11 @@ char * Interfaces::GetSelectedItem(int & size)
 	if(text == NULL)
 	{
 		log.elog("evelabel is null");
-		Py_DECREF(main);
-		Py_DECREF(selectedItemView);
-		Py_DECREF(maincontainer);
-		Py_DECREF(mainitem);
-		Py_DECREF(toparea);
+		Py_XDECREF(main);
+		Py_XDECREF(selectedItemView);
+		Py_XDECREF(maincontainer);
+		Py_XDECREF(mainitem);
+		Py_XDECREF(toparea);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6120,12 +6121,12 @@ char * Interfaces::GetSelectedItem(int & size)
 	if(result == NULL)
 	{
 		log.elog("Couldn't get the text attribute");
-		Py_DECREF(main);
-		Py_DECREF(selectedItemView);
-		Py_DECREF(maincontainer);
-		Py_DECREF(mainitem);
-		Py_DECREF(toparea);
-		Py_DECREF(text);
+		Py_XDECREF(main);
+		Py_XDECREF(selectedItemView);
+		Py_XDECREF(maincontainer);
+		Py_XDECREF(mainitem);
+		Py_XDECREF(toparea);
+		Py_XDECREF(text);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6136,12 +6137,12 @@ char * Interfaces::GetSelectedItem(int & size)
 	if(label == NULL)
 	{
 		log.elog("Couldn't turn label into string");
-		Py_DECREF(main);
-		Py_DECREF(selectedItemView);
-		Py_DECREF(maincontainer);
-		Py_DECREF(mainitem);
-		Py_DECREF(toparea);
-		Py_DECREF(text);
+		Py_XDECREF(main);
+		Py_XDECREF(selectedItemView);
+		Py_XDECREF(maincontainer);
+		Py_XDECREF(mainitem);
+		Py_XDECREF(toparea);
+		Py_XDECREF(text);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6149,12 +6150,12 @@ char * Interfaces::GetSelectedItem(int & size)
 	
 	char * output = builder.buildStringObject(label, size);
 
-	Py_DECREF(main);
-	Py_DECREF(selectedItemView);
-	Py_DECREF(maincontainer);
-	Py_DECREF(mainitem);
-	Py_DECREF(toparea);
-	Py_DECREF(text);
+	Py_XDECREF(main);
+	Py_XDECREF(selectedItemView);
+	Py_XDECREF(maincontainer);
+	Py_XDECREF(mainitem);
+	Py_XDECREF(toparea);
+	Py_XDECREF(text);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -6177,7 +6178,7 @@ char * Interfaces::GetTargetList(int & size)
 	if(children == NULL)
 	{
 		log.elog("Target has no children");
-		Py_DECREF(target);
+		Py_XDECREF(target);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6188,8 +6189,8 @@ char * Interfaces::GetTargetList(int & size)
 	if(len < 1)
 	{
 		log.elog("Target has no children");
-		Py_DECREF(children);
-		Py_DECREF(target);
+		Py_XDECREF(children);
+		Py_XDECREF(target);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6204,8 +6205,8 @@ char * Interfaces::GetTargetList(int & size)
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get the child value");
-			Py_DECREF(children);
-			Py_DECREF(target);
+			Py_XDECREF(children);
+			Py_XDECREF(target);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -6215,9 +6216,9 @@ char * Interfaces::GetTargetList(int & size)
 		if(fname == NULL)
 		{
 			log.elog("Couldn't get type name");
-			Py_DECREF(children);
-			Py_DECREF(target);
-			Py_DECREF(pvalue);
+			Py_XDECREF(children);
+			Py_XDECREF(target);
+			Py_XDECREF(pvalue);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -6232,9 +6233,9 @@ char * Interfaces::GetTargetList(int & size)
 			if(label == NULL)
 			{
 				log.elog("Couldn't pull the text child off the target");
-				Py_DECREF(children);
-				Py_DECREF(target);
-				Py_DECREF(pvalue);
+				Py_XDECREF(children);
+				Py_XDECREF(target);
+				Py_XDECREF(pvalue);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -6244,10 +6245,10 @@ char * Interfaces::GetTargetList(int & size)
 			if(text == NULL)
 			{
 				log.elog("Couldn't pull the text attribute off the label");
-				Py_DECREF(children);
-				Py_DECREF(target);
-				Py_DECREF(pvalue);
-				Py_DECREF(label);
+				Py_XDECREF(children);
+				Py_XDECREF(target);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(label);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -6257,11 +6258,11 @@ char * Interfaces::GetTargetList(int & size)
 			if(text == NULL)
 			{
 				log.elog("Couldn't pull the text off the label");
-				Py_DECREF(children);
-				Py_DECREF(target);
-				Py_DECREF(pvalue);
-				Py_DECREF(label);
-				Py_DECREF(text);
+				Py_XDECREF(children);
+				Py_XDECREF(target);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(label);
+				Py_XDECREF(text);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -6271,11 +6272,11 @@ char * Interfaces::GetTargetList(int & size)
 			if(width == NULL)
 			{
 				log.elog("Couldn't get width");
-				Py_DECREF(children);
-				Py_DECREF(target);
-				Py_DECREF(pvalue);
-				Py_DECREF(label);
-				Py_DECREF(text);
+				Py_XDECREF(children);
+				Py_XDECREF(target);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(label);
+				Py_XDECREF(text);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -6285,12 +6286,12 @@ char * Interfaces::GetTargetList(int & size)
 			if(height == NULL)
 			{
 				log.elog("Couldn't get height");
-				Py_DECREF(children);
-				Py_DECREF(target);
-				Py_DECREF(pvalue);
-				Py_DECREF(label);
-				Py_DECREF(text);
-				Py_DECREF(width);
+				Py_XDECREF(children);
+				Py_XDECREF(target);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(label);
+				Py_XDECREF(text);
+				Py_XDECREF(width);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -6300,13 +6301,13 @@ char * Interfaces::GetTargetList(int & size)
 			if(absoluteLeft == NULL)
 			{
 				log.elog("Couldn't get absoluteLeft");
-				Py_DECREF(children);
-				Py_DECREF(target);
-				Py_DECREF(pvalue);
-				Py_DECREF(text);
-				Py_DECREF(label);
-				Py_DECREF(height);
-				Py_DECREF(width);
+				Py_XDECREF(children);
+				Py_XDECREF(target);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(text);
+				Py_XDECREF(label);
+				Py_XDECREF(height);
+				Py_XDECREF(width);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -6316,14 +6317,14 @@ char * Interfaces::GetTargetList(int & size)
 			if(absoluteTop == NULL)
 			{
 				log.elog("Couldn't get absoluteTop");
-				Py_DECREF(children);
-				Py_DECREF(target);
-				Py_DECREF(pvalue);
-				Py_DECREF(label);
-				Py_DECREF(height);
-				Py_DECREF(width);
-				Py_DECREF(text);
-				Py_DECREF(absoluteLeft);
+				Py_XDECREF(children);
+				Py_XDECREF(target);
+				Py_XDECREF(pvalue);
+				Py_XDECREF(label);
+				Py_XDECREF(height);
+				Py_XDECREF(width);
+				Py_XDECREF(text);
+				Py_XDECREF(absoluteLeft);
 				clearExceptions();
 				PyGILState_Release(gstate);
 				return NULL;
@@ -6336,13 +6337,13 @@ char * Interfaces::GetTargetList(int & size)
 			tEntry->topLeftY = PyInt_AsLong(absoluteTop);
 			targets.push_back(tEntry);
 			log.elog("adding target entry");
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
-			Py_DECREF(height);
-			Py_DECREF(width);
-			Py_DECREF(text);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(absoluteTop);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(label);
+			Py_XDECREF(height);
+			Py_XDECREF(width);
+			Py_XDECREF(text);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(absoluteTop);
 			
 		}		
 		else
@@ -6359,8 +6360,8 @@ char * Interfaces::GetTargetList(int & size)
 		delete (*it);
 	}
 
-	Py_DECREF(target);
-	Py_DECREF(children);
+	Py_XDECREF(target);
+	Py_XDECREF(children);
 	PyGILState_Release(gstate);
 	return output;
 
@@ -6380,14 +6381,14 @@ int Interfaces::_getSize(PyObject * layer)
 	if(bottom == NULL)
 	{
 		log.elog("couldn't get bottom");
-		Py_DECREF(top);
+		Py_XDECREF(top);
 		clearExceptions();
 		return -1;
 	}
 
 	int size = PyInt_AsLong(bottom) - PyInt_AsLong(top);
-	Py_DECREF(bottom);
-	Py_DECREF(top);
+	Py_XDECREF(bottom);
+	Py_XDECREF(top);
 	return size;
 }
 
@@ -6406,7 +6407,7 @@ char * Interfaces::_getLocalChatScrollAttribute(string attr, int & size)
 	if(parent == NULL)
 	{
 		log.elog("Couldn't get parent");
-		Py_DECREF(chatScroll);
+		Py_XDECREF(chatScroll);
 		clearExceptions();
 		return NULL;
 	}
@@ -6415,8 +6416,8 @@ char * Interfaces::_getLocalChatScrollAttribute(string attr, int & size)
 	if(bottom == NULL)
 	{
 		log.elog("couldn't get attribute");
-		Py_DECREF(chatScroll);
-		Py_DECREF(parent);
+		Py_XDECREF(chatScroll);
+		Py_XDECREF(parent);
 		clearExceptions();
 		return NULL;
 	}
@@ -6425,9 +6426,9 @@ char * Interfaces::_getLocalChatScrollAttribute(string attr, int & size)
 	os << PyInt_AsLong(bottom);
 
 	char * output = builder.buildStringObject(os.str(), size);
-	Py_DECREF(chatScroll);
-	Py_DECREF(parent);
-	Py_DECREF(bottom);
+	Py_XDECREF(chatScroll);
+	Py_XDECREF(parent);
+	Py_XDECREF(bottom);
 	return output;
 
 }
@@ -6464,7 +6465,7 @@ char * Interfaces::GetOverviewBottom(int & size)
 	if(bottom == NULL)
 	{
 		log.elog("couldn't get bottom");
-		Py_DECREF(overviewScroll);
+		Py_XDECREF(overviewScroll);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6474,8 +6475,8 @@ char * Interfaces::GetOverviewBottom(int & size)
 	os << PyInt_AsLong(bottom);
 
 	char * output = builder.buildStringObject(os.str(), size);
-	Py_DECREF(overviewScroll);
-	Py_DECREF(bottom);
+	Py_XDECREF(overviewScroll);
+	Py_XDECREF(bottom);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -6496,15 +6497,15 @@ bool Interfaces::isLoginOpen()
 	if(isopen == NULL)
 	{
 		log.elog("Couldn't check open");
-		Py_DECREF(login);
+		Py_XDECREF(login);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	bool open = PyObject_IsTrue(isopen);
-	Py_DECREF(login);
-	Py_DECREF(isopen);
+	Py_XDECREF(login);
+	Py_XDECREF(isopen);
 	PyGILState_Release(gstate);
 	return open;
 }
@@ -6533,7 +6534,7 @@ string Interfaces::Internal_getVersion()
 	if(version == NULL)
 	{
 		log.elog("Couldn't get version");
-		Py_DECREF(login);
+		Py_XDECREF(login);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return "";
@@ -6543,17 +6544,17 @@ string Interfaces::Internal_getVersion()
 	if(version_text == NULL)
 	{
 		log.elog("Couldn't get version text");
-		Py_DECREF(login);
-		Py_DECREF(version);
+		Py_XDECREF(login);
+		Py_XDECREF(version);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return "";
 	}
 
 	string output(PyString_AsString(version_text));
-	Py_DECREF(login);
-	Py_DECREF(version);
-	Py_DECREF(version_text);
+	Py_XDECREF(login);
+	Py_XDECREF(version);
+	Py_XDECREF(version_text);
 	clearExceptions();
 	PyGILState_Release(gstate);
 	return output;
@@ -6580,7 +6581,7 @@ char * Interfaces::GetVersion(int & size)
 	if(version == NULL)
 	{
 		log.elog("Couldn't get version");
-		Py_DECREF(login);
+		Py_XDECREF(login);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6590,17 +6591,17 @@ char * Interfaces::GetVersion(int & size)
 	if(version_text == NULL)
 	{
 		log.elog("Couldn't get version text");
-		Py_DECREF(login);
-		Py_DECREF(version);
+		Py_XDECREF(login);
+		Py_XDECREF(version);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildStringObject(PyString_AsString(version_text), size);
-	Py_DECREF(login);
-	Py_DECREF(version);
-	Py_DECREF(version_text);
+	Py_XDECREF(login);
+	Py_XDECREF(version);
+	Py_XDECREF(version_text);
 	PyGILState_Release(gstate);
 	return output;
 
@@ -6622,7 +6623,7 @@ char * Interfaces::GetOverviewTop(int & size)
 	if(bottom == NULL)
 	{
 		log.elog("couldn't get bottom");
-		Py_DECREF(overviewScroll);
+		Py_XDECREF(overviewScroll);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6632,8 +6633,8 @@ char * Interfaces::GetOverviewTop(int & size)
 	os << PyInt_AsLong(bottom);
 
 	char * output = builder.buildStringObject(os.str(), size);
-	Py_DECREF(overviewScroll);
-	Py_DECREF(bottom);
+	Py_XDECREF(overviewScroll);
+	Py_XDECREF(bottom);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -6655,18 +6656,18 @@ char * Interfaces::GetLocalChatScrollbar(int & size)
 	if(!ok)
 	{
 		log.elog("couldn't populate attributes");
-		Py_DECREF(scroll);
+		Py_XDECREF(scroll);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("localScroll", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(scroll);
-	Py_DECREF(height);
-	Py_DECREF(width);
-	Py_DECREF(absoluteTop);
-	Py_DECREF(absoluteLeft);
+	Py_XDECREF(scroll);
+	Py_XDECREF(height);
+	Py_XDECREF(width);
+	Py_XDECREF(absoluteTop);
+	Py_XDECREF(absoluteLeft);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -6688,7 +6689,7 @@ char * Interfaces::GetLocalCount(int & size)
 	if(local == NULL)
 	{
 		log.elog("Couldn't get local");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6698,8 +6699,8 @@ char * Interfaces::GetLocalCount(int & size)
 	if(captionParent == NULL)
 	{
 		log.elog("Couldn't get parent");
-		Py_DECREF(main);
-		Py_DECREF(local);
+		Py_XDECREF(main);
+		Py_XDECREF(local);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6709,9 +6710,9 @@ char * Interfaces::GetLocalCount(int & size)
 	if(label == NULL)
 	{
 		log.elog("Couldn't get text");
-		Py_DECREF(main);
-		Py_DECREF(local);
-		Py_DECREF(captionParent);
+		Py_XDECREF(main);
+		Py_XDECREF(local);
+		Py_XDECREF(captionParent);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6721,21 +6722,21 @@ char * Interfaces::GetLocalCount(int & size)
 	if(text == NULL)
 	{
 		log.elog("Couldn't get parent");
-		Py_DECREF(main);
-		Py_DECREF(local);
-		Py_DECREF(captionParent);
-		Py_DECREF(label);
+		Py_XDECREF(main);
+		Py_XDECREF(local);
+		Py_XDECREF(captionParent);
+		Py_XDECREF(label);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildStringObject(PyString_AsString(text), size);
-	Py_DECREF(main);
-	Py_DECREF(local);
-	Py_DECREF(captionParent);
-	Py_DECREF(label);
-	Py_DECREF(text);
+	Py_XDECREF(main);
+	Py_XDECREF(local);
+	Py_XDECREF(captionParent);
+	Py_XDECREF(label);
+	Py_XDECREF(text);
 	PyGILState_Release(gstate);
 	return output;
 
@@ -6757,7 +6758,7 @@ PyObject * Interfaces::_getLocalChatScroll()
 	if(local == NULL)
 	{
 		log.elog("Couldn't get local");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -6766,8 +6767,8 @@ PyObject * Interfaces::_getLocalChatScroll()
 	if(userlist == NULL)
 	{
 		log.elog("Couldn't get userlist");
-		Py_DECREF(main);
-		Py_DECREF(local);
+		Py_XDECREF(main);
+		Py_XDECREF(local);
 		clearExceptions();
 		return NULL;
 	}
@@ -6777,16 +6778,16 @@ PyObject * Interfaces::_getLocalChatScroll()
 	if(scroll == NULL)
 	{
 		log.elog("Couldn't get the scroll");
-		Py_DECREF(main);
-		Py_DECREF(local);
-		Py_DECREF(userlist);
+		Py_XDECREF(main);
+		Py_XDECREF(local);
+		Py_XDECREF(userlist);
 		clearExceptions();
 		return NULL;
 	}
 
-	Py_DECREF(main);
-	Py_DECREF(local);
-	Py_DECREF(userlist);
+	Py_XDECREF(main);
+	Py_XDECREF(local);
+	Py_XDECREF(userlist);
 
 	return scroll;
 
@@ -6807,7 +6808,7 @@ PyObject * Interfaces::_getOverviewScroll()
 	if(overview == NULL)
 	{
 		log.elog("Couldn't get overview child");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		return NULL;
 	}
@@ -6816,14 +6817,14 @@ PyObject * Interfaces::_getOverviewScroll()
 	if(overviewScroll == NULL)
 	{
 		log.elog("Couldn't get the scrollarea");
-		Py_DECREF(main);
-		Py_DECREF(overview);
+		Py_XDECREF(main);
+		Py_XDECREF(overview);
 		clearExceptions();
 		return NULL;
 	}
 
-	Py_DECREF(main);
-	Py_DECREF(overview);
+	Py_XDECREF(main);
+	Py_XDECREF(overview);
 
 	return overviewScroll;
 
@@ -6846,7 +6847,7 @@ char * Interfaces::GetOverviewHeight(int & size)
 	stringstream os;
 	os << ssize;
 	char * output = builder.buildStringObject(os.str(), size);
-	Py_DECREF(overviewScroll);
+	Py_XDECREF(overviewScroll);
 	PyGILState_Release(gstate);
 	return output;
 
@@ -6866,7 +6867,7 @@ PyObject * Interfaces::_getScrollHandle(PyObject * layer)
 	if(sr == NULL)
 	{
 		log.elog("Couldn't get sr");
-		Py_DECREF(scrollControls);
+		Py_XDECREF(scrollControls);
 		clearExceptions();
 		return NULL;
 	}
@@ -6875,14 +6876,14 @@ PyObject * Interfaces::_getScrollHandle(PyObject * layer)
 	if(scrollHandle == NULL)
 	{
 		log.elog("Couldn't get scrollHandle");
-		Py_DECREF(scrollControls);
-		Py_DECREF(sr);
+		Py_XDECREF(scrollControls);
+		Py_XDECREF(sr);
 		clearExceptions();
 		return NULL;
 	}
 	
-	Py_DECREF(scrollControls);
-	Py_DECREF(sr);
+	Py_XDECREF(scrollControls);
+	Py_XDECREF(sr);
 	return scrollHandle;
 }
 
@@ -6905,7 +6906,7 @@ char * Interfaces::OverviewGetScrollBar(int & size)
 	if(overview == NULL)
 	{
 		log.elog("Couldn't get overview child");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6915,8 +6916,8 @@ char * Interfaces::OverviewGetScrollBar(int & size)
 	if(scrollHandle == NULL)
 	{
 		log.elog("Couldn't get the scrollHandle");
-		Py_DECREF(main);
-		Py_DECREF(overview);
+		Py_XDECREF(main);
+		Py_XDECREF(overview);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6927,22 +6928,22 @@ char * Interfaces::OverviewGetScrollBar(int & size)
 	if(!ok)
 	{
 		log.elog("Couldn't populate");
-		Py_DECREF(main);
-		Py_DECREF(overview);
-		Py_DECREF(scrollHandle);
+		Py_XDECREF(main);
+		Py_XDECREF(overview);
+		Py_XDECREF(scrollHandle);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
 	}
 
 	char * output = builder.buildInterfaceObject("overviewScrollBar", PyInt_AsLong(absoluteLeft), PyInt_AsLong(absoluteTop), PyInt_AsLong(width), PyInt_AsLong(height), size);
-	Py_DECREF(main);
-	Py_DECREF(overview);
-	Py_DECREF(scrollHandle);
-	Py_DECREF(height);
-	Py_DECREF(width);
-	Py_DECREF(absoluteLeft);
-	Py_DECREF(absoluteTop);
+	Py_XDECREF(main);
+	Py_XDECREF(overview);
+	Py_XDECREF(scrollHandle);
+	Py_XDECREF(height);
+	Py_XDECREF(width);
+	Py_XDECREF(absoluteLeft);
+	Py_XDECREF(absoluteTop);
 	PyGILState_Release(gstate);
 	return output;
 	
@@ -6967,7 +6968,7 @@ char * Interfaces::OverViewGetMembers(int & size)
 	if(overview == NULL)
 	{
 		log.elog("Couldn't get overview child");
-		Py_DECREF(main);
+		Py_XDECREF(main);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6978,8 +6979,8 @@ char * Interfaces::OverViewGetMembers(int & size)
 	if(maincontainer == NULL)
 	{
 		log.elog("maincontainer is null");
-		Py_DECREF(main);
-		Py_DECREF(overview);
+		Py_XDECREF(main);
+		Py_XDECREF(overview);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -6989,9 +6990,9 @@ char * Interfaces::OverViewGetMembers(int & size)
 	if(content == NULL)
 	{
 		log.elog("content is null");
-		Py_DECREF(main);
-		Py_DECREF(maincontainer);
-		Py_DECREF(overview);
+		Py_XDECREF(main);
+		Py_XDECREF(maincontainer);
+		Py_XDECREF(overview);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -7002,10 +7003,10 @@ char * Interfaces::OverViewGetMembers(int & size)
 	if(children == NULL)
 	{
 		log.elog("Couldn't get CHildren");
-		Py_DECREF(main);
-		Py_DECREF(maincontainer);
-		Py_DECREF(content);
-		Py_DECREF(overview);
+		Py_XDECREF(main);
+		Py_XDECREF(maincontainer);
+		Py_XDECREF(content);
+		Py_XDECREF(overview);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -7015,11 +7016,11 @@ char * Interfaces::OverViewGetMembers(int & size)
 	if(len < 1)
 	{
 		log.elog("Overview is Closed");
-		Py_DECREF(main);
-		Py_DECREF(maincontainer);
-		Py_DECREF(content);
-		Py_DECREF(children);
-		Py_DECREF(overview);
+		Py_XDECREF(main);
+		Py_XDECREF(maincontainer);
+		Py_XDECREF(content);
+		Py_XDECREF(children);
+		Py_XDECREF(overview);
 		clearExceptions();
 		PyGILState_Release(gstate);
 		return NULL;
@@ -7033,11 +7034,11 @@ char * Interfaces::OverViewGetMembers(int & size)
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get the child value");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
+			Py_XDECREF(main);
+			Py_XDECREF(maincontainer);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
+			Py_XDECREF(overview);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -7048,12 +7049,12 @@ char * Interfaces::OverViewGetMembers(int & size)
 		if(label == NULL)
 		{
 			log.elog("No label");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
-			Py_DECREF(pvalue);
+			Py_XDECREF(main);
+			Py_XDECREF(maincontainer);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
+			Py_XDECREF(overview);
+			Py_XDECREF(pvalue);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -7064,13 +7065,13 @@ char * Interfaces::OverViewGetMembers(int & size)
 		if(text == NULL)
 		{
 			log.elog("No text in the label");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
+			Py_XDECREF(main);
+			Py_XDECREF(maincontainer);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
+			Py_XDECREF(overview);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(label);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -7082,14 +7083,14 @@ char * Interfaces::OverViewGetMembers(int & size)
 		if(!ok)
 		{
 			log.elog("couldn't populate");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
-			Py_DECREF(text);
+			Py_XDECREF(main);
+			Py_XDECREF(maincontainer);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
+			Py_XDECREF(overview);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(label);
+			Py_XDECREF(text);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -7100,18 +7101,18 @@ char * Interfaces::OverViewGetMembers(int & size)
 		if(icon == NULL)
 		{
 			log.elog("Icon was null");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
-			Py_DECREF(text);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(width);
-			Py_DECREF(height);
+			Py_XDECREF(main);
+			Py_XDECREF(maincontainer);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
+			Py_XDECREF(overview);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(label);
+			Py_XDECREF(text);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(width);
+			Py_XDECREF(height);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -7121,19 +7122,19 @@ char * Interfaces::OverViewGetMembers(int & size)
 		if(color == NULL)
 		{
 			log.elog("Couldn't get color");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
-			Py_DECREF(text);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(width);
-			Py_DECREF(height);
-			Py_DECREF(icon);
+			Py_XDECREF(main);
+			Py_XDECREF(maincontainer);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
+			Py_XDECREF(overview);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(label);
+			Py_XDECREF(text);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(width);
+			Py_XDECREF(height);
+			Py_XDECREF(icon);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -7143,20 +7144,20 @@ char * Interfaces::OverViewGetMembers(int & size)
 		if(g == NULL)
 		{
 			log.elog("Couldn't get color");
-			Py_DECREF(main);
-			Py_DECREF(maincontainer);
-			Py_DECREF(content);
-			Py_DECREF(children);
-			Py_DECREF(overview);
-			Py_DECREF(pvalue);
-			Py_DECREF(label);
-			Py_DECREF(text);
-			Py_DECREF(absoluteLeft);
-			Py_DECREF(absoluteTop);
-			Py_DECREF(width);
-			Py_DECREF(height);
-			Py_DECREF(icon);
-			Py_DECREF(color);
+			Py_XDECREF(main);
+			Py_XDECREF(maincontainer);
+			Py_XDECREF(content);
+			Py_XDECREF(children);
+			Py_XDECREF(overview);
+			Py_XDECREF(pvalue);
+			Py_XDECREF(label);
+			Py_XDECREF(text);
+			Py_XDECREF(absoluteLeft);
+			Py_XDECREF(absoluteTop);
+			Py_XDECREF(width);
+			Py_XDECREF(height);
+			Py_XDECREF(icon);
+			Py_XDECREF(color);
 			clearExceptions();
 			PyGILState_Release(gstate);
 			return NULL;
@@ -7171,15 +7172,15 @@ char * Interfaces::OverViewGetMembers(int & size)
 		over->color = PyFloat_AsDouble(g);
 
 		labels.push_back(over);
-		Py_DECREF(pvalue);
-		Py_DECREF(label);
-		Py_DECREF(text);
-		Py_DECREF(absoluteLeft);
-		Py_DECREF(absoluteTop);
-		Py_DECREF(width);
-		Py_DECREF(icon);
-		Py_DECREF(color);
-		Py_DECREF(g);
+		Py_XDECREF(pvalue);
+		Py_XDECREF(label);
+		Py_XDECREF(text);
+		Py_XDECREF(absoluteLeft);
+		Py_XDECREF(absoluteTop);
+		Py_XDECREF(width);
+		Py_XDECREF(icon);
+		Py_XDECREF(color);
+		Py_XDECREF(g);
 
 	}
 	log.elog("Building overview object");
@@ -7190,11 +7191,11 @@ char * Interfaces::OverViewGetMembers(int & size)
 		delete (*it);
 	}
 
-	Py_DECREF(main);
-	Py_DECREF(maincontainer);
-	Py_DECREF(content);
-	Py_DECREF(children);
-	Py_DECREF(overview);
+	Py_XDECREF(main);
+	Py_XDECREF(maincontainer);
+	Py_XDECREF(content);
+	Py_XDECREF(children);
+	Py_XDECREF(overview);
 	PyGILState_Release(gstate);
 	return output;
 }
@@ -7223,7 +7224,7 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 			{
 				log.elog("Failed to create args with args: ");
 				log.elog(name);
-				Py_DECREF(findChild);
+				Py_XDECREF(findChild);
 				clearExceptions();
 				return NULL;
 			}
@@ -7233,8 +7234,8 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 			if(param == NULL)
 			{
 				log.elog("Failed to build PyTuple");
-				Py_DECREF(findChild);
-				Py_DECREF(args);
+				Py_XDECREF(findChild);
+				Py_XDECREF(args);
 				clearExceptions();
 				return NULL;
 			}
@@ -7243,25 +7244,22 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 			if(PyTuple_SetItem(param, 0, args) != 0)
 			{
 				log.elog("Failed to setitem in tuple");
-				Py_DECREF(findChild);
-				Py_DECREF(args);
-				Py_DECREF(param);
+				Py_XDECREF(findChild);
+				Py_XDECREF(args);
+				Py_XDECREF(param);
 				clearExceptions();
 				return NULL;
 			}
-
-			
 
 			if(PyCallable_Check(findChild) == 0)
 			{
 				log.elog("findChild is not callable");
-				Py_DECREF(findChild);
-				//Py_DECREF(args);
-				Py_DECREF(param);
+				Py_XDECREF(findChild);
+				//Py_XDECREF(args);
+				Py_XDECREF(param);
 				clearExceptions();
 				return NULL;
 			}
-
 
 			soughtInterface = PyObject_CallObject(findChild, param );
 			
@@ -7269,27 +7267,27 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 			{
 				log.elog("Error calling FindChild(param)");
 				log.elog(PyString_AsString(param));
-				Py_DECREF(findChild);
-				//Py_DECREF(args);
-				Py_DECREF(param);
+				Py_XDECREF(findChild);
+				//Py_XDECREF(args);
+				Py_XDECREF(param);
 				clearExceptions();
 				return NULL;
 			}
 			if(PyObject_Not(soughtInterface))
 			{
 				log.elog("FindChild returned blank");
-				Py_DECREF(findChild);
-				//Py_DECREF(args);
-				Py_DECREF(param);
+				Py_XDECREF(findChild);
+				//Py_XDECREF(args);
+				Py_XDECREF(param);
 				clearExceptions();
 				return NULL;
 			}
 
 			log.elog("Found Child");
 			//output = builder.buildInterfaceObject(name,  (int)PyInt_AsLong(leftPosVal) ,(int)PyInt_AsLong(topPosVal), (int)PyInt_AsLong(width), (int)PyInt_AsLong(height), size);
-			Py_DECREF(findChild);
-			//Py_DECREF(args);
-			Py_DECREF(param);
+			Py_XDECREF(findChild);
+			//Py_XDECREF(args);
+			Py_XDECREF(param);
 		}
 		else
 		{
@@ -7300,11 +7298,8 @@ PyObject * Interfaces::_findByNameLayer(PyObject * layer, string name)
 	return soughtInterface;
 }
 
-
 PyObject * Interfaces::_getLayer(string name)
 {
-	
-		
 		PyObject * main = PyImport_AddModule("__builtin__");
 		if(main == NULL)
 		{
@@ -7334,7 +7329,6 @@ PyObject * Interfaces::_getLayer(string name)
 		if(layer == NULL)
 		{
 			log.elog("layer is null");
-			Py_DECREF(uicore);
 			clearExceptions();
 			return NULL;
 		}
@@ -7343,11 +7337,12 @@ PyObject * Interfaces::_getLayer(string name)
 		if(layeritem == NULL)
 		{
 			log.elog("layeritem is null");
-			Py_DECREF(uicore);
-			Py_DECREF(layer);
+			Py_XDECREF(layer);
 			clearExceptions();
 			return NULL;
 		}
+
+		Py_XDECREF(layer);
 
 		return layeritem;
 }
@@ -7388,7 +7383,7 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 	if(len < 1)
 	{
 		log.elog("End of branch");
-		Py_DECREF(children);
+		Py_XDECREF(children);
 		clearExceptions();
 		return;
 	}
@@ -7416,7 +7411,7 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 		if(pvalue == NULL)
 		{
 			log.elog("Couldn't get children[i]");
-			Py_DECREF(children);
+			Py_XDECREF(children);
 			clearExceptions();
 			return;
 		}
@@ -7433,8 +7428,8 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 				if(ctext == NULL)
 				{
 					log.elog("Couldn't convert python string");
-					Py_DECREF(children);
-					Py_DECREF(ptext);
+					Py_XDECREF(children);
+					Py_XDECREF(ptext);
 					clearExceptions();
 					return;
 				}
@@ -7445,8 +7440,8 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 					*result = pvalue;
 					//delete buf;
 					//delete ibuf;
-					Py_DECREF(children);
-					Py_DECREF(ptext);
+					Py_XDECREF(children);
+					Py_XDECREF(ptext);
 					clearExceptions();
 					return;
 				}
@@ -7455,7 +7450,7 @@ void Interfaces::_findByText(PyObject * parentInt, string text, PyObject ** resu
 		}
 		_findByText(pvalue, text, result); 
 		//log.elog("Function ran");
-		Py_DECREF(pvalue);
+		Py_XDECREF(pvalue);
 	}
 		
 
