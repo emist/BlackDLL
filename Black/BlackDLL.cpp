@@ -16,11 +16,9 @@
 using namespace std;
 
 
-
-
 	extern "C"
 	{
-
+	char * version = "2.1";
 	LPWSTR name = NULL;
 		
 
@@ -202,6 +200,7 @@ using namespace std;
 
 		__declspec(dllexport) void startServer()
 		{
+
 
 			PyGILState_STATE gstate = PyGILState_Ensure();
 			
@@ -983,7 +982,7 @@ using namespace std;
 				if( !WriteFile(npipe, (void*)output, size, &bsent, NULL) )
 				{
 					 
-					char * perr =(char*) malloc(100*sizeof(char));
+					char * perr =(char*) malloc(300*sizeof(char));
 					log.elog("Couldn't write to client");
 					sprintf(perr, "%x", GetLastError());
 					log.elog(perr);
@@ -1026,10 +1025,11 @@ using namespace std;
 			wcscpy(name, messageStruct->Title);
 
 			log.elog(name);
-		
+			log.elog(version);
 			
 			//MessageBox(NULL, L"testing", L"testing", 0);
 			threadHandler = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&namedPipeServer, 0, 0, &threadId);
+			
 		}
 
 	}
