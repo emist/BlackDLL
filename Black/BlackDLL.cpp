@@ -374,7 +374,13 @@ using namespace std;
 				 {
 					 log.elog("Inside memnu");
 					 log.elog(func.strparameter());
-					 output = interfaces.findByTextMenu(func.strparameter(), size);
+					 output = interfaces.findByTextMenu(func.strparameter(), size, false);
+				 }
+
+				 if(func.name().compare("findByTextMenuExact") == 0)
+				 {
+					 log.elog(func.strparameter());
+					 output = interfaces.findByTextMenu(func.strparameter(), size, true);
 				 }
 					 
 				 if(func.name().compare("getInflightInterface") == 0)

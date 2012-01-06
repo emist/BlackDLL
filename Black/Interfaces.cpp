@@ -176,7 +176,7 @@ PyObject * Interfaces::_getHeight(PyObject * result)
 
 
 
-char * Interfaces::findByTextMenu(string label, int & size)
+char * Interfaces::findByTextMenu(string label, int & size, bool exact)
 {
 	char * output = NULL;
 	PyGILState_STATE gstate = PyGILState_Ensure();
@@ -312,8 +312,14 @@ char * Interfaces::findByTextMenu(string label, int & size)
 			stoupper(label);
 			stoupper(stext);
 			
+			bool match = false;
 
-			if(stext.find(label) != stext.npos)
+			if(exact)
+				match = stext.compare(label);
+			else
+				match = stext.find(label) != stext.npos;
+
+			if(exact)
 			{
 				bool ok = _populateAttributes(text_child, &width, &height, &absoluteTop, &absoluteLeft);
 				if(!ok)

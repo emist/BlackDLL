@@ -179,8 +179,8 @@ public:
 	char * OverViewGetMembers(int & size);
 	char * getInflightInterface(int & size);
 	char * atLogin(int & size);
-	char * findByTextMenu(string label, int & size);
-	char * findByTextMenuContains(string label, int & size);
+	char * findByTextMenu(string label, int & size, bool exact);
+	//char * findByTextMenuContains(string label, int & size);
 	char * findByNameLogin(string name, int & size);
 	char * findByTextLogin(string text, int & size);
 	char * GetShipHangar(int & size);
